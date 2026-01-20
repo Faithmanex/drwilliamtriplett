@@ -6,11 +6,11 @@ import dotenv from 'dotenv';
 dotenv.config({ path: '.env' });
 
 const app = express();
-const port = 3001;
+const port = process.env.PORT || 3001;
 
 // Initialize Resend with the API key
 // Using the key found in the code if not in env, though env is preferred
-const resend = new Resend(process.env.RESEND_API_KEY || 're_VUQPxKxm_8krL3hXocyTpN4K4NkTtahQy');
+const resend = new Resend(process.env.RESEND_API_KEY || '');
 
 app.use(cors());
 app.use(express.json());
@@ -124,6 +124,12 @@ app.post('/api/purchase-confirmation', async (req, res) => {
   }
 });
 
-app.listen(port, () => {
-  console.log(`Server running on http://localhost:${port}`);
-});
+export { app };
+
+// Only listen if run directly (not imported as a module for Netlify Functions)
+// In ES modules we can check if the current file is the entry point
+if (process.argv[1] === new URL(import.meta.url).pathname || process.env.DEV_SERVER === 'true') {
+  app.listen(port, () => {
+    console.log(`Server running on http://localhost:${port}`);
+  });
+}
