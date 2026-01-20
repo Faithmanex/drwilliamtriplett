@@ -123,7 +123,7 @@ const Books: React.FC = () => {
     setPurchaseState('processing');
     
     try {
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL}/api/purchase-confirmation`, {
+      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/purchase-confirmation`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
