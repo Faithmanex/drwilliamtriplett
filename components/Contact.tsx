@@ -27,7 +27,7 @@ const Contact: React.FC = () => {
 
     try {
       // Send to local backend server instead of Resend directly
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || ''}/api/send-email`, {
+      const response = await fetch('/api/send-email', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
