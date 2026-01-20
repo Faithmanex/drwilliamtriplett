@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Dr. William Triplett | Leadership, Ethics & Human Flourishing Advisor</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Merriweather:ital,wght@0,300;0,400;0,700;1,300;1,400&display=swap" rel="stylesheet">
+    <script>
+      tailwind.config = {
+        theme: {
+          extend: {
+            fontFamily: {
+              sans: ['Inter', 'sans-serif'],
+              serif: ['Merriweather', 'serif'],
+            },
+            colors: {
+              brand: {
+                dark: '#0B1120', // Deep Ink (Slate 950-ish)
+                primary: '#1E3A8A', // Classic Navy
+                secondary: '#64748B', // Slate 500
+                accent: '#CA8A04', // Muted Gold/Amber
+                light: '#F8FAFC', // Slate 50
+                surface: '#FFFFFF',
+              }
+            },
+            boxShadow: {
+              'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
+              'card': '0 10px 40px -10px rgba(0, 0, 0, 0.08)',
+              'glow': '0 0 20px rgba(202, 138, 4, 0.3)',
+            }
+          }
+        }
+      }
+    </script>
+    <style>
+      /* Scroll Animation Utilities */
+      .reveal-on-scroll {
+        opacity: 0;
+        transform: translateY(30px);
+        transition: opacity 1s ease-out, transform 1s ease-out;
+        will-change: opacity, transform;
+      }
+      
+      .reveal-on-scroll.is-visible {
+        opacity: 1;
+        transform: translateY(0);
+      }
+
+      /* Stagger delays for grids */
+      .delay-100 { transition-delay: 100ms; }
+      .delay-200 { transition-delay: 200ms; }
+      .delay-300 { transition-delay: 300ms; }
+    </style>
+  <script type="importmap">
+{
+  "imports": {
+    "react-router-dom": "https://esm.sh/react-router-dom@^7.12.0",
+    "lucide-react": "https://esm.sh/lucide-react@^0.562.0",
+    "react-dom/": "https://esm.sh/react-dom@^19.2.3/",
+    "react/": "https://esm.sh/react@^19.2.3/",
+    "react": "https://esm.sh/react@^19.2.3",
+    "@google/genai": "https://esm.sh/@google/genai@^1.36.0"
+  }
+}
+</script>
+<link rel="stylesheet" href="/index.css">
+</head>
+  <body class="bg-brand-light text-slate-800 antialiased selection:bg-brand-accent selection:text-white">
+    <div id="root"></div>
+  <script type="module" src="/index.tsx"></script>
+</body>
+</html>
