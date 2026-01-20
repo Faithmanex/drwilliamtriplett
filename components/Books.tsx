@@ -182,10 +182,7 @@ const Books: React.FC = () => {
       }
     } catch (error) {
       console.error('Email sending failed:', error);
-      // Fallback for demo
-      setTimeout(() => {
-        setPurchaseState('success');
-      }, 1500);
+      setPurchaseState('error');
     }
   };
 
