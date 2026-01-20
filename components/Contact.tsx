@@ -26,15 +26,15 @@ const Contact: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      // Send to local backend server instead of Resend directly
-      const response = await fetch('/api/send-email', {
+      const response = await fetch('https://api.resend.com/emails', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: 'Contact Inquiries <onboarding@resend.dev>', // Default Resend testing domain
-          to: 'fmanekponne@gmail.com', // In testing, this must be your verified email or you can only send to yourself
+          from: 'Contact Inquiries <onboarding@resend.dev>',
+          to: ['fmanekponne@gmail.com'],
           reply_to: formData.email,
           subject: `Platform Inquiry: ${formData.subject} from ${formData.name}`,
           html: `<div>
@@ -58,8 +58,7 @@ const Contact: React.FC = () => {
       setIsSubmitted(true);
     } catch (error) {
       console.error('Email sending failed:', error);
-      // Fallback or error handling
-      alert('Failed to send email. Please ensure the backend server is running on port 3001.');
+      alert('Failed to send email. Please try again later.');
       setIsSubmitting(false);
     }
   };
