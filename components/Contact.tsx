@@ -26,25 +26,16 @@ const Contact: React.FC = () => {
     setIsSubmitting(true);
 
     try {
-      const response = await fetch('https://api.resend.com/emails', {
+      const response = await fetch('/.netlify/functions/contact', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
-          'Authorization': `Bearer ${import.meta.env.VITE_RESEND_API_KEY}`,
         },
         body: JSON.stringify({
-          from: 'Contact Inquiries <onboarding@resend.dev>',
-          to: ['fmanekponne@gmail.com'],
-          reply_to: formData.email,
-          subject: `Platform Inquiry: ${formData.subject} from ${formData.name}`,
-          html: `<div>
-            <h1>New Inquiry</h1>
-            <p><strong>Name:</strong> ${formData.name}</p>
-            <p><strong>Email:</strong> ${formData.email}</p>
-            <p><strong>Subject:</strong> ${formData.subject}</p>
-            <p><strong>Message:</strong></p>
-            <p>${formData.message}</p>
-          </div>`,
+          name: formData.name,
+          email: formData.email,
+          subject: formData.subject,
+          message: formData.message,
         }),
       });
 
