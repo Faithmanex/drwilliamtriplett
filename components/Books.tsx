@@ -16,7 +16,7 @@ export const booksCatalog: Book[] = [
     price: 26.99,
     imageUrl: "https://res.cloudinary.com/dtbdixfgf/image/upload/v1768238501/IMG-20260112-WA0007_y38m1g.jpg", 
     features: ["Paperback Edition", "200+ Pages", "Historical Analysis", "Signed Copy Available"],
-    pubDate: "2023",
+    pubDate: "2025",
     reviews: [
       {
         author: "Dr. Cornel West",
