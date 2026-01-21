@@ -107,9 +107,9 @@ const Contact: React.FC = () => {
                     <div className="w-20 h-20 bg-green-50 rounded-full flex items-center justify-center mb-6">
                       <CheckCircle className="text-green-600 w-10 h-10" />
                     </div>
-                    <h3 className="text-3xl font-serif font-bold text-brand-dark mb-3">Message Received</h3>
+                    <h3 className="text-3xl font-serif font-bold text-brand-dark mb-3">Message Sent Successfully</h3>
                     <p className="text-slate-600 max-w-sm mb-8">
-                      Thank you, {formData.name.split(' ')[0]}. Your inquiry has been securely routed.
+                      Thank you, {formData.name.split(' ')[0]}. Your inquiry has been received and you will be contacted within 24 hours.
                     </p>
 
 
@@ -129,7 +129,7 @@ const Contact: React.FC = () => {
                 <form onSubmit={handleSubmit} className="space-y-8">
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <div className="space-y-2">
-                      <label htmlFor="name" className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Full Name</label>
+                      <label htmlFor="name" className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Your Name</label>
                       <input
                         type="text"
                         id="name"
@@ -139,7 +139,7 @@ const Contact: React.FC = () => {
                         onChange={handleChange}
                         disabled={isSubmitting}
                         className="w-full px-5 py-4 bg-slate-50 rounded-xl border-2 border-transparent focus:border-brand-primary/20 focus:bg-white focus:ring-0 outline-none transition-all font-medium text-slate-800 disabled:opacity-50"
-                        placeholder="Dr. Jane Doe"
+                        placeholder="Jane Doe"
                       />
                     </div>
                     <div className="space-y-2">
@@ -184,7 +184,7 @@ const Contact: React.FC = () => {
                   </div>
 
                   <div className="space-y-2">
-                    <label htmlFor="message" className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Message</label>
+                    <label htmlFor="message" className="text-xs font-bold text-slate-500 uppercase tracking-widest ml-1">Your Message</label>
                     <textarea
                       id="message"
                       name="message"
@@ -210,7 +210,7 @@ const Contact: React.FC = () => {
                       </>
                     ) : (
                       <>
-                        <span>Send Message</span>
+                        <span>Submit Inquiry</span>
                         <Send size={18} />
                       </>
                     )}

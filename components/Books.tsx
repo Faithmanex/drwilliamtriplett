@@ -84,7 +84,7 @@ export const booksCatalog: Book[] = [
 const Books: React.FC = () => {
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
-  const [purchaseState, setPurchaseState] = useState<'idle' | 'input_email' | 'processing' | 'success' | 'error'>('idle');
+  const [purchaseState, setPurchaseState] = useState<'idle' | 'input_email' | 'payment' | 'processing' | 'success' | 'error'>('idle');
   const [userEmail, setUserEmail] = useState('');
   const [emailError, setEmailError] = useState('');
   
@@ -110,7 +110,8 @@ const Books: React.FC = () => {
       setEmailError('');
   };
 
-  const handleConfirmPurchase = async (e: React.FormEvent) => {
+  // Step 1: Validate email and proceed to payment
+  const handleEmailSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!userEmail || !userEmail.includes('@') || !userEmail.includes('.')) {
@@ -118,6 +119,12 @@ const Books: React.FC = () => {
         return;
     }
 
+    setPurchaseState('payment');
+  };
+
+  // Step 2: Handle PayPal payment completion (simulated for now)
+  // TODO: Replace with real PayPal integration
+  const handlePaymentComplete = async () => {
     if (!selectedBook) return;
 
     setPurchaseState('processing');
@@ -303,7 +310,7 @@ const Books: React.FC = () => {
                       </button>
                   </div>
                   
-                  <form onSubmit={handleConfirmPurchase}>
+                  <form onSubmit={handleEmailSubmit}>
                       <div className="mb-6">
                           <label htmlFor="email" className="sr-only">Email Address</label>
                           <div className="relative">
@@ -338,17 +345,68 @@ const Books: React.FC = () => {
                               type="submit"
                               className="flex-1 bg-brand-primary hover:bg-brand-dark text-white px-6 py-3.5 rounded-xl font-bold transition-all shadow-md hover:shadow-lg flex items-center justify-center gap-2 transform active:scale-95"
                           >
-                              Complete Access <ArrowRight size={18} />
+                              Continue to Payment <ArrowRight size={18} />
                           </button>
                       </div>
                   </form>
               </div>
               )}
 
+              {purchaseState === 'payment' && (
+                <div className="bg-white border-2 border-brand-primary/10 rounded-2xl p-6 sm:p-8 animate-[fadeInUp_0.4s_ease-out]">
+                  <div className="flex justify-between items-start mb-6">
+                      <div>
+                          <h3 className="text-lg font-bold text-brand-dark font-serif">Complete Your Purchase</h3>
+                          <p className="text-sm text-slate-500">Secure payment powered by PayPal</p>
+                      </div>
+                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100">
+                          <X size={20} />
+                      </button>
+                  </div>
+
+                  {/* Order Summary */}
+                  <div className="bg-slate-50 rounded-xl p-4 mb-6 border border-slate-100">
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="text-slate-600">{selectedBook?.title}</span>
+                      <span className="font-bold text-brand-dark">${selectedBook?.price.toFixed(2)}</span>
+                    </div>
+                    <div className="flex justify-between items-center text-sm text-slate-500">
+                      <span>Delivery to:</span>
+                      <span className="font-medium text-slate-700">{userEmail}</span>
+                    </div>
+                  </div>
+
+                  {/* PayPal Button - Simulated for now */}
+                  {/* TODO: Replace with real PayPal button integration */}
+                  <button 
+                    onClick={handlePaymentComplete}
+                    className="w-full bg-[#FFC439] hover:bg-[#F4BB2E] text-brand-dark px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 mb-4"
+                  >
+                    <span className="italic font-serif font-black pr-1">Pay</span>
+                    <span className="italic font-serif font-black text-blue-800">Pal</span>
+                    <span className="border-l border-black/10 h-6 mx-1"></span>
+                    <span>Pay ${selectedBook?.price.toFixed(2)}</span>
+                  </button>
+
+                  <button 
+                    onClick={() => setPurchaseState('input_email')}
+                    className="w-full text-slate-500 hover:text-slate-700 font-medium py-2 transition-colors flex items-center justify-center gap-2"
+                  >
+                    <ArrowLeft size={16} /> Change Email
+                  </button>
+
+                  <div className="mt-4 flex items-center justify-center gap-2 text-xs text-slate-400">
+                    <ShieldCheck size={14} />
+                    <span>Secure SSL Encrypted Transaction</span>
+                  </div>
+              </div>
+              )}
+
               {purchaseState === 'processing' && (
                 <div className="flex flex-col items-center justify-center p-12 bg-slate-50 border border-slate-200 rounded-2xl animate-[fadeInUp_0.4s_ease-out]">
                   <Loader2 className="w-10 h-10 text-brand-primary animate-spin mb-4" />
-                  <p className="text-lg font-bold text-brand-dark">Confirming details...</p>
+                  <p className="text-lg font-bold text-brand-dark">Processing your order...</p>
+                  <p className="text-sm text-slate-500 mt-2">Sending download link to {userEmail}</p>
                 </div>
               )}
 
@@ -357,12 +415,35 @@ const Books: React.FC = () => {
                   <div className="w-16 h-16 bg-green-100 text-green-600 rounded-full flex items-center justify-center mx-auto mb-4">
                     <CheckCircle size={32} />
                   </div>
-                  <h3 className="font-serif text-2xl font-bold text-brand-dark mb-2">Resource Access Granted!</h3>
+                  <h3 className="font-serif text-2xl font-bold text-brand-dark mb-2">Purchase Successful!</h3>
                   <p className="text-slate-600 mb-6">
-                    A secure link for <strong>{selectedBook.title}</strong> has been sent to <span className="font-bold text-slate-900">{userEmail}</span>.
+                    Thank you for your purchase! A download link for <strong>{selectedBook.title}</strong> has been sent to <span className="font-bold text-slate-900">{userEmail}</span>.
                   </p>
-                  <button className="inline-flex items-center gap-2 bg-brand-primary text-white px-8 py-3 rounded-full font-bold hover:bg-brand-dark transition-colors mb-4 shadow-lg">
+                  <a 
+                    href={import.meta.env[`VITE_DOWNLOAD_URL_${selectedBook.id.toUpperCase().replace(/-/g, '_')}`] || '#'}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 bg-brand-primary text-white px-8 py-3 rounded-full font-bold hover:bg-brand-dark transition-colors mb-4 shadow-lg"
+                  >
                     <Download size={18} /> Download Now
+                  </a>
+                </div>
+              )}
+
+              {purchaseState === 'error' && (
+                <div className="bg-red-50 border border-red-200 rounded-2xl p-8 text-center animate-[fadeInUp_0.5s_ease-out]">
+                  <div className="w-16 h-16 bg-red-100 text-red-600 rounded-full flex items-center justify-center mx-auto mb-4">
+                    <X size={32} />
+                  </div>
+                  <h3 className="font-serif text-2xl font-bold text-brand-dark mb-2">Something Went Wrong</h3>
+                  <p className="text-slate-600 mb-6">
+                    We couldn't process your request. Please try again or contact support if the issue persists.
+                  </p>
+                  <button 
+                    onClick={() => setPurchaseState('idle')}
+                    className="inline-flex items-center gap-2 bg-brand-primary text-white px-8 py-3 rounded-full font-bold hover:bg-brand-dark transition-colors shadow-lg"
+                  >
+                    <ArrowLeft size={18} /> Try Again
                   </button>
                 </div>
               )}
