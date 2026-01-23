@@ -7,31 +7,29 @@ const servicesData: ServiceCategory[] = [
   {
     title: "Advisory & Strategy",
     items: [
-      { title: "Entrepreneurship, Innovation & Strategic Advisory" },
-      { title: "Faith, Ethics, Technology & Cyber Advisory" },
-      { title: "Investment & Philanthropic Strategy" }
+      { title: "Faith, ethics, technology, and cybersecurity advisory." },
+      { title: "Entrepreneurship, innovation, and philanthropic strategy." }
     ]
   },
   {
     title: "Academic & Research",
     items: [
-      { title: "Faculty Support & Academic Development" },
-      { title: "Research Design, IRB, Proposal & Dissertation Support" },
-      { title: "Research Collaboration & Scholarly Engagement" }
+      { title: "Faculty support, curriculum innovation, and academic development." },
+      { title: "Research design, IRB, proposal, and dissertation support." }
     ]
   },
   {
     title: "Coaching & Development",
     items: [
-      { title: "Leadership Coaching & Executive Formation" },
-      { title: "Organizational Development & Learning Systems" },
-      { title: "Human Performance, Fitness & Leadership Formation" }
+      { title: "Leadership coaching and executive formation rooted in ethics, purpose, and adaptive leadership." },
+      { title: "Organizational development and CLO-aligned learning strategy, including workforce development and learning systems." },
+      { title: "Human performance, leadership formation, and holistic flourishing." }
     ]
   },
   {
     title: "Public Engagement",
     items: [
-      { title: "Speaking, Teaching & Facilitation" }
+      { title: "Speaking, teaching, facilitation, and scholarly collaboration." }
     ]
   }
 ];
@@ -71,7 +69,7 @@ const Services: React.FC = () => {
               <ul className="space-y-4 mb-8 flex-grow">
                 {category.items.map((item, idx) => (
                   <li key={idx} className="flex items-start group">
-                    <span className="w-1.5 h-1.5 rounded-full bg-slate-300 mt-2.5 mr-4 group-hover:bg-brand-accent transition-colors"></span>
+                    <span className="w-1.5 h-1.5 rounded-full bg-brand-accent mt-2.5 mr-4 transition-colors flex-shrink-0"></span>
                     <span className="text-slate-600 font-medium leading-relaxed group-hover:text-slate-900 transition-colors">{item.title}</span>
                   </li>
                 ))}

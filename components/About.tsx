@@ -48,32 +48,19 @@ const About: React.FC = () => {
           {/* Text Column */}
           <div className="w-full lg:w-7/12 pt-8 reveal-on-scroll delay-200">
             <h2 className="font-serif text-4xl font-bold text-brand-dark mb-8 relative inline-block">
-              A Vocation of Flourishing
+              Executive / Consulting-Oriented
               <span className="absolute -bottom-2 left-0 w-1/3 h-1 bg-brand-accent"></span>
             </h2>
 
             <div className="space-y-6 text-lg text-slate-600 leading-loose font-medium">
               <p>
-                Dr. William Triplett is an author, scholar, educator, and
-                advisor whose work bridges
-                <span className="font-bold text-brand-dark">
-                  {" "}
-                  faith, leadership, technology, ethics, and human performance
-                </span>{" "}
-                with a sustained focus on human flourishing.
+                <span className="font-bold text-brand-dark">Dr. William Triplett</span> is an author, scholar, educator, and strategic advisor specializing in cybersecurity, artificial intelligence, leadership, and human performance. His work centers on advancing human-centered excellence in organizations operating at the forefront of technological change, informed by faith and purpose.
               </p>
               <p>
-                With a career dedicated to helping individuals and institutions
-                navigate the complexities of the modern world, he brings a
-                unique multidisciplinary approach to every engagement. His
-                research and practice are grounded in the belief that true
-                leadership requires a deep understanding of the ethical and
-                human dimensions of technological and social change.
+                Drawing from interdisciplinary research and applied experience, he supports leaders in addressing complex challenges across security, innovation, and organizational transformation. His approach integrates technical insight with a deep understanding of how systems, culture, and belief shape human outcomes.
               </p>
               <p>
-                He serves as a guide for those seeking to integrate their
-                deepest values with their professional responsibilities,
-                ensuring that progress never comes at the cost of humanity.
+                Dr. Triplett partners with leaders and institutions committed to building secure, intelligent, and resilient systems—where innovation is guided by purpose and accountability to people.
               </p>
             </div>
           </div>
@@ -107,9 +94,9 @@ const About: React.FC = () => {
                 color: "text-brand-accent",
               },
               {
-                title: "Technology & Flourishing",
+                title: "Technology and Human-Centered Progress",
                 icon: <Cpu className="w-8 h-8" />,
-                desc: "Examining how technological advancements impact human dignity and stewardship of innovation.",
+                desc: <span>Examining how technological advancements impact human dignity and stewardship of <span className="font-bold">innovation</span>.</span>,
                 color: "text-slate-700",
               },
             ].map((pillar, idx) => (

@@ -23,22 +23,22 @@ const Home: React.FC = () => {
     {
       title: "Advisory & Strategy",
       icon: <Briefcase className="w-6 h-6" />,
-      description: "Strategic guidance for institutions navigating faith, ethics, and technology."
+      description: "Faith, ethics, technology, and cybersecurity advisory alongside philanthropic strategy."
     },
     {
       title: "Academic & Research",
       icon: <Book className="w-6 h-6" />,
-      description: "Faculty support, curriculum development, and scholarly collaboration."
+      description: "Faculty support, curriculum innovation, and research design for academic development."
     },
     {
       title: "Coaching & Development",
       icon: <UserCheck className="w-6 h-6" />,
-      description: "Executive formation and leadership coaching for high-performance contexts."
+      description: "Leadership coaching and executive formation rooted in ethics, purpose, and adaptive leadership."
     },
     {
       title: "Public Engagement",
       icon: <Mic className="w-6 h-6" />,
-      description: "Keynote speaking and facilitation on leadership and human flourishing."
+      description: "Speaking, teaching, facilitation, and scholarly collaboration for various contexts."
     }
   ];
 
@@ -67,7 +67,7 @@ const Home: React.FC = () => {
           <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-[1.1] tracking-tight drop-shadow-2xl reveal-on-scroll">
             Faith. Leadership. <br />
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-yellow-200 italic pr-2">
-              Human Flourishing.
+              Human-Centered Progress.
             </span>
           </h1>
           

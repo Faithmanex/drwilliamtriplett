@@ -140,6 +140,7 @@ const Books: React.FC = () => {
           bookId: selectedBook.id,
           bookTitle: selectedBook.title,
           bookSubtitle: selectedBook.subtitle,
+          price: selectedBook.price,
         }),
       });
 
@@ -484,7 +485,7 @@ const Books: React.FC = () => {
         <div className="max-w-7xl mx-auto text-center relative z-10 animate-fade-in-up">
           <h1 className="font-serif text-4xl md:text-5xl font-bold mb-6 text-white">Publications & Resources</h1>
           <p className="font-sans text-lg text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
-            Curated works on faith, ethics, and leadership designed to equip you for the challenges of the modern age.
+            Curated works exploring faith, leadership, cybersecurity, artificial intelligence, learning innovation, and sports ministry—designed to equip leaders for the challenges of a complex, modern world.
           </p>
         </div>
       </div>
