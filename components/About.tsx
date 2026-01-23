@@ -34,7 +34,7 @@ const About: React.FC = () => {
             <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl transition-transform duration-500 hover:scale-105 bg-slate-200">
               <img
                 src="https://res.cloudinary.com/dtbdixfgf/image/upload/f_auto,q_auto,w_800/v1768235662/WT-30_ei1uny.jpg"
-                alt="Dr. William Triplett Portrait"
+                alt="Dr. William Triplett - Strategic Advisor and Scholar"
                 loading="eager"
                 fetchPriority="high"
                 onLoad={() => setIsImageLoaded(true)}

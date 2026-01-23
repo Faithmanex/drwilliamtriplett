@@ -50,7 +50,7 @@ const Home: React.FC = () => {
         <div className="absolute inset-0 z-0">
           <img 
             src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2690&auto=format&fit=crop" 
-            alt="Library Architecture" 
+            alt="Dr. William Triplett Library - Leadership and Excellence" 
             className="w-full h-full object-cover opacity-20 scale-105 animate-[pulse_10s_ease-in-out_infinite]"
           />
           <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/90 via-brand-dark/50 to-brand-dark"></div>
@@ -129,7 +129,7 @@ const Home: React.FC = () => {
                 <div className="relative w-64 md:w-80 aspect-[2/3] shadow-2xl rounded-r-md transform transition-all duration-500 group-hover:rotate-y-[-5deg] group-hover:scale-105 origin-center">
                    <img 
                       src={featuredBook.imageUrl} 
-                      alt={`Cover of ${featuredBook.title}`}
+                      alt={`Book Cover: ${featuredBook.title} by Dr. William Triplett`}
                       className="absolute inset-0 w-full h-full object-cover rounded-r-md z-10" 
                    />
                    {/* Shine */}

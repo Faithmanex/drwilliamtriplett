@@ -175,7 +175,7 @@ const Books: React.FC = () => {
             <>
                 <img 
                     src={book.imageUrl} 
-                    alt={`Cover of ${book.title}`} 
+                    alt={`Book Cover: ${book.title} - Publication by Dr. William Triplett`} 
                     className="absolute inset-0 w-full h-full object-cover"
                 />
                  <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-black/10 pointer-events-none"></div>
