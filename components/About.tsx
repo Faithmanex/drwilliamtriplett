@@ -46,8 +46,7 @@ const About: React.FC = () => {
           </div>
 
           {/* Text Column */}
-          <div className="w-full lg:w-7/12 pt-8 reveal-on-scroll delay-200">
-            <h2 className="font-serif text-4xl font-bold text-brand-dark mb-8 relative inline-block">
+          <div className="w-full lg:w-7/12 pt-8 reveal-on-scroll delay-200">            <h2 className="font-serif text-4xl font-bold text-brand-dark mb-8 relative inline-block">
               Executive / Consulting-Oriented
               <span className="absolute -bottom-2 left-0 w-1/3 h-1 bg-brand-accent"></span>
             </h2>
