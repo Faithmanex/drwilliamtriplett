@@ -117,7 +117,7 @@ export async function handler(event) {
 
     await resend.emails.send({
       from: "Sales Notification <onboarding@resend.dev>",
-      to: ["fmanekponne@gmail.com"],
+      to: ["will@drwilliamtriplett.com"],
       subject: `🔔 New Sale: $${price ? parseFloat(price).toFixed(2) : "0.00"} - ${bookTitle}`,
       html: adminEmailHtml,
     });
