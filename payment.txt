@@ -1,0 +1,64 @@
+# Stacked buttons
+
+## HTML
+
+Part 1
+Paste this code in your website’s <head> (or at the top of your page’s <body> above the Part 2 code) only once per page.
+
+<script 
+  src="https://www.paypal.com/sdk/js?client-id=BAAeVmaNSSf9Bvv56cqvYIYZgw-lW_5H3uKPuO8xYQvgat5zmyWCee9wPnq0yo-AbelvtxfQX2y2EctLvc&components=hosted-buttons&enable-funding=venmo&currency=USD">
+</script>
+
+
+Part 2
+Paste this code in your page's <body>, ideally near your product. You can repeat this for each product you have on a page.
+
+<div id="paypal-container-3WD8BPY7FJDXS"></div>
+<script>
+  paypal.HostedButtons({
+    hostedButtonId: "3WD8BPY7FJDXS",
+  }).render("#paypal-container-3WD8BPY7FJDXS")
+</script>
+
+
+## React
+
+Part 1
+Paste this code in your website’s <head> (or at the top of your page’s <body> above the Part 2 code) only once per page.
+
+<script
+  src="https://www.paypal.com/sdk/js?client-id=BAAeVmaNSSf9Bvv56cqvYIYZgw-lW_5H3uKPuO8xYQvgat5zmyWCee9wPnq0yo-AbelvtxfQX2y2EctLvc&components=hosted-buttons&enable-funding=venmo&currency=USD" 
+  crossorigin="anonymous" 
+  async>
+</script>
+
+Part 2
+Paste this code in your page's <body>.
+
+<script>
+  document.addEventListener("DOMContentLoaded", (event) => {
+    paypal.HostedButtons({
+      hostedButtonId: "3WD8BPY7FJDXS"
+    })
+    .render("#paypal-container-3WD8BPY7FJDXS")
+  })
+</script>
+
+
+# Single button
+
+## HTML
+
+<div>
+  <style>.pp-3WD8BPY7FJDXS{text-align:center;border:none;border-radius:0.25rem;min-width:11.625rem;padding:0 2rem;height:2.625rem;font-weight:bold;background-color:#FFD140;color:#000000;font-family:"Helvetica Neue",Arial,sans-serif;font-size:1rem;line-height:1.25rem;cursor:pointer;}</style>
+  <form action="https://www.paypal.com/ncp/payment/3WD8BPY7FJDXS" method="post" target="_blank" style="display:inline-grid;justify-items:center;align-content:start;gap:0.5rem;">
+    <input class="pp-3WD8BPY7FJDXS" type="submit" value="Buy Now" />
+    <img src=https://www.paypalobjects.com/images/Debit_Credit_APM.svg alt="cards" />
+    <section style="font-size: 0.75rem;"> Powered by <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg" alt="paypal" style="height:0.875rem;vertical-align:middle;"/></section>
+  </form>
+</div>
+
+
+##Payment Link
+
+https://www.paypal.com/ncp/payment/3WD8BPY7FJDXS

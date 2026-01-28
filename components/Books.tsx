@@ -1,6 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingBag, Star, Info, CheckCircle, ArrowLeft, BookOpen, ShieldCheck, Search, Quote, Download, Loader2, Mail, X, ArrowRight } from 'lucide-react';
+import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
 import { Book } from '../types';
 
 
@@ -124,7 +125,7 @@ const Books: React.FC = () => {
 
   // Step 2: Handle PayPal payment completion (simulated for now)
   // TODO: Replace with real PayPal integration
-  const handlePaymentComplete = async () => {
+  const handlePaymentComplete = async (details?: any) => {
     if (!selectedBook) return;
 
     setPurchaseState('processing');
@@ -306,7 +307,7 @@ const Books: React.FC = () => {
                           <h3 className="text-lg font-bold text-brand-dark font-serif">Where should we send your book?</h3>
                           <p className="text-sm text-slate-500">Enter your email address to receive the secure digital access.</p>
                       </div>
-                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100">
+                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100" aria-label="Close purchase form">
                           <X size={20} />
                       </button>
                   </div>
@@ -360,7 +361,7 @@ const Books: React.FC = () => {
                           <h3 className="text-lg font-bold text-brand-dark font-serif">Complete Your Purchase</h3>
                           <p className="text-sm text-slate-500">Secure payment powered by PayPal</p>
                       </div>
-                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100">
+                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100" aria-label="Close payment form">
                           <X size={20} />
                       </button>
                   </div>
@@ -379,15 +380,39 @@ const Books: React.FC = () => {
 
                   {/* PayPal Button - Simulated for now */}
                   {/* TODO: Replace with real PayPal button integration */}
-                  <button 
-                    onClick={handlePaymentComplete}
-                    className="w-full bg-[#FFC439] hover:bg-[#F4BB2E] text-brand-dark px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 mb-4"
-                  >
-                    <span className="italic font-serif font-black pr-1">Pay</span>
-                    <span className="italic font-serif font-black text-blue-800">Pal</span>
-                    <span className="border-l border-black/10 h-6 mx-1"></span>
-                    <span>Pay ${selectedBook?.price.toFixed(2)}</span>
-                  </button>
+                  <PayPalScriptProvider options={{ 
+                    "clientId": import.meta.env.VITE_PAYPAL_CLIENT_ID,
+                    components: "buttons", 
+                    currency: "USD"
+                  }}>
+                      <div className="w-full mb-4">
+                        <PayPalButtons 
+                          style={{ layout: "vertical", shape: "rect", label: "pay" }}
+                          createOrder={(data, actions) => {
+                            return actions.order.create({
+                              purchase_units: [{
+                                description: selectedBook?.title,
+                                amount: {
+                                  // @ts-ignore
+                                  value: selectedBook?.price.toFixed(2),
+                                  currency_code: "USD"
+                                }
+                              }]
+                            });
+                          }}
+                          onApprove={async (data, actions) => {
+                            if (actions.order) {
+                              const details = await actions.order.capture();
+                              handlePaymentComplete(details);
+                            }
+                          }}
+                          onError={(err) => {
+                            console.error("PayPal Error:", err);
+                            setPurchaseState('error');
+                          }}
+                        />
+                      </div>
+                  </PayPalScriptProvider>
 
                   <button 
                     onClick={() => setPurchaseState('input_email')}
@@ -514,8 +539,7 @@ const Books: React.FC = () => {
             {filteredBooks.map((book, index) => (
               <div 
                 key={book.id}
-                className={`group cursor-pointer flex flex-col h-full animate-fade-in-up`}
-                style={{ animationDelay: `${(index % 4) * 100}ms` }}
+                className={`group cursor-pointer flex flex-col h-full animate-fade-in-up delay-${(index % 4) * 100}`}
                 onClick={() => setSelectedBook(book)}
               >
                 <div className="bg-slate-50 rounded-2xl p-8 mb-6 relative overflow-hidden transition-all duration-300 group-hover:shadow-card group-hover:-translate-y-1 border border-slate-100">
