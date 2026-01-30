@@ -1,7 +1,7 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingBag, Star, Info, CheckCircle, ArrowLeft, BookOpen, ShieldCheck, Search, Quote, Download, Loader2, Mail, X, ArrowRight } from 'lucide-react';
-import { PayPalScriptProvider, PayPalButtons } from "@paypal/react-paypal-js";
+import { PayPalScriptProvider, PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { Book } from '../types';
 
 
@@ -15,6 +15,7 @@ export const booksCatalog: Book[] = [
     description: "A profound exploration of how the Black Church and HBCUs serve as sanctuaries for resilience, identity, and liberation.",
     longDescription: "In 'Harbors of Hope', Dr. William Triplett examines the historical and enduring significance of the Black Church and Historically Black Colleges and Universities (HBCUs). These institutions are not merely physical structures but sacred spaces that have nurtured freedom, cultivated leadership, and provided refuge in times of storm. Through rich theological insight and historical analysis, Triplett argues for the preservation and revitalization of these harbors as essential for the flourishing of future generations.",
     price: 26.99,
+    paypalHostedButtonId: "3WD8BPY7FJDXS",
     imageUrl: "https://res.cloudinary.com/dtbdixfgf/image/upload/v1768238501/IMG-20260112-WA0007_y38m1g.jpg", 
     features: ["Paperback Edition", "200+ Pages", "Historical Analysis", "Signed Copy Available"],
     pubDate: "2025",
@@ -46,6 +47,7 @@ export const booksCatalog: Book[] = [
     description: "Navigating the moral complexities of technological advancement in organizational leadership.",
     longDescription: "As artificial intelligence reshapes the landscape of decision-making, leaders face unprecedented ethical dilemmas. This volume provides a theological and philosophical lens for evaluating technology, ensuring that innovation serves human dignity rather than diminishing it. Essential reading for executives and educators alike.",
     price: 29.95,
+    paypalHostedButtonId: "PLACEHOLDER_ID_1",
     imageUrl: "bg-slate-800",
     features: ["Paperback", "310 Pages", "Digital Companion Access"],
     pubDate: "2024",
@@ -65,6 +67,7 @@ export const booksCatalog: Book[] = [
     description: "A guide to spiritual formation and quieting the mind amidst the chaos of modern life.",
     longDescription: "Noise is the currency of the modern age. Sacred Signals argues that the capacity to hear—truly hear—is the first requirement of leadership and spiritual maturity. Dr. Triplett offers practical disciplines for re-tuning our attention to what matters most.",
     price: 19.95,
+    paypalHostedButtonId: "PLACEHOLDER_ID_2",
     imageUrl: "bg-brand-accent",
     features: ["Softcover", "180 Pages", "Devotional Format"],
     pubDate: "2022"
@@ -76,6 +79,7 @@ export const booksCatalog: Book[] = [
     description: "Strategies for leaders repairing broken systems and restoring community faith.",
     longDescription: "Trust is the hardest currency to earn and the easiest to lose. This academic yet accessible work analyzes the collapse of institutional trust in the 21st century and maps a path forward for leaders committed to transparency, accountability, and structural renewal.",
     price: 34.50,
+    paypalHostedButtonId: "PLACEHOLDER_ID_3",
     imageUrl: "bg-emerald-900",
     features: ["Hardcover", "400 Pages", "Case Studies Included"],
     pubDate: "2021"
@@ -382,36 +386,15 @@ const Books: React.FC = () => {
                   {/* TODO: Replace with real PayPal button integration */}
                   <PayPalScriptProvider options={{ 
                     "clientId": import.meta.env.VITE_PAYPAL_CLIENT_ID,
-                    components: "buttons", 
+                    components: "hosted-buttons",
+                    "enable-funding": "venmo",
                     currency: "USD"
                   }}>
-                      <div className="w-full mb-4">
-                        <PayPalButtons 
-                          style={{ layout: "vertical", shape: "rect", label: "pay" }}
-                          createOrder={(data, actions) => {
-                            return actions.order.create({
-                              purchase_units: [{
-                                description: selectedBook?.title,
-                                amount: {
-                                  // @ts-ignore
-                                  value: selectedBook?.price.toFixed(2),
-                                  currency_code: "USD"
-                                }
-                              }]
-                            });
-                          }}
-                          onApprove={async (data, actions) => {
-                            if (actions.order) {
-                              const details = await actions.order.capture();
-                              handlePaymentComplete(details);
-                            }
-                          }}
-                          onError={(err) => {
-                            console.error("PayPal Error:", err);
-                            setPurchaseState('error');
-                          }}
-                        />
-                      </div>
+                      <PayPalButtonWrapper 
+                        selectedBook={selectedBook} 
+                        onSuccess={handlePaymentComplete}
+                        onError={() => setPurchaseState('error')}
+                      />
                   </PayPalScriptProvider>
 
                   <button 
@@ -574,6 +557,38 @@ const Books: React.FC = () => {
           </div>
         )}
       </div>
+    </div>
+  );
+};
+
+// Wrapper component to handle loading state
+const PayPalButtonWrapper: React.FC<{
+  selectedBook: Book;
+  onSuccess: (details: any) => void;
+  onError: () => void;
+}> = ({ selectedBook, onSuccess, onError }) => {
+  const [{ isPending }] = usePayPalScriptReducer();
+
+  return (
+    <div className="w-full mb-4 relative min-h-[150px]">
+      {isPending && (
+         <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 rounded-lg border border-slate-100/50 z-10">
+          <Loader2 className="w-8 h-8 text-brand-primary animate-spin mb-2" />
+          <p className="text-sm text-slate-400 font-medium">Loading secure payment...</p>
+        </div>
+      )}
+      {selectedBook.paypalHostedButtonId ? (
+        <PayPalButtons 
+          style={{ layout: "vertical", shape: "rect", label: "pay" }}
+          className={isPending ? "opacity-0" : "opacity-100 transition-opacity duration-300"}
+          hostedButtonId={selectedBook.paypalHostedButtonId}
+          msg-content="description"
+        />
+      ) : (
+        <div className="text-red-500 text-center p-4">
+          Payment ID missing for this item.
+        </div>
+      )}
     </div>
   );
 };

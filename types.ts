@@ -27,6 +27,7 @@ export interface Book {
   description: string; // Short description for cards
   longDescription: string; // Full description for details
   price: number;
+  paypalHostedButtonId?: string;
   imageUrl: string;
   features: string[]; // List of bullet points (e.g., "Hardcover", "240 Pages")
   pubDate?: string;
