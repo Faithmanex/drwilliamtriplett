@@ -101,7 +101,8 @@ const About: React.FC = () => {
             ].map((pillar, idx) => (
               <div
                 key={idx}
-                className={`group bg-white p-10 rounded-2xl shadow-sm hover:shadow-card transition-all duration-300 transform hover:-translate-y-1 border border-slate-100/50 reveal-on-scroll delay-${idx * 150}`}
+                className="group bg-white p-10 rounded-2xl shadow-sm hover:shadow-card transition-all duration-300 transform hover:-translate-y-1 border border-slate-100/50 reveal-on-scroll"
+                style={{ transitionDelay: `${idx * 150}ms` }}
               >
                 <div
                   className={`w-14 h-14 rounded-2xl bg-slate-50 flex items-center justify-center mb-8 group-hover:bg-white group-hover:shadow-md transition-all ${pillar.color}`}

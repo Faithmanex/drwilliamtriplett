@@ -49,7 +49,7 @@ const Home: React.FC = () => {
         {/* Background */}
         <div className="absolute inset-0 z-0">
           <img 
-            src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=1920&auto=format&fit=crop" 
+            src="https://images.unsplash.com/photo-1507842217343-583bb7270b66?q=80&w=2690&auto=format&fit=crop" 
             alt="Dr. William Triplett Library - Leadership and Excellence" 
             className="w-full h-full object-cover opacity-20 scale-105 animate-[pulse_10s_ease-in-out_infinite]"
           />
@@ -207,7 +207,8 @@ const Home: React.FC = () => {
             {serviceHighlights.map((service, idx) => (
               <div 
                 key={idx} 
-                className={`bg-white p-8 rounded-2xl shadow-sm hover:shadow-card transition-all duration-300 border border-slate-100 group flex flex-col h-full reveal-on-scroll delay-${idx * 100}`}
+                className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-card transition-all duration-300 border border-slate-100 group flex flex-col h-full reveal-on-scroll"
+                style={{ transitionDelay: `${idx * 100}ms` }}
               >
                 <div className="w-12 h-12 bg-brand-light rounded-xl flex items-center justify-center text-brand-primary mb-6 group-hover:scale-110 transition-transform">
                   {service.icon}

@@ -1,8 +1,8 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingBag, Star, Info, CheckCircle, ArrowLeft, BookOpen, ShieldCheck, Search, Quote, Download, Loader2, Mail, X, ArrowRight } from 'lucide-react';
-import { PayPalScriptProvider, PayPalButtons, usePayPalScriptReducer } from "@paypal/react-paypal-js";
 import { Book } from '../types';
+import PayPalHostedButton from './PayPalHostedButton';
 
 
 
@@ -15,7 +15,6 @@ export const booksCatalog: Book[] = [
     description: "A profound exploration of how the Black Church and HBCUs serve as sanctuaries for resilience, identity, and liberation.",
     longDescription: "In 'Harbors of Hope', Dr. William Triplett examines the historical and enduring significance of the Black Church and Historically Black Colleges and Universities (HBCUs). These institutions are not merely physical structures but sacred spaces that have nurtured freedom, cultivated leadership, and provided refuge in times of storm. Through rich theological insight and historical analysis, Triplett argues for the preservation and revitalization of these harbors as essential for the flourishing of future generations.",
     price: 26.99,
-    paypalHostedButtonId: "3WD8BPY7FJDXS",
     imageUrl: "https://res.cloudinary.com/dtbdixfgf/image/upload/v1768238501/IMG-20260112-WA0007_y38m1g.jpg", 
     features: ["Paperback Edition", "200+ Pages", "Historical Analysis", "Signed Copy Available"],
     pubDate: "2025",
@@ -38,7 +37,8 @@ export const booksCatalog: Book[] = [
         content: "This book provides the language we've been looking for to articulate the sacred function of our gathering spaces. Highly recommended for church leadership teams.",
         rating: 5
       }
-    ]
+    ],
+    paypalButtonId: "3WD8BPY7FJDXS"
   },
   {
     id: 'ethical-algorithm',
@@ -47,7 +47,6 @@ export const booksCatalog: Book[] = [
     description: "Navigating the moral complexities of technological advancement in organizational leadership.",
     longDescription: "As artificial intelligence reshapes the landscape of decision-making, leaders face unprecedented ethical dilemmas. This volume provides a theological and philosophical lens for evaluating technology, ensuring that innovation serves human dignity rather than diminishing it. Essential reading for executives and educators alike.",
     price: 29.95,
-    paypalHostedButtonId: "PLACEHOLDER_ID_1",
     imageUrl: "bg-slate-800",
     features: ["Paperback", "310 Pages", "Digital Companion Access"],
     pubDate: "2024",
@@ -67,7 +66,6 @@ export const booksCatalog: Book[] = [
     description: "A guide to spiritual formation and quieting the mind amidst the chaos of modern life.",
     longDescription: "Noise is the currency of the modern age. Sacred Signals argues that the capacity to hear—truly hear—is the first requirement of leadership and spiritual maturity. Dr. Triplett offers practical disciplines for re-tuning our attention to what matters most.",
     price: 19.95,
-    paypalHostedButtonId: "PLACEHOLDER_ID_2",
     imageUrl: "bg-brand-accent",
     features: ["Softcover", "180 Pages", "Devotional Format"],
     pubDate: "2022"
@@ -79,7 +77,6 @@ export const booksCatalog: Book[] = [
     description: "Strategies for leaders repairing broken systems and restoring community faith.",
     longDescription: "Trust is the hardest currency to earn and the easiest to lose. This academic yet accessible work analyzes the collapse of institutional trust in the 21st century and maps a path forward for leaders committed to transparency, accountability, and structural renewal.",
     price: 34.50,
-    paypalHostedButtonId: "PLACEHOLDER_ID_3",
     imageUrl: "bg-emerald-900",
     features: ["Hardcover", "400 Pages", "Case Studies Included"],
     pubDate: "2021"
@@ -103,6 +100,73 @@ const Books: React.FC = () => {
     setEmailError('');
   }, [selectedBook]);
 
+  // Check for PayPal return
+  useEffect(() => {
+    // Check if we have pending purchase state
+    const pendingEmail = localStorage.getItem('pendingPurchaseEmail');
+    const pendingBookId = localStorage.getItem('pendingPurchaseBookId');
+
+    if (pendingEmail && pendingBookId) {
+        // Find the book
+        const book = booksCatalog.find(b => b.id === pendingBookId);
+        
+        // If we have a success param in URL (PayPal standard return) or if we just rely on presence of state 
+        // Logic: if user comes back to this page and has pending state, we might assume success if redirected from PayPal
+        // But better is to look for URL params usually. 
+        // PayPal Hosted Buttons Auto Return adds ?tx=...&st=Completed&amt=...&cc=...&cm=...&item_number=...
+        // We will look for "token" or "tx" or "success=true" which we might set manually in the return URL
+        
+        const urlParams = new URLSearchParams(window.location.search);
+        // We will assume if we have pending state and we are back here, we check for PayPal transaction params
+        // Or specific 'success' flag if user set that in Auto Return URL configuration (e.g. ?success=true)
+        // Since we don't control the exact return URL params entirely, we look for typical ones.
+        
+        if (urlParams.has('tx') || urlParams.has('token') || urlParams.has('PayerID')) {
+            if (book) {
+                setSelectedBook(book);
+                setUserEmail(pendingEmail);
+                setPurchaseState('processing');
+                
+                // Clear pending state immediately to prevent loop
+                localStorage.removeItem('pendingPurchaseEmail');
+                localStorage.removeItem('pendingPurchaseBookId');
+                
+                // We need to trigger this slightly delayed to ensure state is set
+                // We can call a modified version of handlePaymentComplete that takes params
+                
+                 (async () => {
+                    try {
+                      const response = await fetch('/.netlify/functions/book-purchase', {
+                        method: 'POST',
+                        headers: {
+                          'Content-Type': 'application/json',
+                        },
+                        body: JSON.stringify({
+                          email: pendingEmail,
+                          bookId: book.id,
+                          bookTitle: book.title,
+                          bookSubtitle: book.subtitle,
+                          price: book.price,
+                        }),
+                      });
+                
+                      const data = await response.json();
+                
+                      if (response.ok && data.success) {
+                        setPurchaseState('success');
+                      } else {
+                        throw new Error('Email delivery failed');
+                      }
+                    } catch (error) {
+                      console.error('Email sending failed:', error);
+                      setPurchaseState('error');
+                    }
+                 })();
+            }
+        }
+    }
+  }, []);
+
   const handleInitiatePurchase = () => {
       setPurchaseState('input_email');
       if (purchaseRef.current) {
@@ -125,11 +189,17 @@ const Books: React.FC = () => {
     }
 
     setPurchaseState('payment');
+    
+    // Save state for auto-return
+    if (selectedBook?.paypalButtonId) {
+        localStorage.setItem('pendingPurchaseEmail', userEmail);
+        localStorage.setItem('pendingPurchaseBookId', selectedBook.id);
+    }
   };
 
   // Step 2: Handle PayPal payment completion (simulated for now)
   // TODO: Replace with real PayPal integration
-  const handlePaymentComplete = async (details?: any) => {
+  const handlePaymentComplete = async () => {
     if (!selectedBook) return;
 
     setPurchaseState('processing');
@@ -311,7 +381,7 @@ const Books: React.FC = () => {
                           <h3 className="text-lg font-bold text-brand-dark font-serif">Where should we send your book?</h3>
                           <p className="text-sm text-slate-500">Enter your email address to receive the secure digital access.</p>
                       </div>
-                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100" aria-label="Close purchase form">
+                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100">
                           <X size={20} />
                       </button>
                   </div>
@@ -365,7 +435,7 @@ const Books: React.FC = () => {
                           <h3 className="text-lg font-bold text-brand-dark font-serif">Complete Your Purchase</h3>
                           <p className="text-sm text-slate-500">Secure payment powered by PayPal</p>
                       </div>
-                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100" aria-label="Close payment form">
+                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100">
                           <X size={20} />
                       </button>
                   </div>
@@ -382,20 +452,23 @@ const Books: React.FC = () => {
                     </div>
                   </div>
 
-                  {/* PayPal Button - Simulated for now */}
-                  {/* TODO: Replace with real PayPal button integration */}
-                  <PayPalScriptProvider options={{ 
-                    "clientId": import.meta.env.VITE_PAYPAL_CLIENT_ID,
-                    components: "hosted-buttons",
-                    "enable-funding": "venmo",
-                    currency: "USD"
-                  }}>
-                      <PayPalButtonWrapper 
-                        selectedBook={selectedBook} 
-                        onSuccess={handlePaymentComplete}
-                        onError={() => setPurchaseState('error')}
-                      />
-                  </PayPalScriptProvider>
+                  {/* PayPal Button */}
+                  {selectedBook?.paypalButtonId ? (
+                      <div className="mb-4">
+                        <PayPalHostedButton hostedButtonId={selectedBook.paypalButtonId} />
+                      </div>
+                  ) : (
+                    // Fallback for books without hosted button (simulated)
+                    <button 
+                        onClick={handlePaymentComplete}
+                        className="w-full bg-[#FFC439] hover:bg-[#F4BB2E] text-brand-dark px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 mb-4"
+                    >
+                        <span className="italic font-serif font-black pr-1">Pay</span>
+                        <span className="italic font-serif font-black text-blue-800">Pal</span>
+                        <span className="border-l border-black/10 h-6 mx-1"></span>
+                        <span>Pay ${selectedBook?.price.toFixed(2)}</span>
+                    </button>
+                  )}
 
                   <button 
                     onClick={() => setPurchaseState('input_email')}
@@ -522,7 +595,8 @@ const Books: React.FC = () => {
             {filteredBooks.map((book, index) => (
               <div 
                 key={book.id}
-                className={`group cursor-pointer flex flex-col h-full animate-fade-in-up delay-${(index % 4) * 100}`}
+                className={`group cursor-pointer flex flex-col h-full animate-fade-in-up`}
+                style={{ animationDelay: `${(index % 4) * 100}ms` }}
                 onClick={() => setSelectedBook(book)}
               >
                 <div className="bg-slate-50 rounded-2xl p-8 mb-6 relative overflow-hidden transition-all duration-300 group-hover:shadow-card group-hover:-translate-y-1 border border-slate-100">
@@ -557,38 +631,6 @@ const Books: React.FC = () => {
           </div>
         )}
       </div>
-    </div>
-  );
-};
-
-// Wrapper component to handle loading state
-const PayPalButtonWrapper: React.FC<{
-  selectedBook: Book;
-  onSuccess: (details: any) => void;
-  onError: () => void;
-}> = ({ selectedBook, onSuccess, onError }) => {
-  const [{ isPending }] = usePayPalScriptReducer();
-
-  return (
-    <div className="w-full mb-4 relative min-h-[150px]">
-      {isPending && (
-         <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50 rounded-lg border border-slate-100/50 z-10">
-          <Loader2 className="w-8 h-8 text-brand-primary animate-spin mb-2" />
-          <p className="text-sm text-slate-400 font-medium">Loading secure payment...</p>
-        </div>
-      )}
-      {selectedBook.paypalHostedButtonId ? (
-        <PayPalButtons 
-          style={{ layout: "vertical", shape: "rect", label: "pay" }}
-          className={isPending ? "opacity-0" : "opacity-100 transition-opacity duration-300"}
-          hostedButtonId={selectedBook.paypalHostedButtonId}
-          msg-content="description"
-        />
-      ) : (
-        <div className="text-red-500 text-center p-4">
-          Payment ID missing for this item.
-        </div>
-      )}
     </div>
   );
 };
