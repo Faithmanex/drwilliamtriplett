@@ -207,8 +207,9 @@ const Home: React.FC = () => {
             {serviceHighlights.map((service, idx) => (
               <div 
                 key={idx} 
-                className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-card transition-all duration-300 border border-slate-100 group flex flex-col h-full reveal-on-scroll"
-                style={{ transitionDelay: `${idx * 100}ms` }}
+                className={`bg-white p-8 rounded-2xl shadow-sm hover:shadow-card transition-all duration-300 border border-slate-100 group flex flex-col h-full reveal-on-scroll ${
+                  idx === 0 ? '' : idx === 1 ? 'delay-100' : idx === 2 ? 'delay-200' : 'delay-300'
+                }`}
               >
                 <div className="w-12 h-12 bg-brand-light rounded-xl flex items-center justify-center text-brand-primary mb-6 group-hover:scale-110 transition-transform">
                   {service.icon}

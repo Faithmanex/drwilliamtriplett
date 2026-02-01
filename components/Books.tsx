@@ -4,8 +4,6 @@ import { ShoppingBag, Star, Info, CheckCircle, ArrowLeft, BookOpen, ShieldCheck,
 import { Book } from '../types';
 import PayPalHostedButton from './PayPalHostedButton';
 
-
-
 // Mock Data Catalog
 export const booksCatalog: Book[] = [
   {
@@ -136,7 +134,7 @@ const Books: React.FC = () => {
                 
                  (async () => {
                     try {
-                      const response = await fetch('/.netlify/functions/book-purchase', {
+                      const response = await fetch('/api/book-purchase', {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json',
@@ -205,7 +203,7 @@ const Books: React.FC = () => {
     setPurchaseState('processing');
     
     try {
-      const response = await fetch('/.netlify/functions/book-purchase', {
+      const response = await fetch('/api/book-purchase', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -381,7 +379,12 @@ const Books: React.FC = () => {
                           <h3 className="text-lg font-bold text-brand-dark font-serif">Where should we send your book?</h3>
                           <p className="text-sm text-slate-500">Enter your email address to receive the secure digital access.</p>
                       </div>
-                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100">
+                      <button 
+                        onClick={handleCancelPurchase} 
+                        className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100"
+                        aria-label="Close purchase form"
+                        title="Close"
+                      >
                           <X size={20} />
                       </button>
                   </div>
@@ -435,7 +438,12 @@ const Books: React.FC = () => {
                           <h3 className="text-lg font-bold text-brand-dark font-serif">Complete Your Purchase</h3>
                           <p className="text-sm text-slate-500">Secure payment powered by PayPal</p>
                       </div>
-                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100">
+                      <button 
+                        onClick={handleCancelPurchase} 
+                        className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100"
+                        aria-label="Close payment form"
+                        title="Close"
+                      >
                           <X size={20} />
                       </button>
                   </div>
@@ -595,8 +603,7 @@ const Books: React.FC = () => {
             {filteredBooks.map((book, index) => (
               <div 
                 key={book.id}
-                className={`group cursor-pointer flex flex-col h-full animate-fade-in-up`}
-                style={{ animationDelay: `${(index % 4) * 100}ms` }}
+                className={`group cursor-pointer flex flex-col h-full animate-fade-in-up delay-${(index % 4) * 100}`}
                 onClick={() => setSelectedBook(book)}
               >
                 <div className="bg-slate-50 rounded-2xl p-8 mb-6 relative overflow-hidden transition-all duration-300 group-hover:shadow-card group-hover:-translate-y-1 border border-slate-100">

@@ -62,7 +62,7 @@ const PayPalHostedButton: React.FC<PayPalHostedButtonProps> = ({ hostedButtonId 
   }, [hostedButtonId]);
 
   return (
-    <div className="relative w-full" style={{ minHeight: '300px' }}>
+    <div className="relative w-full min-h-[300px]">
         {isLoading && (
             <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50/50 rounded-lg border border-slate-100/50 backdrop-blur-sm z-10">
                 <Loader2 className="w-8 h-8 text-brand-primary animate-spin mb-2" />
