@@ -1,4 +1,4 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
 const SYSTEM_INSTRUCTION = `Triplett Professional Intelligence Ecosystem – Chatbot System Instructions
 
@@ -33,48 +33,51 @@ When responding:
 • Maintain alignment with Dr. Triplett’s interdisciplinary expertise, professional ethics, and leadership philosophy`;
 
 export default async function handler(req, res) {
-  // Only allow POST requests
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method Not Allowed" });
   }
 
   try {
-    const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
-    // User requested gemini-2.5-flash
-    const model = genAI.getGenerativeModel({ 
-      model: "gemini-2.5-flash",
-      systemInstruction: SYSTEM_INSTRUCTION
-    });
-
-    const { messages } = req.body;
+    const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
+    const body = typeof req.body === 'string' ? JSON.parse(req.body) : req.body;
+    const { messages } = body;
     const incomingMessages = messages || [];
 
-    // Convert chat history to Gemini format
-    // The frontend sends: { role: 'user' | 'assistant', content: string }
-    // Gemini expects: { role: 'user' | 'model', parts: [{ text: string }] }
-    const history = incomingMessages.slice(0, -1).map(msg => ({
-      role: msg.role === 'assistant' ? 'model' : 'user',
-      parts: [{ text: msg.content }]
-    }));
-
-    const lastMessage = incomingMessages[incomingMessages.length - 1];
+    // Convert messages for Gemini
+    // @google/genai expects contents as strings or structured parts
+    // We will concat history for simple context or use multi-turn chat if the SDK supports it nicely.
+    // The user example just used `generateContent`. For chat context, we can format the history.
     
-    if (!lastMessage) {
-        return res.status(400).json({ error: "No messages provided" });
-    }
+    // Construct the prompt with history
+    const historyText = incomingMessages.map(m => `${m.role === 'user' ? 'User' : 'Assistant'}: ${m.content}`).join("\n");
+    const fullPrompt = `${SYSTEM_INSTRUCTION}\n\nChat History:\n${historyText}\n\nAssistant:`;
 
-    const chat = model.startChat({
-      history: history,
+    // Enable streaming
+    // Vercel serverless functions (Node runtime) support streaming via res.write
+    res.writeHead(200, {
+      'Content-Type': 'text/plain; charset=utf-8',
+      'Transfer-Encoding': 'chunked'
     });
 
-    const result = await chat.sendMessage(lastMessage.content);
-    const response = await result.response;
-    const text = response.text();
+    const result = await ai.models.generateContentStream({
+      model: "gemini-2.5-flash",
+      contents: [{ role: 'user', parts: [{ text: fullPrompt }] }],
+    });
 
-    return res.status(200).json({ response: text });
+    for await (const chunk of result.stream) {
+      const chunkText = chunk.text();
+      res.write(chunkText);
+    }
+    
+    res.end();
 
   } catch (error) {
     console.error("Error generating content:", error);
-    return res.status(500).json({ error: "Failed to generate response", details: error.message });
+    // If headers haven't been sent, send error json
+    if (!res.headersSent) {
+        return res.status(500).json({ error: "Failed to generate response", details: error.message });
+    } else {
+        res.end();
+    }
   }
 }

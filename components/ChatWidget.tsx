@@ -29,11 +29,15 @@ const ChatWidget: React.FC = () => {
 
     const userMessage: Message = { role: 'user', content: input };
     setMessages(prev => [...prev, userMessage]);
+    
+    // Create placeholder for bot message
+    const botMessage: Message = { role: 'assistant', content: '' };
+    setMessages(prev => [...prev, botMessage]);
+    
     setInput('');
     setIsLoading(true);
 
     try {
-      // Prepare context: last 10 messages to keep request size reasonable
       const contextMessages = messages.slice(-10).map(m => ({ role: m.role, content: m.content }));
       contextMessages.push({ role: 'user', content: input });
 
@@ -44,13 +48,39 @@ const ChatWidget: React.FC = () => {
       });
 
       if (!response.ok) throw new Error('Failed to get response');
+      if (!response.body) throw new Error('ReadableStream not supported');
 
-      const data = await response.json();
-      const botMessage: Message = { role: 'assistant', content: data.response };
-      setMessages(prev => [...prev, botMessage]);
+      const reader = response.body.getReader();
+      const decoder = new TextDecoder();
+      let done = false;
+
+      while (!done) {
+        const { value, done: doneReading } = await reader.read();
+        done = doneReading;
+        const chunkValue = decoder.decode(value, { stream: !done });
+        
+        setMessages(prev => {
+          const newMessages = [...prev];
+          const lastMsg = newMessages[newMessages.length - 1];
+          if (lastMsg.role === 'assistant') {
+            lastMsg.content += chunkValue;
+          }
+          return newMessages;
+        });
+      }
     } catch (error) {
       console.error('Chat error:', error);
-      setMessages(prev => [...prev, { role: 'assistant', content: "I apologize, but I am currently experiencing technical difficulties. Please try again later." }]);
+      setMessages(prev => {
+          // If error, append error message or replace the empty one
+          const newMessages = [...prev];
+          const lastMsg = newMessages[newMessages.length - 1];
+          if (lastMsg.role === 'assistant' && lastMsg.content === '') {
+              lastMsg.content = "I apologize, but I am currently experiencing technical difficulties. Please try again later.";
+          } else {
+               newMessages.push({ role: 'assistant', content: "\n\n[System Error: Connection interrupted]" });
+          }
+          return newMessages;
+      });
     } finally {
       setIsLoading(false);
     }
