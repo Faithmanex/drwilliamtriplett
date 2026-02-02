@@ -47,7 +47,20 @@ const ChatWidget: React.FC = () => {
         body: JSON.stringify({ messages: contextMessages }),
       });
 
-      if (!response.ok) throw new Error('Failed to get response');
+      if (!response.ok) {
+        let errorData;
+        try {
+          // Clone response to try reading as JSON first
+          errorData = await response.clone().json();
+        } catch (e) {
+          // If JSON fails, read as text (e.g. from Vercel timeout/504)
+          const text = await response.text();
+          errorData = { error: text || `Server responded with ${response.status}` };
+        }
+        console.error(`Chat API Error: ${response.status} ${response.statusText}`, errorData);
+        throw new Error(errorData.error || `Server responded with ${response.status}`);
+      }
+
       if (!response.body) throw new Error('ReadableStream not supported');
 
       const reader = response.body.getReader();
@@ -62,22 +75,28 @@ const ChatWidget: React.FC = () => {
         setMessages(prev => {
           const newMessages = [...prev];
           const lastMsg = newMessages[newMessages.length - 1];
-          if (lastMsg.role === 'assistant') {
+          // Ensure we are appending to the last assistant message
+          if (lastMsg && lastMsg.role === 'assistant') {
             lastMsg.content += chunkValue;
           }
           return newMessages;
         });
       }
-    } catch (error) {
-      console.error('Chat error:', error);
+    } catch (error: any) {
+      console.error('Chat Widget Error:', error);
       setMessages(prev => {
-          // If error, append error message or replace the empty one
           const newMessages = [...prev];
           const lastMsg = newMessages[newMessages.length - 1];
-          if (lastMsg.role === 'assistant' && lastMsg.content === '') {
-              lastMsg.content = "I apologize, but I am currently experiencing technical difficulties. Please try again later.";
+          const errorText = "\n\n[System: Connection Error. Please try again.]";
+          
+          if (lastMsg && lastMsg.role === 'assistant') {
+              if (lastMsg.content === '') {
+                  lastMsg.content = "I apologize, but I am encountering a connection issue. Please verify your network or try again later.";
+              } else {
+                  lastMsg.content += errorText;
+              }
           } else {
-               newMessages.push({ role: 'assistant', content: "\n\n[System Error: Connection interrupted]" });
+               newMessages.push({ role: 'assistant', content: "I apologize, but I am unable to connect to the server right now. Please check your connection." });
           }
           return newMessages;
       });
