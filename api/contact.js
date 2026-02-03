@@ -2,16 +2,13 @@ import { Resend } from "resend";
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-export async function handler(event) {
-  if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: "Method not allowed" }),
-    };
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const { name, email, subject, message } = JSON.parse(event.body);
+    const { name, email, subject, message } = req.body;
 
     const emailHtml = `
       <div style="font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif; max-width: 600px; margin: 0 auto; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden;">
@@ -71,15 +68,9 @@ export async function handler(event) {
       html: emailHtml,
     });
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true }),
-    };
+    return res.status(200).json({ success: true });
   } catch (err) {
     console.error("Email sending error:", err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ success: false, error: "Email failed" }),
-    };
+    return res.status(500).json({ success: false, error: "Email failed" });
   }
 }

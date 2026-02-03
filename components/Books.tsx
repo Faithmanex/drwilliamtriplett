@@ -136,7 +136,7 @@ const Books: React.FC = () => {
                 
                  (async () => {
                     try {
-                      const response = await fetch('/.netlify/functions/book-purchase', {
+                      const response = await fetch('/api/book-purchase', {
                         method: 'POST',
                         headers: {
                           'Content-Type': 'application/json',
@@ -205,7 +205,7 @@ const Books: React.FC = () => {
     setPurchaseState('processing');
     
     try {
-      const response = await fetch('/.netlify/functions/book-purchase', {
+      const response = await fetch('/api/book-purchase', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',

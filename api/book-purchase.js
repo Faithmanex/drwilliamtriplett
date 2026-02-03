@@ -9,20 +9,17 @@ const downloadUrls = {
   "fractured-foundations": process.env.DOWNLOAD_URL_FRACTURED_FOUNDATIONS || "#",
 };
 
-export async function handler(event) {
-  if (event.httpMethod !== "POST") {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ error: "Method not allowed" }),
-    };
+export default async function handler(req, res) {
+  if (req.method !== "POST") {
+    return res.status(405).json({ error: "Method not allowed" });
   }
 
   try {
-    const { email, bookId, bookTitle, bookSubtitle, price } = JSON.parse(event.body);
+    const { email, bookId, bookTitle, bookSubtitle, price } = req.body;
     const downloadUrl = downloadUrls[bookId] || "#";
     
-    // Get country info from Netlify headers
-    const countryCode = event.headers["x-country-code"] || "US";
+    // Get country info from Vercel headers
+    const countryCode = req.headers["x-vercel-ip-country"] || "US";
     const flagEmoji = countryCode
       .toUpperCase()
       .replace(/./g, (char) => String.fromCodePoint(127397 + char.charCodeAt(0)));
@@ -122,15 +119,9 @@ export async function handler(event) {
       html: adminEmailHtml,
     });
 
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true }),
-    };
+    return res.status(200).json({ success: true });
   } catch (err) {
     console.error("Email sending error:", err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ success: false, error: "Email failed" }),
-    };
+    return res.status(500).json({ success: false, error: "Email failed" });
   }
 }
