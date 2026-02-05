@@ -57,7 +57,6 @@ const Services: React.FC = () => {
             <div 
               key={index} 
               className="bg-white rounded-2xl p-8 shadow-card border border-slate-100 hover:border-brand-primary/20 transition-all duration-300 flex flex-col h-full reveal-on-scroll"
-              style={{ transitionDelay: `${index * 100}ms` }}
             >
               <div className="flex items-center gap-4 mb-8">
                 <div className="w-12 h-12 rounded-xl bg-brand-light flex items-center justify-center text-brand-primary shadow-sm">

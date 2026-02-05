@@ -4,9 +4,6 @@ const resend = new Resend(process.env.RESEND_API_KEY);
 
 const downloadUrls = {
   "harbor-hopes": process.env.DOWNLOAD_URL_HARBOR_HOPES || "#",
-  "ethical-algorithm": process.env.DOWNLOAD_URL_ETHICAL_ALGORITHM || "#",
-  "sacred-signals": process.env.DOWNLOAD_URL_SACRED_SIGNALS || "#",
-  "fractured-foundations": process.env.DOWNLOAD_URL_FRACTURED_FOUNDATIONS || "#",
 };
 
 export default async function handler(req, res) {

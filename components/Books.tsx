@@ -39,47 +39,6 @@ export const booksCatalog: Book[] = [
       }
     ],
     paypalButtonId: "3WD8BPY7FJDXS"
-  },
-  {
-    id: 'ethical-algorithm',
-    title: "The Ethical Algorithm",
-    subtitle: "Leadership in the Age of AI",
-    description: "Navigating the moral complexities of technological advancement in organizational leadership.",
-    longDescription: "As artificial intelligence reshapes the landscape of decision-making, leaders face unprecedented ethical dilemmas. This volume provides a theological and philosophical lens for evaluating technology, ensuring that innovation serves human dignity rather than diminishing it. Essential reading for executives and educators alike.",
-    price: 29.95,
-    imageUrl: "bg-slate-800",
-    features: ["Paperback", "310 Pages", "Digital Companion Access"],
-    pubDate: "2024",
-    reviews: [
-        {
-            author: "Tech & Faith Weekly",
-            role: "Editorial Review",
-            content: "A timely intervention. Triplett reminds us that algorithms are not neutral and that leadership requires moral imagination in the digital age.",
-            rating: 4
-        }
-    ]
-  },
-  {
-    id: 'sacred-signals',
-    title: "Sacred Signals",
-    subtitle: "Hearing the Divine in a Noisy World",
-    description: "A guide to spiritual formation and quieting the mind amidst the chaos of modern life.",
-    longDescription: "Noise is the currency of the modern age. Sacred Signals argues that the capacity to hear—truly hear—is the first requirement of leadership and spiritual maturity. Dr. Triplett offers practical disciplines for re-tuning our attention to what matters most.",
-    price: 19.95,
-    imageUrl: "bg-brand-accent",
-    features: ["Softcover", "180 Pages", "Devotional Format"],
-    pubDate: "2022"
-  },
-  {
-    id: 'fractured-foundations',
-    title: "Fractured Foundations",
-    subtitle: "Rebuilding Institutional Trust",
-    description: "Strategies for leaders repairing broken systems and restoring community faith.",
-    longDescription: "Trust is the hardest currency to earn and the easiest to lose. This academic yet accessible work analyzes the collapse of institutional trust in the 21st century and maps a path forward for leaders committed to transparency, accountability, and structural renewal.",
-    price: 34.50,
-    imageUrl: "bg-emerald-900",
-    features: ["Hardcover", "400 Pages", "Case Studies Included"],
-    pubDate: "2021"
   }
 ];
 
@@ -381,7 +340,7 @@ const Books: React.FC = () => {
                           <h3 className="text-lg font-bold text-brand-dark font-serif">Where should we send your book?</h3>
                           <p className="text-sm text-slate-500">Enter your email address to receive the secure digital access.</p>
                       </div>
-                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100">
+                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100" aria-label="Cancel purchase">
                           <X size={20} />
                       </button>
                   </div>
@@ -435,7 +394,7 @@ const Books: React.FC = () => {
                           <h3 className="text-lg font-bold text-brand-dark font-serif">Complete Your Purchase</h3>
                           <p className="text-sm text-slate-500">Secure payment powered by PayPal</p>
                       </div>
-                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100">
+                      <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100" aria-label="Cancel purchase">
                           <X size={20} />
                       </button>
                   </div>
@@ -502,7 +461,7 @@ const Books: React.FC = () => {
                     Thank you for your purchase! A download link for <strong>{selectedBook.title}</strong> has been sent to <span className="font-bold text-slate-900">{userEmail}</span>.
                   </p>
                   <a 
-                    href={import.meta.env[`VITE_DOWNLOAD_URL_${selectedBook.id.toUpperCase().replace(/-/g, '_')}`] || '#'}
+                    href="https://drwilliamtriplett.com/secure-cloud/pdf/harbor-hopes-digital.pdf"
                     target="_blank"
                     rel="noopener noreferrer"
                     className="inline-flex items-center gap-2 bg-brand-primary text-white px-8 py-3 rounded-full font-bold hover:bg-brand-dark transition-colors mb-4 shadow-lg"
@@ -595,8 +554,7 @@ const Books: React.FC = () => {
             {filteredBooks.map((book, index) => (
               <div 
                 key={book.id}
-                className={`group cursor-pointer flex flex-col h-full animate-fade-in-up`}
-                style={{ animationDelay: `${(index % 4) * 100}ms` }}
+                className="group cursor-pointer flex flex-col h-full animate-fade-in-up"
                 onClick={() => setSelectedBook(book)}
               >
                 <div className="bg-slate-50 rounded-2xl p-8 mb-6 relative overflow-hidden transition-all duration-300 group-hover:shadow-card group-hover:-translate-y-1 border border-slate-100">

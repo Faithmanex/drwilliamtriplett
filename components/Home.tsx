@@ -207,7 +207,6 @@ const Home: React.FC = () => {
               <div 
                 key={idx} 
                 className="bg-slate-900/40 backdrop-blur-sm p-8 rounded-2xl shadow-sm hover:shadow-glow transition-all duration-300 border border-slate-800/50 group flex flex-col h-full reveal-on-scroll"
-                style={{ transitionDelay: `${idx * 100}ms` }}
               >
                 <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center text-brand-accent mb-6 group-hover:scale-110 transition-transform">
                   {service.icon}
