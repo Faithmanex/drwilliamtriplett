@@ -34,14 +34,19 @@ const About: React.FC = () => {
           <div className="w-full lg:w-5/12 relative group reveal-on-scroll">
             <div className="absolute top-6 left-6 w-full h-full border-2 border-slate-100 rounded-2xl z-0 transition-transform duration-500 group-hover:translate-x-2 group-hover:translate-y-2"></div>
             <div className="relative z-10 rounded-2xl overflow-hidden shadow-2xl transition-transform duration-500 hover:scale-105 bg-slate-200">
+              {/* Animated Skeleton Loader */}
+              {!isImageLoaded && (
+                <div className="absolute inset-0 bg-gradient-to-r from-slate-200 via-slate-300 to-slate-200 animate-pulse">
+                  <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/30 to-transparent animate-[shimmer_2s_infinite]"></div>
+                </div>
+              )}
               <img
                 src="https://res.cloudinary.com/dtbdixfgf/image/upload/f_auto,q_auto,w_800/v1768235662/WT-30_ei1uny.jpg"
                 alt="Dr. William Triplett - Strategic Advisor and Scholar"
-                loading="eager"
-                fetchPriority="high"
+                loading="lazy"
                 onLoad={() => setIsImageLoaded(true)}
                 className={`w-full h-auto object-cover transition-all duration-1000 scale-x-[-1] ${
-                  isImageLoaded ? "opacity-100 blur-0" : "opacity-0 blur-lg"
+                  isImageLoaded ? "opacity-100 blur-0 scale-100" : "opacity-0 blur-lg scale-95"
                 }`}
               />
             </div>

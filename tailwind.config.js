@@ -24,7 +24,16 @@ export default {
         'soft': '0 4px 20px -2px rgba(0, 0, 0, 0.05)',
         'card': '0 10px 40px -10px rgba(0, 0, 0, 0.08)',
         'glow': '0 0 20px rgba(202, 138, 4, 0.3)',
-      }
+      },
+      keyframes: {
+        shimmer: {
+          '0%': { transform: 'translateX(-100%)' },
+          '100%': { transform: 'translateX(100%)' },
+        },
+      },
+      animation: {
+        shimmer: 'shimmer 2s infinite',
+      },
     }
   },
   plugins: [],

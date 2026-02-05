@@ -1,5 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Loader2, Sparkles, User, Bot } from 'lucide-react';
+import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -12,7 +14,7 @@ const ChatWidget: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: 'Welcome to the Triplett Professional Intelligence Ecosystem. I am here to assist you with inquiries related to Dr. William Triplett\'s expertise in leadership, cybersecurity, AI strategy, doctoral education, and organizational development. How may I help you today?',
+      content: 'Hi! I\'m here to help with questions about Dr. Triplett\'s work in leadership, cybersecurity, AI, doctoral education, and organizational development. What can I help you with today?',
       timestamp: new Date(),
     },
   ]);
@@ -77,12 +79,13 @@ const ChatWidget: React.FC = () => {
 
       if (reader) {
         // Add empty assistant message that we'll update
+        const messageStartTime = new Date();
         setMessages((prev) => [
           ...prev,
           {
             role: 'assistant',
             content: '',
-            timestamp: new Date(),
+            timestamp: messageStartTime,
           },
         ]);
 
@@ -91,7 +94,7 @@ const ChatWidget: React.FC = () => {
           if (done) break;
 
           const chunk = decoder.decode(value);
-          const lines = chunk.split('\n');
+          const lines = chunk.split('\\n');
 
           for (const line of lines) {
             if (line.startsWith('data: ')) {
@@ -104,13 +107,13 @@ const ChatWidget: React.FC = () => {
                 
                 if (data.text) {
                   assistantMessage += data.text;
-                  // Update the last message with accumulated text
+                  // Batch updates for smoother streaming
                   setMessages((prev) => {
                     const newMessages = [...prev];
                     newMessages[newMessages.length - 1] = {
                       role: 'assistant',
                       content: assistantMessage,
-                      timestamp: new Date(),
+                      timestamp: messageStartTime,
                     };
                     return newMessages;
                   });
@@ -174,14 +177,14 @@ const ChatWidget: React.FC = () => {
           <div className="bg-gradient-to-r from-brand-primary to-brand-dark text-white p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-10 h-10 bg-white/20 rounded-full flex items-center justify-center">
-                  <Sparkles size={20} />
+                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-serif font-bold text-brand-dark text-sm">
+                  WT
                 </div>
                 <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
               </div>
               <div>
-                <h3 className="font-bold text-sm">Triplett AI Ecosystem</h3>
-                <p className="text-xs text-white/80">Professional Intelligence Assistant</p>
+                <h3 className="font-bold text-sm">Triplett Professional Intelligence Ecosystem</h3>
+                <p className="text-xs text-white/80">AI Assistant</p>
               </div>
             </div>
             <button
@@ -204,10 +207,10 @@ const ChatWidget: React.FC = () => {
                   className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
                     msg.role === 'user'
                       ? 'bg-brand-primary text-white'
-                      : 'bg-white border-2 border-brand-primary/20 text-brand-primary'
+                      : 'bg-white border-2 border-brand-primary/20 text-brand-primary font-serif font-bold text-xs'
                   }`}
                 >
-                  {msg.role === 'user' ? <User size={16} /> : <Bot size={16} />}
+                  {msg.role === 'user' ? <User size={16} /> : 'WT'}
                 </div>
                 <div
                   className={`flex-1 max-w-[80%] ${
@@ -221,7 +224,15 @@ const ChatWidget: React.FC = () => {
                         : 'bg-white text-slate-800 rounded-tl-sm shadow-sm border border-slate-100'
                     }`}
                   >
-                    <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                    {msg.role === 'user' ? (
+                      <p className="text-sm leading-relaxed whitespace-pre-wrap">{msg.content}</p>
+                    ) : (
+                      <div className="text-sm leading-relaxed prose prose-sm max-w-none prose-headings:font-serif prose-headings:text-brand-dark prose-p:text-slate-700 prose-strong:text-brand-dark prose-a:text-brand-primary prose-a:no-underline hover:prose-a:underline prose-code:text-brand-primary prose-code:bg-slate-100 prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-pre:bg-slate-900 prose-pre:text-slate-100 prose-ul:list-disc prose-ol:list-decimal prose-li:text-slate-700">
+                        <ReactMarkdown remarkPlugins={[remarkGfm]}>
+                          {msg.content}
+                        </ReactMarkdown>
+                      </div>
+                    )}
                   </div>
                   <p className="text-xs text-slate-400 mt-1 px-1">
                     {msg.timestamp.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' })}
