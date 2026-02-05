@@ -7,7 +7,6 @@ import About from './components/About';
 import Services from './components/Services';
 import Books from './components/Books';
 import Contact from './components/Contact';
-import ChatWidget from './components/ChatWidget';
 
 // Scroll to top on route change
 const ScrollToTop: React.FC = () => {
@@ -70,7 +69,6 @@ const App: React.FC = () => {
           </Routes>
         </main>
         <Footer />
-        <ChatWidget />
       </div>
     </HashRouter>
   );
