@@ -50,7 +50,7 @@ export default async function handler(req, res) {
 
     // 1. Send download email to the buyer
     await resend.emails.send({
-      from: "Dr. William Triplett <onboarding@resend.dev>",
+      from: "Dr. William Triplett <onboarding@drwilliamtriplett.com>",
       to: [email],
       subject: `Your Resource: ${bookTitle}`,
       html: emailHtml,

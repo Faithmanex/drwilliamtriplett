@@ -1,6 +1,8 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import { GoogleGenAI } from "@google/genai";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY);
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY
+});
 
 const SYSTEM_INSTRUCTION = `Identity: You are the Triplett Professional Intelligence Ecosystem, a unified, role-aware artificial intelligence aligned to the professional identity of Dr. William J. Triplett, PhD.
 
@@ -50,42 +52,53 @@ export default async function handler(req, res) {
       return res.status(400).json({ error: "Message is required" });
     }
 
-    // Initialize the model with system instructions
-    const model = genAI.getGenerativeModel({
-      model: "gemini-2.5-flash",
-      systemInstruction: SYSTEM_INSTRUCTION,
-    });
-
-    // Build conversation history for context
-    const history = conversationHistory.map((msg) => ({
-      role: msg.role === "user" ? "user" : "model",
-      parts: [{ text: msg.content }],
-    }));
-
-    // Start chat with history
-    const chat = model.startChat({
-      history: history,
-      generationConfig: {
-        temperature: 0.7,
-        topP: 0.95,
-        topK: 40,
-        maxOutputTokens: 2048,
+    // Build conversation history
+    const contents = [
+      {
+        role: "user",
+        parts: [{ text: SYSTEM_INSTRUCTION }]
       },
+      {
+        role: "model",
+        parts: [{ text: "Understood. I am the Triplett Professional Intelligence Ecosystem, ready to assist with inquiries related to Dr. William Triplett's expertise." }]
+      }
+    ];
+
+    // Add conversation history
+    conversationHistory.forEach((msg) => {
+      contents.push({
+        role: msg.role === "user" ? "user" : "model",
+        parts: [{ text: msg.content }]
+      });
     });
 
-    // Send message and get streaming response
-    const result = await chat.sendMessageStream(message);
+    // Add current message
+    contents.push({
+      role: "user",
+      parts: [{ text: message }]
+    });
 
     // Set headers for streaming
     res.setHeader("Content-Type", "text/event-stream");
     res.setHeader("Cache-Control", "no-cache");
     res.setHeader("Connection", "keep-alive");
 
+    // Generate streaming response
+    const stream = await ai.models.generateContentStream({
+      model: "gemini-2.5-flash",
+      contents: contents,
+      config: {
+        temperature: 0.7,
+        topP: 0.95,
+        topK: 40,
+        maxOutputTokens: 2048,
+      }
+    });
+
     // Stream the response
-    for await (const chunk of result.stream) {
-      const text = chunk.text();
-      if (text) {
-        res.write(`data: ${JSON.stringify({ text })}\n\n`);
+    for await (const chunk of stream) {
+      if (chunk.text) {
+        res.write(`data: ${JSON.stringify({ text: chunk.text })}\n\n`);
       }
     }
 
