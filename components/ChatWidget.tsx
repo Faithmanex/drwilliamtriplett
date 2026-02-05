@@ -177,8 +177,8 @@ const ChatWidget: React.FC = () => {
           <div className="bg-gradient-to-r from-brand-primary to-brand-dark text-white p-4 flex items-center justify-between">
             <div className="flex items-center gap-3">
               <div className="relative">
-                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center font-serif font-bold text-brand-dark text-sm">
-                  WT
+                <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden">
+                  <img src="/static/AI_icon.png" alt="AI" className="w-full h-full object-cover" />
                 </div>
                 <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
               </div>
@@ -204,13 +204,17 @@ const ChatWidget: React.FC = () => {
                 className={`flex gap-3 ${msg.role === 'user' ? 'flex-row-reverse' : 'flex-row'}`}
               >
                 <div
-                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center ${
+                  className={`flex-shrink-0 w-8 h-8 rounded-full flex items-center justify-center overflow-hidden ${
                     msg.role === 'user'
                       ? 'bg-brand-primary text-white'
-                      : 'bg-white border-2 border-brand-primary/20 text-brand-primary font-serif font-bold text-xs'
+                      : 'bg-white border-2 border-brand-primary/20'
                   }`}
                 >
-                  {msg.role === 'user' ? <User size={16} /> : 'WT'}
+                  {msg.role === 'user' ? (
+                    <User size={16} />
+                  ) : (
+                    <img src="/static/AI_icon.png" alt="AI" className="w-full h-full object-cover" />
+                  )}
                 </div>
                 <div
                   className={`flex-1 max-w-[80%] ${
@@ -275,9 +279,6 @@ const ChatWidget: React.FC = () => {
                 <Send size={18} />
               </button>
             </div>
-            <p className="text-xs text-slate-400 mt-2 text-center">
-              Powered by Gemini AI • For direct contact, use the form above
-            </p>
           </div>
         </div>
       )}
