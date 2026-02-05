@@ -65,14 +65,13 @@ const Home: React.FC = () => {
           </div>
 
           <h1 className="font-serif text-4xl md:text-6xl lg:text-7xl font-bold text-white mb-6 leading-[1.1] tracking-tight drop-shadow-2xl reveal-on-scroll">
-            Faith. Leadership. <br />
-            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-yellow-200 italic pr-2">
-              Human-Centered Progress.
+            <span className="text-transparent bg-clip-text bg-gradient-to-r from-brand-accent to-yellow-200 italic">
+              Leadership · Responsibility · Change
             </span>
           </h1>
           
           <p className="font-sans text-lg md:text-xl text-slate-300 mb-10 font-light max-w-2xl mx-auto leading-relaxed reveal-on-scroll delay-100">
-            Supporting leaders, faculty, and institutions to flourish amid complexity, responsibility, and change.
+            Advising leaders, faculty, and institutions through complexity, responsibility, and change.
           </p>
 
           <div className="flex flex-col sm:flex-row justify-center gap-4 w-full sm:w-auto reveal-on-scroll delay-200">
@@ -100,24 +99,24 @@ const Home: React.FC = () => {
       </section>
 
       {/* Featured Book Spotlight: Harbors of Hope */}
-      <section className="py-24 bg-slate-50 relative overflow-hidden">
+      <section className="py-24 bg-brand-dark relative overflow-hidden">
          {/* Background Decor */}
-         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-200 to-transparent"></div>
-         <div className="absolute -left-40 top-40 w-80 h-80 bg-brand-primary/5 rounded-full blur-3xl mix-blend-multiply"></div>
-         <div className="absolute -right-40 bottom-40 w-80 h-80 bg-brand-accent/5 rounded-full blur-3xl mix-blend-multiply"></div>
+         <div className="absolute top-0 left-0 w-full h-px bg-gradient-to-r from-transparent via-slate-800 to-transparent"></div>
+         <div className="absolute -left-40 top-40 w-80 h-80 bg-brand-primary/10 rounded-full blur-3xl mix-blend-lighten"></div>
+         <div className="absolute -right-40 bottom-40 w-80 h-80 bg-brand-accent/10 rounded-full blur-3xl mix-blend-lighten"></div>
 
          <div className="max-w-7xl mx-auto px-6 relative z-10">
           
           {/* Section Header */}
           <div className="text-center mb-16 reveal-on-scroll">
             <span className="text-brand-accent font-bold tracking-[0.2em] uppercase text-xs mb-3 block">Latest Publication</span>
-            <h2 className="font-serif text-4xl md:text-5xl font-bold text-brand-dark mb-6">Featured Resource</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto text-lg font-light">
+            <h2 className="font-serif text-4xl md:text-5xl font-bold text-white mb-6">Featured Resource</h2>
+            <p className="text-slate-400 max-w-2xl mx-auto text-lg font-light">
               Explore Dr. Triplett's latest work on the intersection of faith, history, and freedom.
             </p>
           </div>
 
-          <div className="bg-white rounded-[2.5rem] p-8 md:p-12 shadow-xl shadow-slate-200/50 border border-slate-100 flex flex-col lg:flex-row items-center gap-12 reveal-on-scroll">
+          <div className="bg-slate-900/40 backdrop-blur-md rounded-[2.5rem] p-8 md:p-12 shadow-2xl shadow-black/20 border border-slate-800/50 flex flex-col lg:flex-row items-center gap-12 reveal-on-scroll">
             
             {/* Book Cover / Visual */}
             <div className="w-full lg:w-5/12 flex justify-center lg:justify-end">
@@ -126,40 +125,40 @@ const Home: React.FC = () => {
                 <div className="absolute inset-0 bg-brand-accent/20 blur-3xl rounded-full opacity-0 group-hover:opacity-40 transition-opacity duration-700"></div>
                 
                 {/* 3D Book Container */}
-                <div className="relative w-64 md:w-80 aspect-[2/3] shadow-2xl rounded-r-md transform transition-all duration-500 group-hover:rotate-y-[-5deg] group-hover:scale-105 origin-center">
+                <div className="relative w-64 md:w-80 aspect-[2/3] shadow-2xl shadow-black/50 rounded-r-md transform transition-all duration-500 group-hover:rotate-y-[-5deg] group-hover:scale-105 origin-center">
                    <img 
                       src={featuredBook.imageUrl} 
                       alt={`Book Cover: ${featuredBook.title} by Dr. William Triplett`}
                       className="absolute inset-0 w-full h-full object-cover rounded-r-md z-10" 
                    />
                    {/* Shine */}
-                   <div className="absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/20 pointer-events-none z-20 rounded-r-md"></div>
+                   <div className="absolute inset-0 bg-gradient-to-tr from-black/20 via-transparent to-white/10 pointer-events-none z-20 rounded-r-md"></div>
                 </div>
               </div>
             </div>
 
             {/* Book Details */}
             <div className="w-full lg:w-7/12 text-left">
-               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-primary/10 text-brand-primary text-xs font-bold uppercase tracking-wider mb-6">
+               <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-brand-accent/10 text-brand-accent text-xs font-bold uppercase tracking-wider mb-6">
                 <Star size={14} fill="currentColor" /> Editor's Choice
               </div>
               
-              <h3 className="font-serif text-3xl md:text-5xl font-bold text-brand-dark mb-4 leading-tight">
+              <h3 className="font-serif text-3xl md:text-5xl font-bold text-white mb-4 leading-tight">
                 {featuredBook.title}
               </h3>
-              <p className="font-sans text-xl text-slate-500 font-light italic mb-6">
+              <p className="font-sans text-xl text-slate-400 font-light italic mb-6">
                 {featuredBook.subtitle}
               </p>
 
-              <div className="text-lg text-slate-600 leading-relaxed mb-8">
+              <div className="text-lg text-slate-300 leading-relaxed mb-8">
                 <p>
                   {isExpanded ? featuredBook.longDescription : getTruncatedText(featuredBook.longDescription)}
                   {!isExpanded && (
-                     <span className="text-slate-400">... </span>
+                     <span className="text-slate-500">... </span>
                   )}
                   <button 
                     onClick={() => setIsExpanded(!isExpanded)}
-                    className="inline-flex items-center gap-1 text-brand-primary font-bold text-sm uppercase tracking-wide hover:text-brand-accent transition-colors focus:outline-none ml-1"
+                    className="inline-flex items-center gap-1 text-brand-accent font-bold text-sm uppercase tracking-wide hover:text-white transition-colors focus:outline-none ml-1"
                   >
                     {isExpanded ? "Read Less" : "Read More"}
                   </button>
@@ -169,8 +168,8 @@ const Home: React.FC = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
                 {featuredBook.features.slice(0,4).map((feature, i) => (
                   <div key={i} className="flex items-center gap-3">
-                    <CheckCircle size={20} className="text-green-600/80 flex-shrink-0" />
-                    <span className="text-sm font-medium text-slate-700">{feature}</span>
+                    <CheckCircle size={20} className="text-brand-accent/80 flex-shrink-0" />
+                    <span className="text-sm font-medium text-slate-300">{feature}</span>
                   </div>
                 ))}
               </div>
@@ -178,13 +177,13 @@ const Home: React.FC = () => {
               <div className="flex flex-col sm:flex-row gap-4">
                  <NavLink 
                    to="/books" 
-                   className="inline-flex items-center justify-center gap-2 bg-brand-dark text-white px-8 py-4 rounded-full font-bold text-lg hover:bg-brand-primary transition-all shadow-lg hover:shadow-xl hover:-translate-y-1"
+                   className="inline-flex items-center justify-center gap-2 bg-white text-brand-dark px-8 py-4 rounded-full font-bold text-lg hover:bg-brand-accent hover:text-brand-dark transition-all shadow-lg hover:shadow-white/10 hover:-translate-y-1"
                  >
                    Get Your Copy <ArrowRight size={18} />
                  </NavLink>
                  <NavLink 
                    to="/books" 
-                   className="inline-flex items-center justify-center gap-2 bg-slate-50 border border-slate-200 text-slate-700 px-8 py-4 rounded-full font-bold text-lg hover:bg-white hover:border-slate-300 transition-all"
+                   className="inline-flex items-center justify-center gap-2 bg-slate-800/50 border border-slate-700 text-slate-300 px-8 py-4 rounded-full font-bold text-lg hover:bg-slate-800 hover:text-white transition-all"
                  >
                    Read Excerpt
                  </NavLink>
@@ -196,25 +195,25 @@ const Home: React.FC = () => {
       </section>
 
       {/* Services Showcase */}
-      <section className="py-16 bg-brand-light border-t border-slate-100">
+      <section className="py-16 bg-[#0a0f1d] border-t border-slate-800">
         <div className="max-w-7xl mx-auto px-6">
           <div className="text-center mb-12 reveal-on-scroll">
-            <h2 className="font-serif text-4xl font-bold text-brand-dark mb-4">Engagements</h2>
-            <p className="text-slate-500 max-w-2xl mx-auto">Multidisciplinary support for leaders and institutions.</p>
+            <h2 className="font-serif text-4xl font-bold text-white mb-4">Engagements</h2>
+            <p className="text-slate-400 max-w-2xl mx-auto">Multidisciplinary support for leaders and institutions.</p>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-10">
             {serviceHighlights.map((service, idx) => (
               <div 
                 key={idx} 
-                className="bg-white p-8 rounded-2xl shadow-sm hover:shadow-card transition-all duration-300 border border-slate-100 group flex flex-col h-full reveal-on-scroll"
+                className="bg-slate-900/40 backdrop-blur-sm p-8 rounded-2xl shadow-sm hover:shadow-glow transition-all duration-300 border border-slate-800/50 group flex flex-col h-full reveal-on-scroll"
                 style={{ transitionDelay: `${idx * 100}ms` }}
               >
-                <div className="w-12 h-12 bg-brand-light rounded-xl flex items-center justify-center text-brand-primary mb-6 group-hover:scale-110 transition-transform">
+                <div className="w-12 h-12 bg-brand-primary/10 rounded-xl flex items-center justify-center text-brand-accent mb-6 group-hover:scale-110 transition-transform">
                   {service.icon}
                 </div>
-                <h3 className="font-serif text-lg font-bold text-brand-dark mb-3">{service.title}</h3>
-                <p className="text-sm text-slate-500 leading-relaxed mb-6 flex-grow">
+                <h3 className="font-serif text-lg font-bold text-white mb-3">{service.title}</h3>
+                <p className="text-sm text-slate-400 leading-relaxed mb-6 flex-grow">
                   {service.description}
                 </p>
                 <NavLink to="/services" className="text-xs font-bold text-brand-accent uppercase tracking-widest flex items-center gap-1 hover:gap-2 transition-all mt-auto">
@@ -225,7 +224,7 @@ const Home: React.FC = () => {
           </div>
           
           <div className="text-center reveal-on-scroll">
-            <NavLink to="/services" className="inline-block border border-slate-300 text-slate-700 px-8 py-3 rounded-full font-bold hover:bg-white hover:border-brand-primary hover:text-brand-primary transition-colors">
+            <NavLink to="/services" className="inline-block border border-slate-700 text-slate-300 px-8 py-3 rounded-full font-bold hover:bg-slate-800 hover:border-brand-accent hover:text-brand-accent transition-colors">
               View Full Service Offerings
             </NavLink>
           </div>
@@ -233,14 +232,14 @@ const Home: React.FC = () => {
       </section>
 
       {/* Modern Intro / Mission Statement */}
-      <section className="py-16 bg-white relative overflow-hidden border-t border-slate-100">
+      <section className="py-16 bg-brand-dark relative overflow-hidden border-t border-slate-800">
         <div className="absolute top-0 right-0 -mr-20 -mt-20 w-96 h-96 bg-brand-accent/5 rounded-full blur-3xl"></div>
         <div className="absolute bottom-0 left-0 -ml-20 -mb-20 w-96 h-96 bg-brand-primary/5 rounded-full blur-3xl"></div>
 
         <div className="max-w-4xl mx-auto px-6 text-center relative z-10 reveal-on-scroll">
           <div className="w-16 h-1 bg-brand-accent mx-auto mb-10"></div>
           
-          <blockquote className="font-serif text-xl md:text-2xl leading-relaxed text-slate-600 font-medium mb-10 italic">
+          <blockquote className="font-serif text-xl md:text-2xl leading-relaxed text-slate-300 font-medium mb-10 italic">
             "This website serves as the professional home for my work as an author, scholar, educator,
             and advisor engaging leaders and institutions across academic, professional, and public
             contexts."
@@ -261,7 +260,7 @@ const Home: React.FC = () => {
                       textAnchor="middle" 
                       fontFamily="'Sacramento', cursive" 
                       fontSize="65" 
-                      fill="#2c3e50">
+                      fill="white">
                   Dr. William Triplett
                 </text>
               </svg>

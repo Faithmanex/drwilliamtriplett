@@ -13,14 +13,16 @@ const About: React.FC = () => {
           <h1 className="font-serif text-5xl md:text-6xl font-bold mb-6">
             About Dr. William Triplett
           </h1>
-          <div className="flex justify-center gap-3 text-sm md:text-base font-medium tracking-widest text-brand-accent uppercase">
+          <div className="flex flex-wrap justify-center gap-3 text-xs md:text-sm lg:text-base font-medium tracking-widest text-brand-accent uppercase">
             <span>Author</span>
             <span className="text-slate-600">•</span>
             <span>Scholar</span>
             <span className="text-slate-600">•</span>
-            <span>Researcher</span>
+            <span>Faculty</span>
             <span className="text-slate-600">•</span>
             <span>Advisor</span>
+            <span className="text-slate-600">•</span>
+            <span>Tech & Learning Executive</span>
           </div>
         </div>
       </div>

@@ -52,11 +52,11 @@ const Footer: React.FC = () => {
           </div>
         </div>
 
-        <div className="mt-16 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-600">
+        <div className="mt-16 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium">
           <p>&copy; {currentYear} Dr. William Triplett. All rights reserved.</p>
           <div className="flex gap-6">
-            <a href="#" className="hover:text-slate-400">Privacy Policy</a>
-            <a href="#" className="hover:text-slate-400">Terms of Service</a>
+            <a href="#" className="hover:text-brand-accent transition-colors">Privacy Policy</a>
+            <a href="#" className="hover:text-brand-accent transition-colors">Terms of Service</a>
           </div>
         </div>
       </div>
