@@ -15,14 +15,12 @@ const About: React.FC = () => {
           </h1>
           <div className="flex flex-wrap justify-center gap-3 text-xs md:text-sm lg:text-base font-medium tracking-widest text-brand-accent uppercase">
             <span>Author</span>
-            <span className="text-slate-600">•</span>
+            <span className="text-slate-600">.</span>
             <span>Scholar</span>
-            <span className="text-slate-600">•</span>
-            <span>Faculty</span>
-            <span className="text-slate-600">•</span>
-            <span>Advisor</span>
-            <span className="text-slate-600">•</span>
-            <span>Tech & Learning Executive</span>
+            <span className="text-slate-600">.</span>
+            <span>Faculty Advisor</span>
+            <span className="text-slate-600">.</span>
+            <span>Technology & Learning Executive</span>
           </div>
         </div>
       </div>

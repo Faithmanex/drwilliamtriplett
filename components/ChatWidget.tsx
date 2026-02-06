@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { MessageCircle, X, Send, Loader2, Sparkles, User, Bot } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
+import { useToast } from './Toast';
 
 interface Message {
   role: 'user' | 'assistant';
@@ -11,6 +12,7 @@ interface Message {
 
 const ChatWidget: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
+  const { showToast } = useToast();
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
@@ -123,14 +125,31 @@ const ChatWidget: React.FC = () => {
                   break;
                 }
               } catch (e) {
-                // Skip malformed JSON
+                // Skip malformed JSON but log for debugging
+                console.warn('Failed to parse SSE data:', line, e);
               }
             }
           }
         }
+
+        // Ensure final message is saved even if stream ends without 'done' signal
+        if (assistantMessage) {
+          setMessages((prev) => {
+            const newMessages = [...prev];
+            if (newMessages.length > 0) {
+              newMessages[newMessages.length - 1] = {
+                role: 'assistant',
+                content: assistantMessage,
+                timestamp: messageStartTime,
+              };
+            }
+            return newMessages;
+          });
+        }
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Chat error:', error);
+      showToast(error.message || 'Interrupted connection with the AI assistant.', 'error');
       setMessages((prev) => [
         ...prev,
         {

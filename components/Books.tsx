@@ -1,48 +1,16 @@
 
 import React, { useState, useEffect, useRef } from 'react';
 import { ShoppingBag, Star, Info, CheckCircle, ArrowLeft, BookOpen, ShieldCheck, Search, Quote, Download, Loader2, Mail, X, ArrowRight } from 'lucide-react';
+import { useParams, useNavigate } from 'react-router-dom';
 import { Book } from '../types';
 import PayPalHostedButton from './PayPalHostedButton';
-
-
-
-// Mock Data Catalog
-export const booksCatalog: Book[] = [
-  {
-    id: 'harbor-hopes',
-    title: "Harbors of Hope",
-    subtitle: "The Black Church, HBCUs, and Sacred Spaces of Freedom",
-    description: "A profound exploration of how the Black Church and HBCUs serve as sanctuaries for resilience, identity, and liberation.",
-    longDescription: "In 'Harbors of Hope', Dr. William Triplett examines the historical and enduring significance of the Black Church and Historically Black Colleges and Universities (HBCUs). These institutions are not merely physical structures but sacred spaces that have nurtured freedom, cultivated leadership, and provided refuge in times of storm. Through rich theological insight and historical analysis, Triplett argues for the preservation and revitalization of these harbors as essential for the flourishing of future generations.",
-    price: 26.99,
-    imageUrl: "https://res.cloudinary.com/dtbdixfgf/image/upload/v1768238501/IMG-20260112-WA0007_y38m1g.jpg", 
-    features: ["Paperback Edition", "200+ Pages", "Historical Analysis", "Signed Copy Available"],
-    pubDate: "2025",
-    reviews: [
-      {
-        author: "Dr. Cornel West",
-        role: "Philosopher & Author",
-        content: "A masterful examination of the institutions that have sustained the soul of a people. Triplett writes with the mind of a historian and the heart of a pastor.",
-        rating: 5
-      },
-      {
-        author: "Sarah J. Roberts",
-        role: "Dean of Humanities",
-        content: "Harbors of Hope is essential reading for anyone seeking to understand the resilience of the Black Church. It is rigorous, compelling, and deeply moving.",
-        rating: 5
-      },
-       {
-        author: "Rev. Michael T. Ericson",
-        role: "Senior Pastor",
-        content: "This book provides the language we've been looking for to articulate the sacred function of our gathering spaces. Highly recommended for church leadership teams.",
-        rating: 5
-      }
-    ],
-    paypalButtonId: "3WD8BPY7FJDXS"
-  }
-];
+import { booksCatalog } from '../data/books';
+import { useToast } from './Toast';
 
 const Books: React.FC = () => {
+  const { bookId } = useParams<{ bookId?: string }>();
+  const navigate = useNavigate();
+  const { showToast } = useToast();
   const [selectedBook, setSelectedBook] = useState<Book | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [purchaseState, setPurchaseState] = useState<'idle' | 'input_email' | 'payment' | 'processing' | 'success' | 'error'>('idle');
@@ -51,7 +19,40 @@ const Books: React.FC = () => {
   
   const purchaseRef = useRef<HTMLDivElement>(null);
 
-  // Scroll to top when a book is selected or deselected
+  // Sync selected book and SEO metadata with URL param
+  useEffect(() => {
+    if (bookId) {
+      const book = booksCatalog.find(b => b.id === bookId);
+      if (book) {
+        setSelectedBook(book);
+        
+        // Update Metadata for the specific book
+        document.title = `${book.title} | Dr. William Triplett`;
+        const metaDescription = document.querySelector('meta[name="description"]');
+        if (metaDescription) {
+          metaDescription.setAttribute('content', book.description);
+        }
+      } else {
+        // If ID is invalid, clear it
+        navigate('/books', { replace: true });
+        setSelectedBook(null);
+      }
+    } else {
+      setSelectedBook(null);
+    }
+  }, [bookId, navigate]);
+
+  // Handle book selection
+  const handleBookClick = (book: Book) => {
+    navigate(`/books/${book.id}`);
+  };
+
+  // Handle going back to catalog
+  const handleBackToCatalog = () => {
+    navigate('/books');
+  };
+
+  // Scroll to top when selection changes
   useEffect(() => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
     setPurchaseState('idle'); 
@@ -116,11 +117,12 @@ const Books: React.FC = () => {
                       } else {
                         throw new Error('Email delivery failed');
                       }
-                    } catch (error) {
+                    } catch (error: any) {
                       console.error('Email sending failed:', error);
+                      showToast(error.message || 'Payment confirmation failed.', 'error');
                       setPurchaseState('error');
                     }
-                 })();
+                  })();
             }
         }
     }
@@ -185,8 +187,9 @@ const Books: React.FC = () => {
       } else {
         throw new Error('Email delivery failed');
       }
-    } catch (error) {
+    } catch (error: any) {
       console.error('Email sending failed:', error);
+      showToast(error.message || 'Failed to process purchase.', 'error');
       setPurchaseState('error');
     }
   };
@@ -254,7 +257,7 @@ const Books: React.FC = () => {
         <style>{fadeInStyle}</style>
         <div className="max-w-7xl mx-auto px-6 py-12">
           <button 
-            onClick={() => setSelectedBook(null)}
+            onClick={handleBackToCatalog}
             className="group flex items-center gap-2 text-slate-500 hover:text-brand-primary transition-colors mb-12 font-medium"
           >
             <div className="p-2 rounded-full bg-slate-100 group-hover:bg-brand-primary/10 transition-colors">
@@ -555,7 +558,7 @@ const Books: React.FC = () => {
               <div 
                 key={book.id}
                 className="group cursor-pointer flex flex-col h-full animate-fade-in-up"
-                onClick={() => setSelectedBook(book)}
+                onClick={() => handleBookClick(book)}
               >
                 <div className="bg-slate-50 rounded-2xl p-8 mb-6 relative overflow-hidden transition-all duration-300 group-hover:shadow-card group-hover:-translate-y-1 border border-slate-100">
                   <div className="flex justify-center transform transition-transform duration-500 group-hover:scale-105">

@@ -1,75 +1,97 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Loader2 } from 'lucide-react';
+import { useToast } from './Toast';
 
 interface PayPalHostedButtonProps {
   hostedButtonId: string;
 }
 
-declare global {
-  interface Window {
-    paypal?: {
-      HostedButtons: (config: { hostedButtonId: string }) => {
-        render: (selector: string) => Promise<void>;
-      };
-    };
-  }
-}
-
 const PayPalHostedButton: React.FC<PayPalHostedButtonProps> = ({ hostedButtonId }) => {
-  const [isLoading, setIsLoading] = useState(true);
+  const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
+  const { showToast } = useToast();
 
-  useEffect(() => {
-    // Check if the script is already loaded
-    const scriptId = 'paypal-js-sdk';
-    const containerId = `paypal-container-${hostedButtonId}`;
+  const handlePayClick = (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    showToast('Opening secure checkout...', 'info');
+    
+    const width = 500;
+    const height = 700;
+    const left = window.screenX + (window.outerWidth - width) / 2;
+    const top = window.screenY + (window.outerHeight - height) / 2;
+    
+    const popup = window.open(
+      `https://www.paypal.com/ncp/payment/${hostedButtonId}`,
+      'PayPalCheckout',
+      `width=${width},height=${height},left=${left},top=${top},status=no,toolbar=no,menubar=no,location=no`
+    );
 
-    const renderButton = () => {
-      if (window.paypal && window.paypal.HostedButtons) {
-        // Clear container first to prevent duplicates
-        const container = document.getElementById(containerId);
-        if (container) container.innerHTML = '';
-        
-        window.paypal.HostedButtons({
-          hostedButtonId: hostedButtonId
-        })
-        .render(`#${containerId}`)
-        .then(() => {
-           setIsLoading(false);
-        })
-        .catch((err) => {
-           console.error("PayPal button render failed", err);
-           setIsLoading(false); // Stop loading on error too
-        });
-      }
-    };
-
-    if (!document.getElementById(scriptId)) {
-      const script = document.createElement('script');
-      script.id = scriptId;
-       // Updated client-id from user request
-      script.src = "https://www.paypal.com/sdk/js?client-id=BAAeVmaNSSf9Bvv56cqvYIYZgw-lW_5H3uKPuO8xYQvgat5zmyWCee9wPnq0yo-AbelvtxfQX2y2EctLvc&components=hosted-buttons&enable-funding=venmo&currency=USD";
-      script.crossOrigin = "anonymous";
-      script.async = true;
-      script.onload = () => {
-          // Script loaded, now render
-          renderButton();
-      };
-      document.body.appendChild(script);
+    if (popup) {
+      setIsCheckoutOpen(true);
+      
+      // Polling to detect when popup is closed
+      const pollTimer = window.setInterval(() => {
+        if (popup.closed !== false) {
+          window.clearInterval(pollTimer);
+          setIsCheckoutOpen(false);
+          showToast('Checkout window closed.', 'info');
+        }
+      }, 500);
     } else {
-      // If script is already loaded, just render
-      renderButton();
+      showToast('Pop-up blocked! Please allow pop-ups for this site.', 'error');
     }
-  }, [hostedButtonId]);
+  };
 
   return (
-    <div className="relative w-full min-h-[300px]">
-        {isLoading && (
-            <div className="absolute inset-0 flex flex-col items-center justify-center bg-slate-50/50 rounded-lg border border-slate-100/50 backdrop-blur-sm z-10">
-                <Loader2 className="w-8 h-8 text-brand-primary animate-spin mb-2" />
-                <p className="text-sm text-slate-500 font-medium">Loading secure payment...</p>
+    <div className="flex justify-center w-full py-4">
+      {/* Checkout Overlay */}
+      {isCheckoutOpen && (
+        <div className="fixed inset-0 z-[9999] flex flex-col items-center justify-center bg-slate-900/60 backdrop-blur-sm transition-all duration-300">
+          <div className="bg-white p-8 rounded-[2rem] shadow-2xl flex flex-col items-center gap-4 animate-[fadeInUp_0.4s_ease-out]">
+            <Loader2 className="w-12 h-12 text-brand-primary animate-spin" />
+            <div className="text-center">
+              <h3 className="font-serif text-xl font-bold text-brand-dark mb-2">Checkout in Progress</h3>
+              <p className="text-slate-500 text-sm max-w-[240px]">
+                Please complete your transaction in the secure PayPal window.
+              </p>
             </div>
-        )}
-        <div id={`paypal-container-${hostedButtonId}`} className="w-full relative z-0" />
+          </div>
+        </div>
+      )}
+
+      <style>{`
+        .pp-${hostedButtonId} {
+          text-align: center;
+          border: none;
+          border-radius: 0.25rem;
+          min-width: 11.625rem;
+          padding: 0 2rem;
+          height: 2.625rem;
+          font-weight: bold;
+          background-color: #FFD140;
+          color: #000000;
+          font-family: inherit;
+          font-size: 1rem;
+          line-height: 1.25rem;
+          cursor: pointer;
+          transition: all 0.2s ease;
+        }
+        .pp-${hostedButtonId}:hover {
+          background-color: #f4c42e;
+          transform: translateY(-1px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+      `}</style>
+      <form 
+        onSubmit={handlePayClick}
+        style={{ display: 'inline-grid', justifyItems: 'center', alignContent: 'start', gap: '0.5rem' }}
+      >
+        <input className={`pp-${hostedButtonId}`} type="submit" value="Buy Now" />
+        <img src="https://www.paypalobjects.com/images/Debit_Credit_APM.svg" alt="cards" />
+        <section style={{ fontSize: '0.75rem', color: '#64748b' }}>
+          Powered by <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg" alt="paypal" style={{ height: '0.875rem', verticalAlign: 'middle' }} />
+        </section>
+      </form>
     </div>
   );
 };

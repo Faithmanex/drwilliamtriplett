@@ -1,9 +1,11 @@
 
 import React, { useState } from 'react';
 import { Send, Mail, MapPin, Loader2, CheckCircle, ArrowRight } from 'lucide-react';
+import { useToast } from './Toast';
 
 
 const Contact: React.FC = () => {
+  const { showToast } = useToast();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -47,9 +49,10 @@ const Contact: React.FC = () => {
       
       setIsSubmitting(false);
       setIsSubmitted(true);
-    } catch (error) {
+      showToast('Message sent successfully!', 'success');
+    } catch (error: any) {
       console.error('Email sending failed:', error);
-      alert('Failed to send email. Please try again later.');
+      showToast(error.message || 'Failed to send email. Please try again.', 'error');
       setIsSubmitting(false);
     }
   };

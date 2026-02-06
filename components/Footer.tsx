@@ -13,7 +13,7 @@ const Footer: React.FC = () => {
           <div className="max-w-sm space-y-6">
             <div>
               <h3 className="font-serif text-2xl text-white font-bold">Dr. William Triplett</h3>
-              <p className="text-xs text-brand-accent uppercase tracking-widest mt-1">Leadership & Ethics</p>
+              <p className="text-xs text-brand-accent uppercase tracking-widest mt-1">Author . Scholar . Faculty Advisor . Technology & Learning Executive</p>
             </div>
             <p className="text-sm leading-relaxed text-slate-400 font-light">
               Supporting leaders, faculty, and institutions to flourish amid complexity, responsibility, and change.

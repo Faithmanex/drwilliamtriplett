@@ -2,7 +2,7 @@
 import React, { useState } from 'react';
 import { ArrowRight, BookOpen, Star, CheckCircle, Briefcase, Book, UserCheck, Mic } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
-import { booksCatalog } from './Books'; 
+import { booksCatalog } from '../data/books'; 
 
 const Home: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
@@ -176,13 +176,13 @@ const Home: React.FC = () => {
 
               <div className="flex flex-col sm:flex-row gap-4">
                  <NavLink 
-                   to="/books" 
+                   to={`/books/${featuredBook.id}`} 
                    className="inline-flex items-center justify-center gap-2 bg-white text-brand-dark px-8 py-4 rounded-full font-bold text-lg hover:bg-brand-accent hover:text-brand-dark transition-all shadow-lg hover:shadow-white/10 hover:-translate-y-1"
                  >
                    Get Your Copy <ArrowRight size={18} />
                  </NavLink>
                  <NavLink 
-                   to="/books" 
+                   to={`/books/${featuredBook.id}`} 
                    className="inline-flex items-center justify-center gap-2 bg-slate-800/50 border border-slate-700 text-slate-300 px-8 py-4 rounded-full font-bold text-lg hover:bg-slate-800 hover:text-white transition-all"
                  >
                    Read Excerpt
