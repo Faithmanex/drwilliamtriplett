@@ -60,7 +60,7 @@ const Navbar: React.FC = () => {
               <h1 className={`font-serif text-2xl font-bold tracking-tight transition-colors duration-300 ${scrolled || location.pathname !== '/' || isOpen ? 'text-brand-dark' : 'text-white'}`}>
                 Dr. William Triplett
               </h1>
-              <span className={`block text-[10px] font-sans font-bold tracking-[0.2em] uppercase mt-1 transition-colors duration-300 ${scrolled || location.pathname !== '/' || isOpen ? 'text-brand-accent' : 'text-slate-300 group-hover:text-brand-accent'}`}>
+              <span className={`block text-[10px] font-sans font-bold tracking-[0.2em] uppercase mt-1 transition-colors duration-300 ${scrolled || location.pathname !== '/' || isOpen ? 'text-brand-accent group-hover:text-brand-primary' : 'text-brand-accent group-hover:text-white'}`}>
                 Author . Scholar . Faculty Advisor . Technology & Learning Executive
               </span>
             </NavLink>
