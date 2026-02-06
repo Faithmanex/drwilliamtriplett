@@ -314,19 +314,21 @@ const Books: React.FC = () => {
               <div ref={purchaseRef}>
               {purchaseState === 'idle' && (
                 <>
-                  <div className="flex flex-col sm:flex-row items-center gap-6 p-6 bg-white border border-slate-200 rounded-2xl shadow-soft">
-                    <div className="flex-1">
-                      <p className="text-sm text-slate-500 mb-1">Total Amount</p>
-                      <p className="text-3xl font-bold text-brand-dark">${selectedBook.price.toFixed(2)}</p>
+                  <div className="flex flex-col sm:flex-row items-center justify-between gap-8 p-8 bg-white border border-slate-100 rounded-3xl shadow-[0_20px_50px_rgba(0,0,0,0.04)]">
+                    <div className="flex flex-col">
+                      <p className="text-xs uppercase tracking-widest text-slate-400 font-bold mb-1">Total Amount</p>
+                      <p className="text-4xl font-serif font-black text-brand-dark">${selectedBook.price.toFixed(2)}</p>
                     </div>
                     <button 
                       onClick={handleInitiatePurchase}
-                      className="w-full sm:w-auto flex-1 bg-[#FFC439] hover:bg-[#F4BB2E] text-brand-dark px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-md hover:shadow-lg transform hover:-translate-y-0.5"
+                      className="h-16 w-full sm:w-auto px-10 bg-[#FFC439] hover:bg-[#F4BB2E] text-slate-900 rounded-full transition-all duration-300 flex items-center justify-center gap-4 shadow-[0_8px_20px_-4px_rgba(255,196,57,0.4)] hover:shadow-[0_12px_25px_-5px_rgba(255,196,57,0.5)] transform hover:-translate-y-0.5 active:scale-[0.98] group"
                     >
-                      <span className="italic font-serif font-black pr-1">Pay</span>
-                      <span className="italic font-serif font-black text-blue-800">Pal</span>
-                      <span className="border-l border-black/10 h-6 mx-1"></span>
-                      <span>Buy Now</span>
+                      <div className="flex items-center select-none">
+                        <span className="italic font-serif font-black text-xl tracking-tighter">Pay</span>
+                        <span className="italic font-serif font-black text-xl tracking-tighter text-[#003087]">Pal</span>
+                      </div>
+                      <div className="h-6 w-px bg-slate-900/10"></div>
+                      <span className="font-sans font-bold text-lg tracking-tight">Buy Now</span>
                     </button>
                   </div>
                   <div className="mt-4 flex items-center justify-center sm:justify-end gap-2 text-xs text-slate-400">
@@ -423,12 +425,14 @@ const Books: React.FC = () => {
                     // Fallback for books without hosted button (simulated)
                     <button 
                         onClick={handlePaymentComplete}
-                        className="w-full bg-[#FFC439] hover:bg-[#F4BB2E] text-brand-dark px-8 py-4 rounded-full font-bold text-lg transition-all duration-300 flex items-center justify-center gap-3 shadow-md hover:shadow-lg transform hover:-translate-y-0.5 mb-4"
+                        className="h-16 w-full px-10 bg-[#FFC439] hover:bg-[#F4BB2E] text-slate-900 rounded-full transition-all duration-300 flex items-center justify-center gap-4 shadow-[0_8px_20px_-4px_rgba(255,196,57,0.4)] hover:shadow-[0_12px_25px_-5px_rgba(255,196,57,0.5)] transform hover:-translate-y-0.5 active:scale-[0.98] mb-4"
                     >
-                        <span className="italic font-serif font-black pr-1">Pay</span>
-                        <span className="italic font-serif font-black text-blue-800">Pal</span>
-                        <span className="border-l border-black/10 h-6 mx-1"></span>
-                        <span>Pay ${selectedBook?.price.toFixed(2)}</span>
+                        <div className="flex items-center select-none">
+                          <span className="italic font-serif font-black text-xl tracking-tighter">Pay</span>
+                          <span className="italic font-serif font-black text-xl tracking-tighter text-[#003087]">Pal</span>
+                        </div>
+                        <div className="h-6 w-px bg-slate-900/10"></div>
+                        <span className="font-sans font-bold text-lg tracking-tight">Pay ${selectedBook?.price.toFixed(2)}</span>
                     </button>
                   )}
 
