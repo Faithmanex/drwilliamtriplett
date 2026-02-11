@@ -1,5 +1,4 @@
-import { GoogleGenAI } from "@google/genai";
-import OpenAI from "openai";
+import { OpenAI } from "openai";
 
 const SYSTEM_INSTRUCTION = `Identity: You are the Triplett Professional Intelligence Ecosystem, a unified, role-aware artificial intelligence aligned to the professional identity of Dr. William J. Triplett, PhD.
 
@@ -41,128 +40,55 @@ If a visitor explicitly requests to speak directly with Dr. William Triplett, co
 Do not attempt to handle direct communication requests yourself. Always redirect to the contact form.`;
 
 export default async function handler(req, res) {
-  if (req.method !== "POST") {
-    return res.status(405).json({ error: "Method not allowed" });
-  }
+    const aiProvider = "openai";
 
-  const aiProvider = process.env.AI_PROVIDER || "gemini";
 
-  try {
-    const { message, conversationHistory = [] } = req.body;
+    try {
+        const { message, conversationHistory = [] } = req.body;
 
-    if (!message || typeof message !== "string") {
-      return res.status(400).json({ error: "Message is required" });
-    }
-
-    // Set headers for streaming
-    res.setHeader("Content-Type", "text/event-stream");
-    res.setHeader("Cache-Control", "no-cache");
-    res.setHeader("Connection", "keep-alive");
-
-    if (aiProvider === "openai") {
-       if (!process.env.OPENAI_API_KEY) {
-          throw new Error("OPENAI_API_KEY is not configured.");
-       }
-
-       const openai = new OpenAI({
-         apiKey: process.env.OPENAI_API_KEY,
-       });
-
-       const messages = [
-         { role: "system", content: SYSTEM_INSTRUCTION },
-         ...conversationHistory.map((msg) => ({
-           role: msg.role === "assistant" ? "assistant" : "user",
-           content: msg.content,
-         })),
-         { role: "user", content: message },
-       ];
-
-       const stream = await openai.chat.completions.create({
-         model: "gpt-5.2",
-         messages: messages,
-         stream: true,
-         temperature: 0.7,
-       });
-
-       for await (const chunk of stream) {
-         const content = chunk.choices[0]?.delta?.content || "";
-         if (content) {
-           res.write(`data: ${JSON.stringify({ text: content })}\n\n`);
-         }
-       }
-
-    } else {
-      // Default to Gemini
-      if (!process.env.GEMINI_API_KEY) {
-          throw new Error("GEMINI_API_KEY is not configured.");
-      }
-
-      const ai = new GoogleGenAI({
-        apiKey: process.env.GEMINI_API_KEY
-      });
-
-      // Build conversation history for Gemini
-      const contents = [
-        {
-          role: "user",
-          parts: [{ text: SYSTEM_INSTRUCTION }]
-        },
-        {
-          role: "model",
-          parts: [{ text: "Understood. I am the Triplett Professional Intelligence Ecosystem, ready to assist with inquiries related to Dr. William Triplett's expertise." }]
+        if (!message || typeof message !== "string") {
+            return res.status(400).json({ error: "Message is required" });
         }
-      ];
 
-      // Add conversation history
-      conversationHistory.forEach((msg) => {
-        contents.push({
-          role: msg.role === "user" ? "user" : "model",
-          parts: [{ text: msg.content }]
+        // Set headers for streaming
+        res.setHeader("Content-Type", "text/event-stream");
+        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Connection", "keep-alive");
+
+        const client = new OpenAI();
+
+        const input = [
+            { role: "system", content: SYSTEM_INSTRUCTION },
+            ...conversationHistory.map((msg) => ({
+                role: msg.role === "assistant" ? "assistant" : "user",
+                content: msg.content,
+            })),
+            { role: "user", content: message },
+        ];
+
+        const stream = await client.responses.create({
+            model: "gpt-5",
+            input: input,
+            stream: true,
         });
-      });
 
-      // Add current message
-      contents.push({
-        role: "user",
-        parts: [{ text: message }]
-      });
-
-      // Generate streaming response
-      const stream = await ai.models.generateContentStream({
-        model: "gemini-2.5-flash",
-        contents: contents,
-        config: {
-          temperature: 0.7,
-          topP: 0.95,
-          topK: 40,
-          maxOutputTokens: 2048,
+        for await (const event of stream) {
+            console.log(event);
+            const content = event.choices?.[0]?.delta?.content || "";
+            if (content) {
+                res.write(`data: ${JSON.stringify({ text: content })}\n\n`);
+            }
         }
-      });
 
-      // Stream the response
-      for await (const chunk of stream) {
-        if (chunk.text) {
-          res.write(`data: ${JSON.stringify({ text: chunk.text })}\n\n`);
+        res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
+        res.end();
+
+    } catch (err) {
+        console.error("Chat API error:", err);
+        if (!res.headersSent) {
+            return res.status(500).json({ error: "Failed to generate response", details: err.message });
         }
-      }
+        res.write(`data: ${JSON.stringify({ error: err.message })}\n\n`);
+        res.end();
     }
-
-    // Send completion signal
-    res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
-    res.end();
-  } catch (err) {
-    console.error(`Chat API error (${aiProvider}):`, err);
-    
-    // If streaming hasn't started, send JSON error
-    if (!res.headersSent) {
-      return res.status(500).json({ 
-        error: "Failed to generate response",
-        details: err.message 
-      });
-    }
-    
-    // If streaming has started, send error in stream format
-    res.write(`data: ${JSON.stringify({ error: "Stream interrupted: " + err.message })}\n\n`);
-    res.end();
-  }
 }
