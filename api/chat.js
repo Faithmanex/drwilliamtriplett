@@ -45,17 +45,23 @@ export default async function handler(req, res) {
 
     try {
         const { message, conversationHistory = [] } = req.body;
+        console.log("[/api/chat] Incoming request body:", {
+            messageSnippet: typeof message === "string" ? message.slice(0, 200) : message,
+            conversationHistoryLength: Array.isArray(conversationHistory) ? conversationHistory.length : 0,
+            aiProvider,
+        });
 
         if (!message || typeof message !== "string") {
             return res.status(400).json({ error: "Message is required" });
         }
 
-        // Set headers for streaming
-        res.setHeader("Content-Type", "text/event-stream");
-        res.setHeader("Cache-Control", "no-cache");
-        res.setHeader("Connection", "keep-alive");
+        // // Set headers for streaming
+        // res.setHeader("Content-Type", "text/event-stream");
+        // res.setHeader("Cache-Control", "no-cache");
+        // res.setHeader("Connection", "keep-alive");
 
         const client = new OpenAI();
+        console.log("[/api/chat] OpenAI client initialized with provider:", aiProvider);
 
         const input = [
             { role: "system", content: SYSTEM_INSTRUCTION },
@@ -65,21 +71,30 @@ export default async function handler(req, res) {
             })),
             { role: "user", content: message },
         ];
+        console.log("[/api/chat] Constructed input for model:", {
+            systemInstructionLength: SYSTEM_INSTRUCTION.length,
+            totalMessages: input.length,
+        });
 
+        console.log("[/api/chat] Creating response stream with model gpt-5");
         const stream = await client.responses.create({
             model: "gpt-5",
             input: input,
             stream: true,
         });
+        console.log("[/api/chat] Stream created, beginning to read events");
 
         for await (const event of stream) {
-            console.log(event);
+            console.log("[/api/chat] Stream event received:", {
+                hasChoices: !!event.choices,
+            });
             const content = event.choices?.[0]?.delta?.content || "";
             if (content) {
                 res.write(`data: ${JSON.stringify({ text: content })}\n\n`);
             }
         }
 
+        console.log("[/api/chat] Stream completed, sending done flag");
         res.write(`data: ${JSON.stringify({ done: true })}\n\n`);
         res.end();
 
