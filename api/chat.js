@@ -54,6 +54,7 @@ export default async function handler(req, res) {
 
         const client = new OpenAI({
             apiKey: process.env.OPENAI_API_KEY,
+            organization: process.env.OPENAI_ORG_ID,
         });
 
         const input = [
