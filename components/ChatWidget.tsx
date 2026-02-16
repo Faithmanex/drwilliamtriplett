@@ -91,25 +91,38 @@ const ChatWidget: React.FC = () => {
           },
         ]);
 
-        while (true) {
+        let buffer = '';
+        let streamCompleted = false;
+
+        while (!streamCompleted) {
           const { done, value } = await reader.read();
           if (done) break;
 
-          const chunk = decoder.decode(value);
-          const lines = chunk.split('\\n');
+          buffer += decoder.decode(value, { stream: true });
+          const events = buffer.split('\n\n');
+          buffer = events.pop() ?? '';
 
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
+          for (const event of events) {
+            const lines = event
+              .split('\n')
+              .map((line) => line.trim())
+              .filter(Boolean);
+
+            for (const line of lines) {
+              if (!line.startsWith('data:')) continue;
+
+              const payload = line.slice(5).trim();
+              if (!payload) continue;
+
               try {
-                const data = JSON.parse(line.slice(6));
-                
+                const data = JSON.parse(payload);
+
                 if (data.error) {
                   throw new Error(data.error);
                 }
-                
-                if (data.text) {
+
+                if (typeof data.text === 'string' && data.text.length > 0) {
                   assistantMessage += data.text;
-                  // Batch updates for smoother streaming
                   setMessages((prev) => {
                     const newMessages = [...prev];
                     newMessages[newMessages.length - 1] = {
@@ -120,14 +133,31 @@ const ChatWidget: React.FC = () => {
                     return newMessages;
                   });
                 }
-                
+
                 if (data.done) {
+                  streamCompleted = true;
                   break;
                 }
               } catch (e) {
-                // Skip malformed JSON but log for debugging
                 console.warn('Failed to parse SSE data:', line, e);
               }
+            }
+
+            if (streamCompleted) break;
+          }
+        }
+
+        // Parse any remaining complete payload after stream closure
+        if (!streamCompleted && buffer.trim().startsWith('data:')) {
+          const payload = buffer.trim().slice(5).trim();
+          if (payload) {
+            try {
+              const data = JSON.parse(payload);
+              if (typeof data.text === 'string' && data.text.length > 0) {
+                assistantMessage += data.text;
+              }
+            } catch (e) {
+              console.warn('Failed to parse trailing SSE data:', buffer, e);
             }
           }
         }
