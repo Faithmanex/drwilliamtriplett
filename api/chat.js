@@ -41,33 +41,55 @@ Do not attempt to handle direct communication requests yourself. Always redirect
 
 export default async function handler(req, res) {
     try {
-        const { message, conversationHistory = [] } = req.body;
+        if (req.method && req.method !== "POST") {
+            return res.status(405).json({ error: "Method not allowed" });
+        }
 
-        if (!message || typeof message !== "string") {
+        const body = req.body ?? {};
+        const { message, conversationHistory = [] } = body;
+
+        if (!process.env.OPENAI_API_KEY) {
+            return res.status(500).json({ error: "OPENAI_API_KEY is not configured" });
+        }
+
+        if (!message || typeof message !== "string" || !message.trim()) {
             return res.status(400).json({ error: "Message is required" });
         }
 
+        if (!Array.isArray(conversationHistory)) {
+            return res.status(400).json({ error: "conversationHistory must be an array" });
+        }
+
+        const sanitizedHistory = conversationHistory
+            .filter((msg) => msg && typeof msg === "object")
+            .map((msg) => ({
+                role: msg.role === "assistant" ? "assistant" : "user",
+                content: typeof msg.content === "string" ? msg.content : "",
+            }))
+            .filter((msg) => msg.content.trim().length > 0);
+
         // Set headers for streaming
         res.setHeader("Content-Type", "text/event-stream");
-        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Cache-Control", "no-cache, no-transform");
         res.setHeader("Connection", "keep-alive");
+        res.setHeader("X-Accel-Buffering", "no");
+        res.flushHeaders?.();
 
         const client = new OpenAI({
             apiKey: process.env.OPENAI_API_KEY,
             organization: process.env.OPENAI_ORG_ID,
         });
 
+        const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
+
         const input = [
             { role: "system", content: SYSTEM_INSTRUCTION },
-            ...conversationHistory.map((msg) => ({
-                role: msg.role === "assistant" ? "assistant" : "user",
-                content: msg.content,
-            })),
-            { role: "user", content: message },
+            ...sanitizedHistory,
+            { role: "user", content: message.trim() },
         ];
 
         const stream = await client.chat.completions.create({
-            model: "gpt-5.2",
+            model,
             messages: input,
             stream: true,
         });
