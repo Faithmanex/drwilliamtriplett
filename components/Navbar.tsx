@@ -61,7 +61,7 @@ const Navbar: React.FC = () => {
                 Dr. William Triplett
               </h1>
               <span className={`block text-[10px] font-sans font-bold tracking-[0.2em] uppercase mt-1 transition-colors duration-300 ${scrolled || location.pathname !== '/' || isOpen ? 'text-brand-accent group-hover:text-brand-primary' : 'text-brand-accent group-hover:text-white'}`}>
-                Author . Scholar . Faculty Advisor . Technology & Learning Executive
+                Author . Coach . Advisor . Executive
               </span>
             </NavLink>
           </div>

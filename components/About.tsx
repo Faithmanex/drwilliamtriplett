@@ -16,11 +16,11 @@ const About: React.FC = () => {
           <div className="flex flex-wrap justify-center gap-3 text-xs md:text-sm lg:text-base font-medium tracking-widest text-brand-accent uppercase">
             <span>Author</span>
             <span className="text-slate-600">.</span>
-            <span>Scholar</span>
+            <span>Coach</span>
             <span className="text-slate-600">.</span>
-            <span>Faculty Advisor</span>
+            <span>Advisor</span>
             <span className="text-slate-600">.</span>
-            <span>Technology & Learning Executive</span>
+            <span>Executive</span>
           </div>
         </div>
       </div>
@@ -40,7 +40,7 @@ const About: React.FC = () => {
               )}
               <img
                 src="https://res.cloudinary.com/dtbdixfgf/image/upload/f_auto,q_auto,w_800/v1768235662/WT-30_ei1uny.jpg"
-                alt="Dr. William Triplett - Strategic Advisor and Scholar"
+                alt="Dr. William Triplett - Strategic Advisor and Coach"
                 loading="lazy"
                 onLoad={() => setIsImageLoaded(true)}
                 className={`w-full h-auto object-cover transition-all duration-1000 scale-x-[-1] ${
@@ -58,7 +58,7 @@ const About: React.FC = () => {
 
             <div className="space-y-6 text-lg text-slate-600 leading-loose font-medium">
               <p>
-                <span className="font-bold text-brand-dark">Dr. William Triplett</span> is an author, scholar, educator, and strategic advisor specializing in cybersecurity, artificial intelligence, leadership, and human performance. His work centers on advancing human-centered excellence in organizations operating at the forefront of technological change, informed by faith and purpose.
+                <span className="font-bold text-brand-dark">Dr. William Triplett</span> is an author, coach, educator, and strategic advisor specializing in cybersecurity, artificial intelligence, leadership, and human performance. His work centers on advancing human-centered excellence in organizations operating at the forefront of technological change, informed by faith and purpose.
               </p>
               <p>
                 Drawing from interdisciplinary research and applied experience, he supports leaders in addressing complex challenges across security, innovation, and organizational transformation. His approach integrates technical insight with a deep understanding of how systems, culture, and belief shape human outcomes.

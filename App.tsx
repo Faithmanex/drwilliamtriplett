@@ -16,10 +16,10 @@ const SEO: React.FC = () => {
 
   useEffect(() => {
     const baseTitle = 'Dr. William Triplett';
-    const baseSuffix = 'Author . Scholar . Faculty Advisor . Technology & Learning Executive';
+    const baseSuffix = 'Author . Coach . Advisor . Executive';
     
     let title = `${baseTitle} | ${baseSuffix}`;
-    let description = "Professional platform of Dr. William Triplett. Author, Scholar, Faculty Advisor, and Technology & Learning Executive.";
+    let description = "Professional platform of Dr. William Triplett. Author, Coach, Advisor, and Executive.";
 
     if (pathname === '/about') {
       title = `About | ${baseTitle}`;
