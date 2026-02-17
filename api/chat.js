@@ -23,6 +23,14 @@ Integrated Functions: You support the following:
 - Fitness, wellness, youth development, and performance optimization programming
 - Business entrepreneurship, healthcare technology ventures, and mission-driven enterprise strategy
 
+Website Navigation Support:
+- Help visitors quickly find the right page and clearly explain where to click next.
+- Primary navigation routes are: Home (/), About (/about), Services (/services), Books (/books), and Contact (/contact).
+- "Shop Resources" routes to the Books section (/books).
+- For service inquiries, speaking engagements, advisory requests, or research collaboration, direct visitors to the Contact page and form.
+- For book discovery or purchases, direct visitors to the Books page; users can browse the catalog, open individual book pages, and complete purchase steps there.
+- When users seem unsure where to go, offer a short, step-by-step path (1-3 steps) tailored to their goal.
+
 Tone & Style:
 - Be warm, conversational, and approachable while maintaining professionalism
 - Use natural language and speak as if you're having a genuine dialogue
@@ -30,7 +38,10 @@ Tone & Style:
 - Adapt tone appropriately for academic, executive, instructional, healthcare, or consulting contexts
 - Provide structured, actionable, and evidence-informed responses in a friendly manner
 - Ask clarifying questions when necessary to help better understand needs
+- When a request is broad, ambiguous, or missing context, ask 1-3 focused follow-up questions before giving a final recommendation
+- If enough context is provided, answer directly without unnecessary questions
 - Avoid overly formal or robotic language—be human and relatable
+- Do not use em dashes in responses
 - Use "I" and "you" to create connection (e.g., "I'd be happy to help you with that")
 - Maintain alignment with Dr. Triplett's interdisciplinary expertise, professional ethics, and leadership philosophy
 
@@ -41,33 +52,55 @@ Do not attempt to handle direct communication requests yourself. Always redirect
 
 export default async function handler(req, res) {
     try {
-        const { message, conversationHistory = [] } = req.body;
+        if (req.method && req.method !== "POST") {
+            return res.status(405).json({ error: "Method not allowed" });
+        }
 
-        if (!message || typeof message !== "string") {
+        const body = req.body ?? {};
+        const { message, conversationHistory = [] } = body;
+
+        if (!process.env.OPENAI_API_KEY) {
+            return res.status(500).json({ error: "OPENAI_API_KEY is not configured" });
+        }
+
+        if (!message || typeof message !== "string" || !message.trim()) {
             return res.status(400).json({ error: "Message is required" });
         }
 
+        if (!Array.isArray(conversationHistory)) {
+            return res.status(400).json({ error: "conversationHistory must be an array" });
+        }
+
+        const sanitizedHistory = conversationHistory
+            .filter((msg) => msg && typeof msg === "object")
+            .map((msg) => ({
+                role: msg.role === "assistant" ? "assistant" : "user",
+                content: typeof msg.content === "string" ? msg.content : "",
+            }))
+            .filter((msg) => msg.content.trim().length > 0);
+
         // Set headers for streaming
         res.setHeader("Content-Type", "text/event-stream");
-        res.setHeader("Cache-Control", "no-cache");
+        res.setHeader("Cache-Control", "no-cache, no-transform");
         res.setHeader("Connection", "keep-alive");
+        res.setHeader("X-Accel-Buffering", "no");
+        res.flushHeaders?.();
 
         const client = new OpenAI({
             apiKey: process.env.OPENAI_API_KEY,
             organization: process.env.OPENAI_ORG_ID,
         });
 
+        const model = process.env.OPENAI_MODEL || "gpt-4o-mini";
+
         const input = [
             { role: "system", content: SYSTEM_INSTRUCTION },
-            ...conversationHistory.map((msg) => ({
-                role: msg.role === "assistant" ? "assistant" : "user",
-                content: msg.content,
-            })),
-            { role: "user", content: message },
+            ...sanitizedHistory,
+            { role: "user", content: message.trim() },
         ];
 
         const stream = await client.chat.completions.create({
-            model: "gpt-5.2",
+            model,
             messages: input,
             stream: true,
         });

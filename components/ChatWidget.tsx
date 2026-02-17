@@ -91,25 +91,38 @@ const ChatWidget: React.FC = () => {
           },
         ]);
 
-        while (true) {
+        let buffer = '';
+        let streamCompleted = false;
+
+        while (!streamCompleted) {
           const { done, value } = await reader.read();
           if (done) break;
 
-          const chunk = decoder.decode(value);
-          const lines = chunk.split('\\n');
+          buffer += decoder.decode(value, { stream: true });
+          const events = buffer.split('\n\n');
+          buffer = events.pop() ?? '';
 
-          for (const line of lines) {
-            if (line.startsWith('data: ')) {
+          for (const event of events) {
+            const lines = event
+              .split('\n')
+              .map((line) => line.trim())
+              .filter(Boolean);
+
+            for (const line of lines) {
+              if (!line.startsWith('data:')) continue;
+
+              const payload = line.slice(5).trim();
+              if (!payload) continue;
+
               try {
-                const data = JSON.parse(line.slice(6));
-                
+                const data = JSON.parse(payload);
+
                 if (data.error) {
                   throw new Error(data.error);
                 }
-                
-                if (data.text) {
+
+                if (typeof data.text === 'string' && data.text.length > 0) {
                   assistantMessage += data.text;
-                  // Batch updates for smoother streaming
                   setMessages((prev) => {
                     const newMessages = [...prev];
                     newMessages[newMessages.length - 1] = {
@@ -120,14 +133,31 @@ const ChatWidget: React.FC = () => {
                     return newMessages;
                   });
                 }
-                
+
                 if (data.done) {
+                  streamCompleted = true;
                   break;
                 }
               } catch (e) {
-                // Skip malformed JSON but log for debugging
                 console.warn('Failed to parse SSE data:', line, e);
               }
+            }
+
+            if (streamCompleted) break;
+          }
+        }
+
+        // Parse any remaining complete payload after stream closure
+        if (!streamCompleted && buffer.trim().startsWith('data:')) {
+          const payload = buffer.trim().slice(5).trim();
+          if (payload) {
+            try {
+              const data = JSON.parse(payload);
+              if (typeof data.text === 'string' && data.text.length > 0) {
+                assistantMessage += data.text;
+              }
+            } catch (e) {
+              console.warn('Failed to parse trailing SSE data:', buffer, e);
             }
           }
         }
@@ -176,14 +206,14 @@ const ChatWidget: React.FC = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-6 right-6 z-50 bg-brand-primary hover:bg-brand-dark text-white p-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 group"
+          className="fixed bottom-4 right-4 sm:bottom-6 sm:right-6 z-50 bg-brand-primary hover:bg-brand-dark text-white p-3 sm:p-4 rounded-full shadow-2xl transition-all duration-300 transform hover:scale-110 group"
           aria-label="Open AI Assistant"
         >
           <div className="relative">
             <MessageCircle size={28} />
             <div className="absolute -top-1 -right-1 w-3 h-3 bg-green-400 rounded-full animate-pulse"></div>
           </div>
-          <span className="absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-brand-dark text-white px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
+          <span className="hidden sm:block absolute right-full mr-3 top-1/2 -translate-y-1/2 bg-brand-dark text-white px-4 py-2 rounded-lg text-sm font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none">
             Ask the AI Assistant
           </span>
         </button>
@@ -191,10 +221,10 @@ const ChatWidget: React.FC = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed bottom-6 right-6 z-50 w-full max-w-md h-[600px] bg-white rounded-2xl shadow-2xl flex flex-col overflow-hidden border border-slate-200 animate-[slideUp_0.3s_ease-out]">
+        <div className="fixed inset-0 z-50 w-full h-[100dvh] bg-white rounded-none shadow-2xl flex flex-col overflow-hidden border-0 animate-[slideUp_0.3s_ease-out] sm:inset-auto sm:bottom-6 sm:right-6 sm:w-full sm:max-w-md sm:h-[600px] sm:rounded-2xl sm:border sm:border-slate-200">
           {/* Header */}
-          <div className="bg-gradient-to-r from-brand-primary to-brand-dark text-white p-4 flex items-center justify-between">
-            <div className="flex items-center gap-3">
+          <div className="bg-gradient-to-r from-brand-primary to-brand-dark text-white p-3 sm:p-4 flex items-center justify-between pt-[max(0.75rem,env(safe-area-inset-top))]">
+            <div className="flex items-center gap-2 sm:gap-3 min-w-0">
               <div className="relative">
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden">
                   <img src="/static/AI_icon.png" alt="AI" className="w-full h-full object-cover" />
@@ -202,7 +232,7 @@ const ChatWidget: React.FC = () => {
                 <div className="absolute -bottom-1 -right-1 w-3 h-3 bg-green-400 rounded-full border-2 border-white"></div>
               </div>
               <div>
-                <h3 className="font-bold text-sm">Triplett Professional Intelligence Ecosystem</h3>
+                <h3 className="font-bold text-xs sm:text-sm truncate">Triplett Professional Intelligence Ecosystem</h3>
                 <p className="text-xs text-white/80">AI Assistant</p>
               </div>
             </div>
@@ -216,7 +246,7 @@ const ChatWidget: React.FC = () => {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-4 space-y-4 bg-slate-50">
+          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-slate-50">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
@@ -236,7 +266,7 @@ const ChatWidget: React.FC = () => {
                   )}
                 </div>
                 <div
-                  className={`flex-1 max-w-[80%] ${
+                  className={`flex-1 max-w-[85%] sm:max-w-[80%] ${
                     msg.role === 'user' ? 'text-right' : 'text-left'
                   }`}
                 >
@@ -277,7 +307,7 @@ const ChatWidget: React.FC = () => {
           </div>
 
           {/* Input */}
-          <div className="p-4 bg-white border-t border-slate-200">
+          <div className="p-3 sm:p-4 bg-white border-t border-slate-200 pb-[max(0.75rem,env(safe-area-inset-bottom))]">
             <div className="flex gap-2">
               <input
                 ref={inputRef}
