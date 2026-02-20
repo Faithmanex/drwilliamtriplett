@@ -31,6 +31,7 @@ export const booksCatalog: Book[] = [
         rating: 5
       }
     ],
-    paypalButtonId: "3WD8BPY7FJDXS"
+    paypalButtonId: "3WD8BPY7FJDXS",
+    blobUrl: "https://mdonfowww3ur5lf4.public.blob.vercel-storage.com/Harbors_of_Hope_The_Black_Church%2C_HBCUs%2C_and_the_Legacy_of_American.pdf"
   }
 ];

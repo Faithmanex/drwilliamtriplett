@@ -32,4 +32,5 @@ export interface Book {
   pubDate: string;
   reviews?: Review[];
   paypalButtonId?: string;
+  blobUrl?: string;
 }
