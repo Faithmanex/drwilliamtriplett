@@ -7,6 +7,7 @@ import About from './components/About';
 import Services from './components/Services';
 import Books from './components/Books';
 import Contact from './components/Contact';
+import AdminDashboard from './components/AdminDashboard';
 import ChatWidget from './components/ChatWidget';
 import { ToastProvider } from './components/Toast';
 
@@ -108,6 +109,7 @@ const App: React.FC = () => {
               <Route path="/books" element={<Books />} />
               <Route path="/books/:bookId" element={<Books />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/admin" element={<AdminDashboard />} />
             </Routes>
           </main>
           <Footer />

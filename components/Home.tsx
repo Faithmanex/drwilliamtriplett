@@ -6,9 +6,28 @@ import { booksCatalog } from '../data/books';
 
 const Home: React.FC = () => {
   const [isExpanded, setIsExpanded] = useState(false);
+  const [dynamicBooks, setDynamicBooks] = useState<Book[]>(booksCatalog);
+
+  // Fetch dynamic books from API
+  React.useEffect(() => {
+    const fetchDynamicBooks = async () => {
+      try {
+        const res = await fetch('/api/admin/books');
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setDynamicBooks(data);
+          }
+        }
+      } catch (err) {
+        console.error("Failed to fetch dynamic books:", err);
+      }
+    };
+    fetchDynamicBooks();
+  }, []);
   
   // Find "Harbors of Hope" specifically
-  const featuredBook = booksCatalog.find(book => book.id === 'harbor-hopes') || booksCatalog[0];
+  const featuredBook = dynamicBooks.find(book => book.id === 'harbor-hopes') || dynamicBooks[0];
 
   // Helper to safely truncate text for the "Read More" feature
   const getTruncatedText = (text: string) => {
