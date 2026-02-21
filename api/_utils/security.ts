@@ -16,7 +16,7 @@ export function validateOrigin(req: any, res: any): boolean {
   if (requestOrigin && ALLOWED_ORIGINS.includes(requestOrigin)) {
     res.setHeader("Access-Control-Allow-Origin", requestOrigin);
     res.setHeader("Access-Control-Allow-Methods", "GET, POST, OPTIONS");
-    res.setHeader("Access-Control-Allow-Headers", "Content-Type");
+    res.setHeader("Access-Control-Allow-Headers", "Content-Type, Authorization, x-filename");
     res.setHeader("Access-Control-Allow-Credentials", "true");
   }
 
