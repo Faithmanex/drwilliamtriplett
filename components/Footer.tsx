@@ -1,6 +1,6 @@
 import React from 'react';
 import { NavLink } from 'react-router-dom';
-import { Linkedin, Twitter, Mail } from 'lucide-react';
+import { Linkedin, Mail } from 'lucide-react';
 
 const Footer: React.FC = () => {
   const currentYear = new Date().getFullYear();
@@ -21,9 +21,6 @@ const Footer: React.FC = () => {
             <div className="flex space-x-4">
               <a href="#" className="p-2 bg-slate-800/50 rounded-full hover:bg-brand-primary hover:text-white transition-all" aria-label="LinkedIn">
                 <Linkedin size={18} />
-              </a>
-              <a href="#" className="p-2 bg-slate-800/50 rounded-full hover:bg-brand-primary hover:text-white transition-all" aria-label="Twitter">
-                <Twitter size={18} />
               </a>
               <NavLink to="/contact" className="p-2 bg-slate-800/50 rounded-full hover:bg-brand-primary hover:text-white transition-all" aria-label="Email">
                 <Mail size={18} />
