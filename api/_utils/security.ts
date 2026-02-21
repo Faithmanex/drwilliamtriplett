@@ -11,7 +11,14 @@ export function validateOrigin(req: any, res: any): boolean {
   const referer = req.headers.referer;
 
   // Set CORS headers
-  const requestOrigin = origin || (referer ? new URL(referer).origin : null);
+  let requestOrigin = origin;
+  if (!requestOrigin && referer) {
+    try {
+      requestOrigin = new URL(referer).origin;
+    } catch (e) {
+      requestOrigin = null;
+    }
+  }
   
   if (requestOrigin && ALLOWED_ORIGINS.includes(requestOrigin)) {
     res.setHeader("Access-Control-Allow-Origin", requestOrigin);
