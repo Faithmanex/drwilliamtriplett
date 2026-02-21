@@ -1,8 +1,7 @@
 
 import React, { useState } from 'react';
-import { ArrowRight, BookOpen, Star, CheckCircle, Briefcase, Book as BookIcon, UserCheck, Mic } from 'lucide-react';
+import { ArrowRight, BookOpen, Star, CheckCircle, Briefcase, Book, UserCheck, Mic } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
-import { Book } from '../types';
 import { booksCatalog } from '../data/books'; 
 
 const Home: React.FC = () => {
@@ -47,7 +46,7 @@ const Home: React.FC = () => {
     },
     {
       title: "Academic & Research",
-      icon: <BookIcon className="w-6 h-6" />,
+      icon: <Book className="w-6 h-6" />,
       description: "Faculty support, curriculum innovation, and research design for academic development."
     },
     {

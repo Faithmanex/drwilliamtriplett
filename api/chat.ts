@@ -76,10 +76,10 @@ export default async function handler(req: any, res: any) {
         const sanitizedHistory: ChatMessage[] = conversationHistory
             .filter((msg: any) => msg && typeof msg === "object")
             .map((msg: any) => ({
-                role: (msg.role === "assistant" ? "assistant" : "user") as "assistant" | "user",
+                role: msg.role === "assistant" ? "assistant" : "user",
                 content: typeof msg.content === "string" ? msg.content : "",
             }))
-            .filter((msg: any) => typeof msg.content === "string" && msg.content.trim().length > 0);
+            .filter((msg: ChatMessage) => msg.content.trim().length > 0);
 
         // Set headers for streaming
         res.setHeader("Content-Type", "text/event-stream");
