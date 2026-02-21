@@ -151,18 +151,22 @@ const Home: React.FC = () => {
               </p>
 
               <div className="text-lg text-slate-300 leading-relaxed mb-8">
-                <p>
-                  {isExpanded ? featuredBook.longDescription : getTruncatedText(featuredBook.longDescription)}
-                  {!isExpanded && (
-                     <span className="text-slate-500">... </span>
-                  )}
-                  <button 
-                    onClick={() => setIsExpanded(!isExpanded)}
-                    className="inline-flex items-center gap-1 text-brand-accent font-bold text-sm uppercase tracking-wide hover:text-white transition-colors focus:outline-none ml-1"
-                  >
-                    {isExpanded ? "Read Less" : "Read More"}
-                  </button>
-                </p>
+                {isExpanded ? (
+                  <div 
+                    className="prose prose-invert max-w-none"
+                    dangerouslySetInnerHTML={{ __html: featuredBook.longDescription }} 
+                  />
+                ) : (
+                  <p>
+                    {featuredBook.description}
+                  </p>
+                )}
+                <button 
+                  onClick={() => setIsExpanded(!isExpanded)}
+                  className="inline-flex items-center gap-1 text-brand-accent font-bold text-sm uppercase tracking-wide hover:text-white transition-colors focus:outline-none mt-2"
+                >
+                  {isExpanded ? "Read Less" : "Read More"}
+                </button>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 mb-10">
