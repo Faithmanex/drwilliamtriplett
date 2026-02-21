@@ -18,30 +18,11 @@ const Books: React.FC = () => {
   const [emailError, setEmailError] = useState('');
   
   const purchaseRef = useRef<HTMLDivElement>(null);
-  const [dynamicBooks, setDynamicBooks] = useState<Book[]>(booksCatalog);
-
-  // Fetch dynamic books from API
-  useEffect(() => {
-    const fetchDynamicBooks = async () => {
-      try {
-        const res = await fetch('/api/admin/books');
-        if (res.ok) {
-          const data = await res.json();
-          if (Array.isArray(data) && data.length > 0) {
-            setDynamicBooks(data);
-          }
-        }
-      } catch (err) {
-        console.error("Failed to fetch dynamic books:", err);
-      }
-    };
-    fetchDynamicBooks();
-  }, []);
 
   // Sync selected book and SEO metadata with URL param
   useEffect(() => {
     if (bookId) {
-      const book = dynamicBooks.find(b => b.id === bookId);
+      const book = booksCatalog.find(b => b.id === bookId);
       if (book) {
         setSelectedBook(book);
         
@@ -87,7 +68,7 @@ const Books: React.FC = () => {
 
     if (pendingEmail && pendingBookId) {
         // Find the book
-        const book = dynamicBooks.find(b => b.id === pendingBookId);
+        const book = booksCatalog.find(b => b.id === pendingBookId);
         
         // If we have a success param in URL (PayPal standard return) or if we just rely on presence of state 
         // Logic: if user comes back to this page and has pending state, we might assume success if redirected from PayPal
@@ -213,7 +194,7 @@ const Books: React.FC = () => {
     }
   };
 
-  const filteredBooks = dynamicBooks.filter(book => {
+  const filteredBooks = booksCatalog.filter(book => {
     const query = searchQuery.toLowerCase();
     return (
       book.title.toLowerCase().includes(query) ||
