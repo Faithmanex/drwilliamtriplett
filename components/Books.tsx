@@ -296,7 +296,10 @@ const Books: React.FC = () => {
               </h2>
 
               <div className="prose prose-slate prose-lg text-slate-600 mb-10 leading-relaxed">
-                <p>{selectedBook.longDescription}</p>
+                {selectedBook.longDescription.startsWith('<')
+                  ? <div dangerouslySetInnerHTML={{ __html: selectedBook.longDescription }} />
+                  : <p>{selectedBook.longDescription}</p>
+                }
               </div>
 
               <div className="bg-slate-50 rounded-2xl p-6 md:p-8 mb-10 border border-slate-100">
