@@ -203,39 +203,17 @@ const Books: React.FC = () => {
     );
   });
 
-  const renderBookCover = (book: Book, size: 'sm' | 'lg') => {
-    const isImageFile = book.imageUrl.includes('/') || book.imageUrl.includes('.');
-    
-    return (
-      <div className={`relative aspect-[2/3] shadow-2xl rounded-r-lg flex flex-col justify-between transform transition-transform duration-500 overflow-hidden ${!isImageFile ? book.imageUrl : 'bg-white'} ${size === 'lg' ? 'w-64 md:w-80 hover:rotate-y-12' : 'w-full group-hover:scale-105'}`}>
-        {isImageFile ? (
-            <>
-                <img 
-                    src={book.imageUrl} 
-                    alt={`Book Cover: ${book.title} - Publication by Dr. William Triplett`} 
-                    className="absolute inset-0 w-full h-full object-cover"
-                />
-                 <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-black/10 pointer-events-none"></div>
-                 <div className="absolute left-0 top-0 bottom-0 w-3 md:w-4 bg-gradient-to-r from-white/40 to-transparent border-r border-white/20 pointer-events-none z-10"></div>
-            </>
-        ) : (
-            <>
-                 <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-black/30 pointer-events-none"></div>
-                 <div className="absolute left-0 top-0 bottom-0 w-3 md:w-4 bg-gradient-to-r from-white/30 to-transparent border-r border-white/10"></div>
-                 <div className="text-center mt-8 pl-2 text-white relative z-10">
-                    <h3 className={`font-serif font-bold tracking-wider mb-2 ${size === 'lg' ? 'text-2xl' : 'text-lg'}`}>
-                    {book.title.split(' ').map((word, i) => <div key={i}>{word}</div>)}
-                    </h3>
-                    <div className="w-8 h-0.5 bg-white/50 mx-auto my-3"></div>
-                 </div>
-                 <div className="text-center mb-4 pl-2 text-white relative z-10">
-                    <p className="font-serif italic text-xs opacity-75">Dr. William Triplett</p>
-                 </div>
-            </>
-        )}
-      </div>
-    );
-  };
+  const renderBookCover = (book: Book, size: 'sm' | 'lg') => (
+    <div className={`relative aspect-[2/3] shadow-2xl rounded-r-lg flex flex-col justify-between transform transition-transform duration-500 overflow-hidden bg-white ${size === 'lg' ? 'w-64 md:w-80 hover:rotate-y-12' : 'w-full group-hover:scale-105'}`}>
+      <img 
+          src={book.imageUrl} 
+          alt={`Book Cover: ${book.title} - Publication by Dr. William Triplett`} 
+          className="absolute inset-0 w-full h-full object-cover"
+      />
+      <div className="absolute inset-0 bg-gradient-to-br from-white/20 to-black/10 pointer-events-none"></div>
+      <div className="absolute left-0 top-0 bottom-0 w-3 md:w-4 bg-gradient-to-r from-white/40 to-transparent border-r border-white/20 pointer-events-none z-10"></div>
+    </div>
+  );
 
   const fadeInStyle = `
     @keyframes fadeInUp {
@@ -295,12 +273,10 @@ const Books: React.FC = () => {
                 {selectedBook.subtitle}
               </h2>
 
-              <div className="prose prose-slate prose-lg text-slate-600 mb-10 leading-relaxed">
-                {selectedBook.longDescription.trim().startsWith('<')
-                  ? <div dangerouslySetInnerHTML={{ __html: selectedBook.longDescription }} />
-                  : <p>{selectedBook.longDescription}</p>
-                }
-              </div>
+              <div 
+                className="prose prose-slate prose-lg text-slate-600 mb-10 leading-relaxed"
+                dangerouslySetInnerHTML={{ __html: selectedBook.longDescription }} 
+              />
 
               <div className="bg-slate-50 rounded-2xl p-6 md:p-8 mb-10 border border-slate-100">
                 <h3 className="font-serif text-lg font-bold text-brand-dark mb-4">Product Details</h3>
@@ -324,11 +300,16 @@ const Books: React.FC = () => {
                     </div>
                     <button 
                       onClick={handleInitiatePurchase}
-                      className="h-16 w-full sm:w-auto px-10 bg-[#FFC439] hover:bg-[#F4BB2E] text-slate-900 rounded-full transition-all duration-300 flex items-center justify-center gap-4 shadow-[0_8px_20px_-4px_rgba(255,196,57,0.4)] hover:shadow-[0_12px_25px_-5px_rgba(255,196,57,0.5)] transform hover:-translate-y-0.5 active:scale-[0.98] group"
+                      disabled={!selectedBook.paypalButtonId}
+                      className={`h-16 w-full sm:w-auto px-10 rounded-full transition-all duration-300 flex items-center justify-center gap-4 transform active:scale-[0.98] group ${
+                        selectedBook.paypalButtonId 
+                        ? "bg-[#FFC439] hover:bg-[#F4BB2E] text-slate-900 shadow-[0_8px_20px_-4px_rgba(255,196,57,0.4)] hover:shadow-[0_12px_25px_-5px_rgba(255,196,57,0.5)] hover:-translate-y-0.5" 
+                        : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
+                      }`}
                     >
                       <div className="flex items-center select-none">
-                        <span className="italic font-serif font-black text-xl tracking-tighter">Pay</span>
-                        <span className="italic font-serif font-black text-xl tracking-tighter text-[#003087]">Pal</span>
+                        <span className={`italic font-serif font-black text-xl tracking-tighter ${!selectedBook.paypalButtonId ? 'text-slate-400' : ''}`}>Pay</span>
+                        <span className={`italic font-serif font-black text-xl tracking-tighter ${!selectedBook.paypalButtonId ? 'text-slate-400' : 'text-[#003087]'}`}>Pal</span>
                       </div>
                       <div className="h-6 w-px bg-slate-900/10"></div>
                       <span className="font-sans font-bold text-lg tracking-tight">Buy Now</span>
@@ -425,17 +406,11 @@ const Books: React.FC = () => {
                         <PayPalHostedButton hostedButtonId={selectedBook.paypalButtonId} />
                       </div>
                   ) : (
-                    // Fallback for books without hosted button (simulated)
                     <button 
-                        onClick={handlePaymentComplete}
-                        className="h-16 w-full px-10 bg-[#FFC439] hover:bg-[#F4BB2E] text-slate-900 rounded-full transition-all duration-300 flex items-center justify-center gap-4 shadow-[0_8px_20px_-4px_rgba(255,196,57,0.4)] hover:shadow-[0_12px_25px_-5px_rgba(255,196,57,0.5)] transform hover:-translate-y-0.5 active:scale-[0.98] mb-4"
+                        disabled
+                        className="h-16 w-full px-10 bg-slate-200 text-slate-400 rounded-full flex items-center justify-center gap-4 mb-4 cursor-not-allowed"
                     >
-                        <div className="flex items-center select-none">
-                          <span className="italic font-serif font-black text-xl tracking-tighter">Pay</span>
-                          <span className="italic font-serif font-black text-xl tracking-tighter text-[#003087]">Pal</span>
-                        </div>
-                        <div className="h-6 w-px bg-slate-900/10"></div>
-                        <span className="font-sans font-bold text-lg tracking-tight">Pay ${selectedBook?.price.toFixed(2)}</span>
+                        <span className="font-sans font-bold text-lg tracking-tight">Payment Unavailable</span>
                     </button>
                   )}
 
@@ -586,7 +561,9 @@ const Books: React.FC = () => {
                   <p className="text-sm text-slate-500 line-clamp-2 mb-4 flex-1">{book.description}</p>
                   <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-auto">
                     <span className="text-lg font-bold text-slate-900">${book.price.toFixed(2)}</span>
-                    <span className="text-brand-accent text-sm font-bold uppercase tracking-wider">Buy Now</span>
+                    <span className={`text-sm font-bold uppercase tracking-wider ${book.paypalButtonId ? 'text-brand-accent' : 'text-slate-300'}`}>
+                      {book.paypalButtonId ? 'Buy Now' : 'Unavailable'}
+                    </span>
                   </div>
                 </div>
               </div>

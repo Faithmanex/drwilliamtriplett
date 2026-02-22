@@ -10,14 +10,7 @@ const Home: React.FC = () => {
   // Find "Harbors of Hope" specifically
   const featuredBook = booksCatalog.find(book => book.id === 'harbor-hopes') || booksCatalog[0];
 
-  // Helper to safely truncate text for the "Read More" feature
-  const getTruncatedText = (text: string) => {
-    // Split by sentences to avoid cutting mid-word
-    const sentences = text.split('. ');
-    if (sentences.length <= 2) return text;
-    // Return first two sentences
-    return sentences.slice(0, 2).join('. ') + '.';
-  };
+
 
   const serviceHighlights = [
     {
