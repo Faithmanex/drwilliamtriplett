@@ -45,5 +45,6 @@ export interface AcademicService {
   description: string;
   features: string[];
   category: 'one-on-one' | 'faculty-advisory' | 'dissertation-advisory';
+  priceLabel?: string; // e.g., "(One-Time)", "(Subscription)", "(per chapter)"
   stripePriceId?: string;
 }

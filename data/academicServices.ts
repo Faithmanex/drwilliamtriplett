@@ -17,6 +17,7 @@ export const academicServices: AcademicService[] = [
       'Written strategic roadmap'
     ],
     category: 'one-on-one',
+    priceLabel: '(One-Time)',
     stripePriceId: 'price_faculty_strategy'
   },
   {
@@ -34,9 +35,10 @@ export const academicServices: AcademicService[] = [
       'Defense preparation insight'
     ],
     category: 'one-on-one',
+    priceLabel: '(One-Time)',
     stripePriceId: 'price_dissertation_strategy'
   },
-  // Faculty Advisory Programs
+  // Faculty Advisory Programs (Post-Consultation)
   {
     id: 'publication-strategy',
     title: 'Publication Strategy Advisory Program',
@@ -50,6 +52,7 @@ export const academicServices: AcademicService[] = [
       'Structured milestone planning'
     ],
     category: 'faculty-advisory',
+    priceLabel: '(One-Time)',
     stripePriceId: 'price_publication_strategy'
   },
   {
@@ -65,6 +68,7 @@ export const academicServices: AcademicService[] = [
       'Institutional expectation mapping'
     ],
     category: 'faculty-advisory',
+    priceLabel: '(One-Time)',
     stripePriceId: 'price_promotion_tenure'
   },
   {
@@ -80,9 +84,10 @@ export const academicServices: AcademicService[] = [
       'Institutional navigation support'
     ],
     category: 'faculty-advisory',
+    priceLabel: '(Subscription)',
     stripePriceId: 'price_executive_academic'
   },
-  // Dissertation Advisory Programs
+  // Dissertation Advisory Programs (Post-Consultation)
   {
     id: 'proposal-irb',
     title: 'Proposal & IRB Advisory Program',
@@ -96,6 +101,7 @@ export const academicServices: AcademicService[] = [
       'IRB readiness review'
     ],
     category: 'dissertation-advisory',
+    priceLabel: '(One-Time)',
     stripePriceId: 'price_proposal_irb'
   },
   {
@@ -111,6 +117,7 @@ export const academicServices: AcademicService[] = [
       'Developmental guidance'
     ],
     category: 'dissertation-advisory',
+    priceLabel: '(per Chapter)',
     stripePriceId: 'price_chapter_development'
   },
   {
@@ -126,6 +133,7 @@ export const academicServices: AcademicService[] = [
       'Structured milestone accountability'
     ],
     category: 'dissertation-advisory',
+    priceLabel: '(One-Time)',
     stripePriceId: 'price_dissertation_completion'
   }
 ];

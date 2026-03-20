@@ -81,8 +81,8 @@ const AcademicServiceDetail: React.FC = () => {
               <span className="bg-green-100 text-green-800 text-2xl font-bold px-4 py-2 rounded-lg">
                 ${service.price}
               </span>
-              {service.price === 1200 && (
-                <span className="text-slate-500 ml-2">/ month</span>
+              {service.priceLabel && (
+                <span className="text-slate-500 ml-2">{service.priceLabel}</span>
               )}
             </div>
 

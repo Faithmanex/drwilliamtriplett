@@ -16,9 +16,14 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
     <div className="bg-white rounded-2xl p-6 shadow-card border border-slate-100 hover:border-brand-primary/20 transition-all duration-300 flex flex-col h-full">
       <div className="flex items-start justify-between mb-4">
         <h3 className="font-serif text-xl font-bold text-brand-dark">{service.title}</h3>
-        <span className="bg-brand-light text-brand-primary text-sm font-bold px-3 py-1 rounded-full">
-          ${service.price}
-        </span>
+        <div className="text-right">
+          <span className="bg-brand-light text-brand-primary text-sm font-bold px-3 py-1 rounded-full">
+            ${service.price}
+          </span>
+          {service.priceLabel && (
+            <span className="block text-xs text-slate-500 mt-1">{service.priceLabel}</span>
+          )}
+        </div>
       </div>
       
       {service.duration && (
@@ -57,12 +62,13 @@ const AcademicServices: React.FC = () => {
         </p>
       </div>
 
-      {/* One-On-One Sessions */}
+      {/* One-On-One Sessions (One-Time) */}
       <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="flex items-center gap-3 mb-8">
+        <div className="flex items-center gap-3 mb-2">
           <BookOpen className="w-8 h-8 text-brand-primary" />
           <h2 className="font-serif text-3xl font-bold text-brand-dark">One-On-One Sessions</h2>
         </div>
+        <p className="text-slate-500 mb-8">(One-Time)</p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
           {oneOnOneServices.map((service) => (
             <ServiceCard key={service.id} service={service} />
@@ -70,12 +76,13 @@ const AcademicServices: React.FC = () => {
         </div>
       </div>
 
-      {/* Faculty Advisory Programs */}
+      {/* Faculty Advisory Programs (Post-Consultation) */}
       <div className="max-w-7xl mx-auto px-6 py-16">
-        <div className="flex items-center gap-3 mb-8">
+        <div className="flex items-center gap-3 mb-2">
           <Users className="w-8 h-8 text-brand-primary" />
           <h2 className="font-serif text-3xl font-bold text-brand-dark">Faculty Advisory Programs</h2>
         </div>
+        <p className="text-slate-500 mb-8">(Post-Consultation)</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {facultyAdvisoryServices.map((service) => (
             <ServiceCard key={service.id} service={service} />
@@ -83,12 +90,13 @@ const AcademicServices: React.FC = () => {
         </div>
       </div>
 
-      {/* Dissertation Advisory Programs */}
+      {/* Dissertation Advisory Programs (Post-Consultation) */}
       <div className="max-w-7xl mx-auto px-6 py-16 pb-24">
-        <div className="flex items-center gap-3 mb-8">
+        <div className="flex items-center gap-3 mb-2">
           <GraduationCap className="w-8 h-8 text-brand-primary" />
           <h2 className="font-serif text-3xl font-bold text-brand-dark">Dissertation Advisory Programs</h2>
         </div>
+        <p className="text-slate-500 mb-8">(Post-Consultation)</p>
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
           {dissertationAdvisoryServices.map((service) => (
             <ServiceCard key={service.id} service={service} />
