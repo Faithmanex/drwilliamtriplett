@@ -15,7 +15,8 @@ const servicesData: ServiceCategory[] = [
     title: "Academic & Research",
     items: [
       { title: "Faculty support, curriculum innovation, and academic development." },
-      { title: "Research design, IRB, proposal, and dissertation support." }
+      { title: "Research design, IRB, proposal, and dissertation support." },
+      { title: "Faculty Strategy & Dissertation Advisory Programs" }
     ]
   },
   {
@@ -82,6 +83,15 @@ const Services: React.FC = () => {
                   Inquire Now 
                   <ArrowRight size={16} className="ml-2 transform group-hover:translate-x-1 transition-transform" />
                 </NavLink>
+                {category.title === "Academic & Research" && (
+                  <NavLink 
+                    to="/services/academic"
+                    className="inline-flex items-center text-sm font-bold text-brand-accent hover:text-brand-primary transition-colors uppercase tracking-wide group ml-4"
+                  >
+                    View Programs 
+                    <ArrowRight size={16} className="ml-2 transform group-hover:translate-x-1 transition-transform" />
+                  </NavLink>
+                )}
               </div>
             </div>
           ))}

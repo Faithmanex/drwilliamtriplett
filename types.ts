@@ -34,3 +34,16 @@ export interface Book {
   paypalButtonId?: string;
   blobUrl?: string;
 }
+
+// Academic Services Types
+export interface AcademicService {
+  id: string;
+  title: string;
+  shortTitle: string;
+  price: number;
+  duration?: string;
+  description: string;
+  features: string[];
+  category: 'one-on-one' | 'faculty-advisory' | 'dissertation-advisory';
+  stripePriceId?: string;
+}
