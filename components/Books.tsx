@@ -408,9 +408,9 @@ const Books: React.FC = () => {
                   ) : (
                     <button 
                         disabled
-                        className="h-16 w-full px-10 bg-slate-200 text-slate-400 rounded-full flex items-center justify-center gap-4 mb-4 cursor-not-allowed"
+                        className="h-16 w-full px-10 bg-amber-50 text-amber-600 rounded-full flex items-center justify-center gap-4 mb-4 cursor-not-allowed border border-amber-200"
                     >
-                        <span className="font-sans font-bold text-lg tracking-tight">Payment Unavailable</span>
+                        <span className="font-sans font-bold text-lg tracking-tight">Coming Soon</span>
                     </button>
                   )}
 
@@ -561,8 +561,8 @@ const Books: React.FC = () => {
                   <p className="text-sm text-slate-500 line-clamp-2 mb-4 flex-1">{book.description}</p>
                   <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-auto">
                     <span className="text-lg font-bold text-slate-900">${book.price.toFixed(2)}</span>
-                    <span className={`text-sm font-bold uppercase tracking-wider ${book.paypalButtonId ? 'text-brand-accent' : 'text-slate-300'}`}>
-                      {book.paypalButtonId ? 'Buy Now' : 'Unavailable'}
+                    <span className={`text-sm font-bold uppercase tracking-wider ${book.paypalButtonId ? 'text-brand-accent' : 'text-amber-500'}`}>
+                      {book.paypalButtonId ? 'Buy Now' : 'Coming Soon'}
                     </span>
                   </div>
                 </div>
