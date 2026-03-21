@@ -16,7 +16,7 @@ const ChatWidget: React.FC = () => {
   const [messages, setMessages] = useState<Message[]>([
     {
       role: 'assistant',
-      content: 'Hi! I\'m here to help with questions about Dr. Triplett\'s work in leadership, cybersecurity, AI, doctoral education, and organizational development. What can I help you with today?',
+      content: 'Hi! I\'m here to help with questions about Dr. Triplett\'s books, academic services, publications, and more. You can ask about Faculty Strategy, Dissertation Support, the AI leadership books, or anything else. What would you like to know?',
       timestamp: new Date(),
     },
   ]);
