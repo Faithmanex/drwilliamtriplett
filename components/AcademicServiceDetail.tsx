@@ -78,12 +78,9 @@ const AcademicServiceDetail: React.FC = () => {
           {/* Content */}
           <div className="px-8 py-8">
             <div className="mb-8">
-              <span className="bg-green-100 text-green-800 text-2xl font-bold px-4 py-2 rounded-lg">
-                ${service.price}
+              <span className="bg-green-100 text-green-800 text-2xl font-bold px-4 py-2 rounded-lg whitespace-nowrap">
+                ${service.price} {service.priceLabel}
               </span>
-              {service.priceLabel && (
-                <span className="text-slate-500 ml-2">{service.priceLabel}</span>
-              )}
             </div>
 
             <p className="text-slate-600 text-lg mb-8">{service.description}</p>

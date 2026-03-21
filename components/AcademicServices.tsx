@@ -16,13 +16,10 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
     <div className="bg-white rounded-2xl p-6 shadow-card border border-slate-100 hover:border-brand-primary/20 transition-all duration-300 flex flex-col h-full">
       <div className="flex items-start justify-between mb-4">
         <h3 className="font-serif text-lg md:text-xl font-bold text-brand-dark">{service.title}</h3>
-        <div className="text-right">
-          <span className="bg-brand-light text-brand-primary text-sm font-bold px-3 py-1 rounded-full">
-            ${service.price}
+        <div className="text-right flex flex-col items-end">
+          <span className="bg-brand-light text-brand-primary text-sm font-bold px-3 py-1 rounded-full whitespace-nowrap">
+            ${service.price} {service.priceLabel}
           </span>
-          {service.priceLabel && (
-            <span className="block text-xs text-slate-500 mt-1">{service.priceLabel}</span>
-          )}
         </div>
       </div>
       
