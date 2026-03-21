@@ -6,6 +6,8 @@ import Footer from './components/Footer';
 import Home from './components/Home';
 import About from './components/About';
 import Services from './components/Services';
+import AcademicServices from './components/AcademicServices';
+import AcademicServiceDetail from './components/AcademicServiceDetail';
 import Books from './components/Books';
 import Contact from './components/Contact';
 import ChatWidget from './components/ChatWidget';
@@ -28,6 +30,12 @@ const SEO: React.FC = () => {
     } else if (pathname === '/services') {
       title = `Services & Advisory | ${baseTitle}`;
       description = "Strategic advisory, speaking engagements, and consulting services by Dr. William Triplett.";
+    } else if (pathname === '/services/academic') {
+      title = `Academic Advisory Services | ${baseTitle}`;
+      description = "Strategic guidance for faculty, researchers, and doctoral candidates. Faculty strategy, dissertation support, and academic career advancement programs.";
+    } else if (pathname.startsWith('/services/academic/')) {
+      title = `Book Now | ${baseTitle}`;
+      description = "Complete your booking for academic advisory services with Dr. William Triplett.";
     } else if (pathname === '/books') {
       title = `Publications | ${baseTitle}`;
       description = "Explore books and resources by Dr. William Triplett exploring faith, leadership, and technology.";
@@ -106,6 +114,8 @@ const App: React.FC = () => {
               <Route path="/" element={<Home />} />
               <Route path="/about" element={<About />} />
               <Route path="/services" element={<Services />} />
+              <Route path="/services/academic" element={<AcademicServices />} />
+              <Route path="/services/academic/:id" element={<AcademicServiceDetail />} />
               <Route path="/books" element={<Books />} />
               <Route path="/books/:bookId" element={<Books />} />
               <Route path="/contact" element={<Contact />} />
