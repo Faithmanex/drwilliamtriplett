@@ -17,11 +17,11 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
       <div className="flex items-start justify-between mb-4">
         <h3 className="font-serif text-lg md:text-xl font-bold text-brand-dark">{service.title}</h3>
         <div className="text-right">
-          <span className="bg-brand-light text-brand-primary text-sm font-bold px-3 py-1 rounded-full">
+          <span className="bg-brand-light text-brand-primary text-sm font-bold px-3 py-1 rounded-full whitespace-nowrap block">
             ${service.price}
           </span>
           {service.priceLabel && (
-            <span className="block text-xs text-slate-500 mt-1">{service.priceLabel}</span>
+            <span className="text-xs text-slate-500 mt-1 block whitespace-nowrap">{service.priceLabel}</span>
           )}
         </div>
       </div>
