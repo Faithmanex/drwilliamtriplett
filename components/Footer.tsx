@@ -52,6 +52,7 @@ const Footer: React.FC = () => {
         <div className="mt-16 pt-8 border-t border-slate-800 flex flex-col md:flex-row justify-between items-center gap-4 text-xs text-slate-400 font-medium">
           <p>&copy; {currentYear} Dr. William Triplett. All rights reserved.</p>
           <div className="flex gap-6">
+            <NavLink to="/legal" className="hover:text-brand-accent transition-colors">Legal & Disclosures</NavLink>
             <a href="#" className="hover:text-brand-accent transition-colors">Privacy Policy</a>
             <a href="#" className="hover:text-brand-accent transition-colors">Terms of Service</a>
           </div>
