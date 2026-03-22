@@ -10,6 +10,7 @@ import AcademicServices from './components/AcademicServices';
 import AcademicServiceDetail from './components/AcademicServiceDetail';
 import Books from './components/Books';
 import Contact from './components/Contact';
+import Legal from './components/Legal';
 import ChatWidget from './components/ChatWidget';
 import { ToastProvider } from './components/Toast';
 
@@ -44,6 +45,9 @@ const SEO: React.FC = () => {
     } else if (pathname === '/contact') {
       title = `Contact | ${baseTitle}`;
       description = "Get in touch with Dr. William Triplett for professional inquiries and advisory requests.";
+    } else if (pathname === '/legal') {
+      title = `Legal Statements & Disclosures | ${baseTitle}`;
+      description = "Legal statements and professional disclosures for Dr. William Triplett's advisory services.";
     }
 
     document.title = title;
@@ -119,6 +123,7 @@ const App: React.FC = () => {
               <Route path="/books" element={<Books />} />
               <Route path="/books/:bookId" element={<Books />} />
               <Route path="/contact" element={<Contact />} />
+              <Route path="/legal" element={<Legal />} />
             </Routes>
           </main>
           <Footer />
