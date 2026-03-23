@@ -101,8 +101,8 @@ const Navbar: React.FC = () => {
             ))}
             <div className="pl-4 ml-2 border-l border-slate-200/20 flex items-center gap-3">
               {user ? (
-                <NavLink
-                  to="/dashboard"
+                <button
+                  onClick={() => navigate('/dashboard')}
                   className={`px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${
                     scrolled || location.pathname !== '/'
                     ? 'bg-brand-primary text-white hover:bg-brand-dark'
@@ -111,7 +111,7 @@ const Navbar: React.FC = () => {
                 >
                   <User size={16} />
                   Dashboard
-                </NavLink>
+                </button>
               ) : (
                 <>
                   <NavLink
