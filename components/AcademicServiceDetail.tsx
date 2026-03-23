@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { academicServices } from '../data/academicServices';
+import { supabase } from '../lib/supabase';
 import { Check, ArrowLeft, CreditCard, Loader2 } from 'lucide-react';
 
 interface RouteParams {
@@ -11,20 +12,47 @@ const AcademicServiceDetail: React.FC = () => {
   const { id } = useParams<RouteParams>();
   const navigate = useNavigate();
   const [isProcessing, setIsProcessing] = useState(false);
-  const [paymentMethod, setPaymentMethod] = useState<'stripe' | 'paypal'>('stripe');
+  const [user, setUser] = useState<any>(null);
   
   const service = academicServices.find(s => s.id === id);
 
   useEffect(() => {
-    const script = document.createElement('script');
-    script.src = 'https://js.stripe.com/v3/';
-    script.async = true;
-    document.body.appendChild(script);
-    
-    return () => {
-      document.body.removeChild(script);
-    };
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user || null);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+    });
+    return () => subscription.unsubscribe();
   }, []);
+
+  const handlePayment = async () => {
+    setIsProcessing(true);
+
+    try {
+      // Check if logged in
+      if (!user) {
+        navigate('/login?redirect=' + encodeURIComponent(window.location.pathname));
+        return;
+      }
+
+      // Simulate payment - create consultation record in database
+      await supabase.from('consultations').insert({
+        user_id: user.id,
+        service_id: service?.id,
+        service_name: service?.title,
+        price: service?.price,
+        status: 'completed', // Simulated as paid
+      });
+
+      // Redirect to dashboard
+      navigate('/dashboard?booking=success');
+    } catch (err) {
+      console.error('Payment error:', err);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
 
   if (!service) {
     return (
@@ -41,19 +69,6 @@ const AcademicServiceDetail: React.FC = () => {
       </div>
     );
   }
-
-  const handlePayment = async () => {
-    setIsProcessing(true);
-    
-    // Simulated payment flow - replace with actual Stripe/PayPal integration
-    if (paymentMethod === 'stripe') {
-      alert('Stripe integration coming soon! Use PayPal for now.');
-    } else {
-      alert('PayPal integration coming soon!');
-    }
-    
-    setIsProcessing(false);
-  };
 
   return (
     <div className="bg-brand-light min-h-screen pt-20">
@@ -104,37 +119,11 @@ const AcademicServiceDetail: React.FC = () => {
                   <span className="font-bold text-slate-700">Total</span>
                   <span className="text-2xl font-bold text-brand-dark">${service.price}</span>
                 </div>
-                
-                <div className="space-y-3">
-                  <label className="flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-white transition-colors">
-                    <input 
-                      type="radio" 
-                      name="payment" 
-                      checked={paymentMethod === 'stripe'}
-                      onChange={() => setPaymentMethod('stripe')}
-                      className="mr-3"
-                    />
-                    <CreditCard className="w-5 h-5 mr-2 text-slate-600" />
-                    <span className="text-slate-700">Pay with Stripe</span>
-                  </label>
-                  
-                  <label className="flex items-center p-3 border border-slate-200 rounded-lg cursor-pointer hover:bg-white transition-colors">
-                    <input 
-                      type="radio" 
-                      name="payment" 
-                      checked={paymentMethod === 'paypal'}
-                      onChange={() => setPaymentMethod('paypal')}
-                      className="mr-3"
-                    />
-                    <span className="font-bold text-blue-700 mr-2">PayPal</span>
-                    <span className="text-slate-600">(or card)</span>
-                  </label>
-                </div>
 
                 <button
                   onClick={handlePayment}
                   disabled={isProcessing}
-                  className="w-full mt-6 bg-brand-dark hover:bg-slate-800 text-white py-4 px-6 rounded-lg font-bold transition-all hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
+                  className="w-full mt-2 bg-brand-dark hover:bg-slate-800 text-white py-4 px-6 rounded-lg font-bold transition-all hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
                 >
                   {isProcessing ? (
                     <>
@@ -144,13 +133,13 @@ const AcademicServiceDetail: React.FC = () => {
                   ) : (
                     <>
                       <CreditCard className="w-5 h-5" />
-                      Proceed to Payment
+                      Book Now (Demo)
                     </>
                   )}
                 </button>
                 
                 <p className="text-center text-slate-500 text-sm mt-4">
-                  Secure payment • Non-refundable • 24hr reschedule notice
+                  Demo mode • Payment simulated • Non-refundable
                 </p>
               </div>
             </div>
