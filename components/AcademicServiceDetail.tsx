@@ -45,8 +45,12 @@ const AcademicServiceDetail: React.FC = () => {
         status: 'completed', // Simulated as paid
       });
 
-      // Redirect to dashboard
-      navigate('/dashboard?booking=success');
+      // Redirect to intake form
+      const intakeRoute = service?.id === 'faculty-strategy' || service?.id === 'publication-strategy' || service?.id === 'promotion-tenure' || service?.id === 'executive-academic'
+        ? '/intake/faculty'
+        : '/intake/dissertation';
+      
+      navigate(`${intakeRoute}/${data.id}?booking=success`);
     } catch (err) {
       console.error('Payment error:', err);
     } finally {
