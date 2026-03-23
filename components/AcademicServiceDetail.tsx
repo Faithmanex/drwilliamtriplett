@@ -37,20 +37,22 @@ const AcademicServiceDetail: React.FC = () => {
       }
 
       // Simulate payment - create consultation record in database
-      await supabase.from('consultations').insert({
+      const { data: consultData, error: consultError } = await supabase.from('consultations').insert({
         user_id: user.id,
         service_id: service?.id,
         service_name: service?.title,
         price: service?.price,
-        status: 'completed', // Simulated as paid
-      });
+        status: 'completed',
+      }).select().single();
+
+      if (consultError) throw consultError;
 
       // Redirect to intake form
       const intakeRoute = service?.id === 'faculty-strategy' || service?.id === 'publication-strategy' || service?.id === 'promotion-tenure' || service?.id === 'executive-academic'
         ? '/intake/faculty'
         : '/intake/dissertation';
       
-      navigate(`${intakeRoute}/${data.id}?booking=success`);
+      navigate(`${intakeRoute}/${consultData.id}?booking=success`);
     } catch (err) {
       console.error('Payment error:', err);
     } finally {
