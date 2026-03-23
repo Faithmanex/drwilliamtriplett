@@ -133,7 +133,7 @@ const AcademicServiceDetail: React.FC = () => {
                   ) : (
                     <>
                       <CreditCard className="w-5 h-5" />
-                      Book Now (Demo)
+                      Book Now
                     </>
                   )}
                 </button>
