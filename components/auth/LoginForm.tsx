@@ -51,7 +51,7 @@ const LoginForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
   };
 
   return (
-    <div className="min-h-screen bg-brand-light flex items-center justify-center p-4">
+    <div className="min-h-screen bg-brand-light flex items-center justify-center p-4 pt-24">
       <div className="bg-white rounded-2xl shadow-card p-8 w-full max-w-md">
         <div className="text-center mb-8">
           <h1 className="font-serif text-3xl font-bold text-brand-dark mb-2">Welcome Back</h1>

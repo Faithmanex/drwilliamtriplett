@@ -81,7 +81,7 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden md:flex space-x-1 items-center">
+          <div className="hidden lg:flex space-x-1 items-center">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
@@ -116,7 +116,7 @@ const Navbar: React.FC = () => {
                 <>
                   <NavLink
                     to="/login"
-                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all whitespace-nowrap flex-shrink-0 ${
                       scrolled || location.pathname !== '/'
                       ? 'text-slate-600 hover:text-brand-primary'
                       : 'text-slate-200 hover:text-white'
@@ -126,7 +126,7 @@ const Navbar: React.FC = () => {
                   </NavLink>
                   <NavLink
                     to="/books"
-                    className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-lg hover:shadow-glow transform hover:-translate-y-0.5 ${
+                    className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-lg hover:shadow-glow transform hover:-translate-y-0.5 whitespace-nowrap flex-shrink-0 ${
                         scrolled || location.pathname !== '/'
                         ? 'bg-brand-primary text-white hover:bg-brand-dark'
                         : 'bg-white text-brand-dark hover:bg-slate-100'
@@ -140,7 +140,7 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Mobile menu button - Elevated z-index to stay above overlay */}
-          <div className="md:hidden flex items-center relative z-[101]">
+          <div className="lg:hidden flex items-center relative z-[101]">
             <button
               onClick={toggleMenu}
               className={`focus:outline-none transition-colors ${scrolled || location.pathname !== '/' || isOpen ? 'text-slate-800' : 'text-white'}`}
@@ -154,7 +154,7 @@ const Navbar: React.FC = () => {
 
       {/* Mobile Menu Overlay */}
       <div
-        className={`md:hidden fixed inset-0 z-[100] bg-white transform transition-transform duration-300 ease-in-out top-0 pt-0 ${
+        className={`lg:hidden fixed inset-0 z-[100] bg-white transform transition-transform duration-300 ease-in-out top-0 pt-0 ${
           isOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >

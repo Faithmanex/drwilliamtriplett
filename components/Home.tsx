@@ -46,7 +46,7 @@ const Home: React.FC = () => {
             alt="Dr. William Triplett Library - Leadership and Excellence" 
             className="w-full h-full object-cover opacity-20 scale-105 animate-[pulse_10s_ease-in-out_infinite]"
           />
-          <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/90 via-brand-dark/50 to-brand-dark"></div>
+          <div className="absolute inset-0 bg-gradient-to-b from-brand-dark/95 via-brand-dark/75 to-brand-dark"></div>
         </div>
 
         {/* Hero Content */}

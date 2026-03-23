@@ -184,25 +184,49 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
               </div>
             ) : (
               <div className="space-y-3">
-                {consultations.map((consult) => (
-                  <div key={consult.id} className="border border-slate-100 rounded-xl p-4">
-                    <div className="flex items-start justify-between mb-2">
-                      <h3 className="font-bold text-brand-dark">{consult.service_name}</h3>
-                      <span className={`px-2 py-1 rounded-full text-xs font-bold border ${getStatusColor(consult.status)}`}>
-                        {consult.status}
-                      </span>
-                    </div>
-                    <div className="flex items-center justify-between text-sm">
-                      <span className="text-slate-600">${consult.price}</span>
-                      {consult.scheduled_at && (
-                        <span className="text-slate-500 flex items-center gap-1">
-                          <Clock className="w-3 h-3" />
-                          {new Date(consult.scheduled_at).toLocaleDateString()}
-                        </span>
+                {consultations.map((consult) => {
+                  const isFaculty = ['faculty-strategy', 'publication-strategy', 'promotion-tenure', 'executive-academic'].includes(consult.service_id);
+                  const intakeRoute = isFaculty ? '/intake/faculty' : '/intake/dissertation';
+
+                  return (
+                    <div key={consult.id} className="border border-slate-200 shadow-sm bg-white rounded-xl p-4">
+                      <div className="flex items-start justify-between mb-2">
+                        <h3 className="font-bold text-brand-dark">{consult.service_name}</h3>
+                        <div className="flex flex-col items-end gap-1">
+                          {consult.intake_submitted ? (
+                            <span className="px-2 py-1 rounded-full text-xs font-bold border bg-green-100 text-green-700 border-green-200 whitespace-nowrap">
+                              Form Filled
+                            </span>
+                          ) : (
+                            <span className="px-2 py-1 rounded-full text-xs font-bold border bg-amber-100 text-amber-700 border-amber-200 whitespace-nowrap">
+                              Form Not Filled
+                            </span>
+                          )}
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between text-sm">
+                        <span className="text-slate-600">${consult.price}</span>
+                        {consult.scheduled_at && (
+                          <span className="text-slate-500 flex items-center gap-1">
+                            <Clock className="w-3 h-3" />
+                            {new Date(consult.scheduled_at).toLocaleDateString()}
+                          </span>
+                        )}
+                      </div>
+                      
+                      {!consult.intake_submitted && (
+                        <div className="mt-3 pt-3 border-t border-slate-100 flex justify-end">
+                          <NavLink
+                            to={`${intakeRoute}/${consult.id}`}
+                            className="inline-flex items-center gap-1 text-sm text-brand-primary font-bold hover:underline"
+                          >
+                            Fill Intake Form <ArrowRight size={14} />
+                          </NavLink>
+                        </div>
                       )}
                     </div>
-                  </div>
-                ))}
+                  );
+                })}
               </div>
             )}
           </div>
