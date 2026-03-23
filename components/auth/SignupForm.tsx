@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { Mail, Lock, Eye, EyeOff, ArrowRight, User } from 'lucide-react';
 
@@ -8,6 +9,7 @@ interface SignupFormProps {
 }
 
 const SignupForm: React.FC<SignupFormProps> = ({ onSuccess, onLoginClick }) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [fullName, setFullName] = useState('');
@@ -42,7 +44,7 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess, onLoginClick }) => {
         });
       }
 
-      onSuccess();
+      navigate('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Failed to sign up');
     } finally {
@@ -128,9 +130,9 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess, onLoginClick }) => {
 
         <p className="text-center mt-6 text-slate-500">
           Already have an account?{' '}
-          <button onClick={onLoginClick} className="text-brand-primary font-bold hover:underline">
+          <Link to="/login" className="text-brand-primary font-bold hover:underline">
             Sign in
-          </button>
+          </Link>
         </p>
       </div>
     </div>

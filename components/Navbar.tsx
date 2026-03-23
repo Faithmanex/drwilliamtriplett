@@ -187,7 +187,33 @@ const Navbar: React.FC = () => {
             </div>
 
             <div className="mt-auto pt-12 text-sm text-slate-400">
-               <p>&copy; {new Date().getFullYear()} Dr. William Triplett</p>
+               {user ? (
+                <NavLink
+                  to="/dashboard"
+                  onClick={() => setIsOpen(false)}
+                  className="block w-full text-center bg-brand-primary text-white p-4 rounded-2xl font-bold text-lg mb-4"
+                >
+                  Dashboard
+                </NavLink>
+               ) : (
+                <>
+                  <NavLink
+                    to="/login"
+                    onClick={() => setIsOpen(false)}
+                    className="block w-full text-center text-slate-800 font-bold text-lg mb-3"
+                  >
+                    Sign In
+                  </NavLink>
+                  <NavLink
+                    to="/signup"
+                    onClick={() => setIsOpen(false)}
+                    className="block w-full text-center bg-brand-primary text-white p-4 rounded-2xl font-bold text-lg"
+                  >
+                    Sign Up
+                  </NavLink>
+                </>
+               )}
+               <p className="mt-4">&copy; {new Date().getFullYear()} Dr. William Triplett</p>
             </div>
           </div>
         </div>

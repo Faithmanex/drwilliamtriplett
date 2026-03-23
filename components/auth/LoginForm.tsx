@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate, Link } from 'react-router-dom';
 import { supabase } from '../../lib/supabase';
 import { Mail, Lock, Eye, EyeOff, ArrowRight } from 'lucide-react';
 
@@ -7,6 +8,7 @@ interface AuthFormProps {
 }
 
 const LoginForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
+  const navigate = useNavigate();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [loading, setLoading] = useState(false);
@@ -40,7 +42,7 @@ const LoginForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
         }
       }
       
-      onSuccess();
+      navigate('/dashboard');
     } catch (err: any) {
       setError(err.message || 'Failed to sign in');
     } finally {
@@ -110,12 +112,12 @@ const LoginForm: React.FC<AuthFormProps> = ({ onSuccess }) => {
 
         <p className="text-center mt-6 text-slate-500">
           Don't have an account?{' '}
-          <button
-            onClick={() => {}}
+          <Link
+            to="/signup"
             className="text-brand-primary font-bold hover:underline"
           >
             Sign up
-          </button>
+          </Link>
         </p>
       </div>
     </div>
