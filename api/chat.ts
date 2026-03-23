@@ -121,13 +121,13 @@ export default async function handler(req: any, res: any) {
             return res.status(400).json({ error: "conversationHistory must be an array" });
         }
 
-        const sanitizedHistory: ChatMessage[] = conversationHistory
+        const sanitizedHistory = conversationHistory
             .filter((msg: any) => msg && typeof msg === "object")
             .map((msg: any) => ({
-                role: msg.role === "assistant" ? "assistant" : "user",
+                role: (msg.role === "assistant" ? "assistant" : "user") as "assistant" | "user",
                 content: typeof msg.content === "string" ? msg.content : "",
             }))
-            .filter((msg: ChatMessage) => msg.content.trim().length > 0);
+            .filter((msg: any) => msg.content.trim().length > 0);
 
         // Set headers for streaming
         res.setHeader("Content-Type", "text/event-stream");
