@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import { NavLink, useLocation } from 'react-router-dom';
+import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { NavItem } from '../types';
-import { Menu, X, ArrowRight } from 'lucide-react';
+import { Menu, X, ArrowRight, User } from 'lucide-react';
+import { supabase } from '../lib/supabase';
 
 const navItems: NavItem[] = [
   { label: 'Home', path: '/' },
@@ -15,9 +16,21 @@ const navItems: NavItem[] = [
 const Navbar: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [scrolled, setScrolled] = useState(false);
+  const [user, setUser] = useState<any>(null);
   const location = useLocation();
+  const navigate = useNavigate();
 
   const toggleMenu = () => setIsOpen(!isOpen);
+
+  useEffect(() => {
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setUser(session?.user || null);
+    });
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user || null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
 
   useEffect(() => {
     setIsOpen(false);
@@ -86,17 +99,43 @@ const Navbar: React.FC = () => {
                 {item.label}
               </NavLink>
             ))}
-            <div className="pl-4 ml-2 border-l border-slate-200/20">
-              <NavLink
-                to="/books"
-                className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-lg hover:shadow-glow transform hover:-translate-y-0.5 ${
+            <div className="pl-4 ml-2 border-l border-slate-200/20 flex items-center gap-3">
+              {user ? (
+                <NavLink
+                  to="/dashboard"
+                  className={`px-4 py-2 rounded-full text-sm font-bold transition-all flex items-center gap-2 ${
                     scrolled || location.pathname !== '/'
                     ? 'bg-brand-primary text-white hover:bg-brand-dark'
                     : 'bg-white text-brand-dark hover:bg-slate-100'
                 }`}
-              >
-                Shop Resources
-              </NavLink>
+                >
+                  <User size={16} />
+                  Dashboard
+                </NavLink>
+              ) : (
+                <>
+                  <NavLink
+                    to="/login"
+                    className={`px-4 py-2 rounded-full text-sm font-medium transition-all ${
+                      scrolled || location.pathname !== '/'
+                      ? 'text-slate-600 hover:text-brand-primary'
+                      : 'text-slate-200 hover:text-white'
+                    }`}
+                  >
+                    Sign In
+                  </NavLink>
+                  <NavLink
+                    to="/books"
+                    className={`px-6 py-2.5 rounded-full text-sm font-bold transition-all shadow-lg hover:shadow-glow transform hover:-translate-y-0.5 ${
+                        scrolled || location.pathname !== '/'
+                        ? 'bg-brand-primary text-white hover:bg-brand-dark'
+                        : 'bg-white text-brand-dark hover:bg-slate-100'
+                    }`}
+                  >
+                    Shop Resources
+                  </NavLink>
+                </>
+              )}
             </div>
           </div>
 

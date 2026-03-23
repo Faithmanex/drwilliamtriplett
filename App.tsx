@@ -1,6 +1,7 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { BrowserRouter, Routes, Route, useLocation } from 'react-router-dom';
 import { Analytics } from '@vercel/analytics/react';
+import { supabase } from './lib/supabase';
 import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import Home from './components/Home';
@@ -11,6 +12,9 @@ import AcademicServiceDetail from './components/AcademicServiceDetail';
 import Books from './components/Books';
 import Contact from './components/Contact';
 import Legal from './components/Legal';
+import LoginForm from './components/auth/LoginForm';
+import SignupForm from './components/auth/SignupForm';
+import UserDashboard from './components/auth/UserDashboard';
 import ChatWidget from './components/ChatWidget';
 import { ToastProvider } from './components/Toast';
 
@@ -105,6 +109,27 @@ const ScrollObserver: React.FC = () => {
 };
 
 const App: React.FC = () => {
+  const [session, setSession] = useState<any>(null);
+  const [authView, setAuthView] = useState<'login' | 'signup'>('login');
+
+  useEffect(() => {
+    // Check current session
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      setSession(session);
+    });
+
+    // Listen for auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setSession(session);
+    });
+
+    return () => subscription.unsubscribe();
+  }, []);
+
+  const handleLogout = () => {
+    setSession(null);
+  };
+
   return (
     <BrowserRouter>
       <ToastProvider>
@@ -112,7 +137,7 @@ const App: React.FC = () => {
         <ScrollToTop />
         <ScrollObserver />
         <div className="flex flex-col min-h-screen font-sans text-slate-900">
-          <Navbar />
+          {!session && <Navbar />}
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
@@ -124,9 +149,23 @@ const App: React.FC = () => {
               <Route path="/books/:bookId" element={<Books />} />
               <Route path="/contact" element={<Contact />} />
               <Route path="/legal" element={<Legal />} />
+              
+              {/* Auth Routes */}
+              <Route path="/login" element={
+                session ? <UserDashboard user={session.user} onLogout={handleLogout} /> : 
+                <LoginForm onSuccess={() => {}} />
+              } />
+              <Route path="/signup" element={
+                session ? <UserDashboard user={session.user} onLogout={handleLogout} /> : 
+                <SignupForm onSuccess={() => {}} onLoginClick={() => setAuthView('login')} />
+              } />
+              <Route path="/dashboard" element={
+                session ? <UserDashboard user={session.user} onLogout={handleLogout} /> : 
+                <LoginForm onSuccess={() => {}} />
+              } />
             </Routes>
           </main>
-          <Footer />
+          {!session && <Footer />}
           <ChatWidget />
         </div>
         <Analytics />
