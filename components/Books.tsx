@@ -303,15 +303,10 @@ const Books: React.FC = () => {
                       disabled={!selectedBook.paypalButtonId}
                       className={`h-16 w-full sm:w-auto px-10 rounded-full transition-all duration-300 flex items-center justify-center gap-4 transform active:scale-[0.98] group ${
                         selectedBook.paypalButtonId 
-                        ? "bg-[#FFC439] hover:bg-[#F4BB2E] text-slate-900 shadow-[0_8px_20px_-4px_rgba(255,196,57,0.4)] hover:shadow-[0_12px_25px_-5px_rgba(255,196,57,0.5)] hover:-translate-y-0.5" 
+                        ? "bg-brand-dark hover:bg-slate-800 text-white shadow-lg hover:shadow-xl hover:-translate-y-0.5" 
                         : "bg-slate-200 text-slate-400 cursor-not-allowed shadow-none"
                       }`}
                     >
-                      <div className="flex items-center select-none">
-                        <span className={`italic font-serif font-black text-xl tracking-tighter ${!selectedBook.paypalButtonId ? 'text-slate-400' : ''}`}>Pay</span>
-                        <span className={`italic font-serif font-black text-xl tracking-tighter ${!selectedBook.paypalButtonId ? 'text-slate-400' : 'text-[#003087]'}`}>Pal</span>
-                      </div>
-                      <div className="h-6 w-px bg-slate-900/10"></div>
                       <span className="font-sans font-bold text-lg tracking-tight">Buy Now</span>
                     </button>
                   </div>
@@ -381,7 +376,7 @@ const Books: React.FC = () => {
                   <div className="flex justify-between items-start mb-6">
                       <div>
                           <h3 className="text-lg font-bold text-brand-dark font-serif">Complete Your Purchase</h3>
-                          <p className="text-sm text-slate-500">Secure payment powered by PayPal</p>
+                          <p className="text-sm text-slate-500">Secure payment</p>
                       </div>
                       <button onClick={handleCancelPurchase} className="text-slate-400 hover:text-slate-600 transition-colors p-1 rounded-full hover:bg-slate-100" aria-label="Cancel purchase">
                           <X size={20} />
@@ -561,8 +556,8 @@ const Books: React.FC = () => {
                   <p className="text-sm text-slate-500 line-clamp-2 mb-4 flex-1">{book.description}</p>
                   <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-auto">
                     <span className="text-lg font-bold text-slate-900">${book.price.toFixed(2)}</span>
-                    <span className={`text-sm font-bold uppercase tracking-wider ${book.paypalButtonId ? 'text-brand-accent' : 'text-slate-300'}`}>
-                      {book.paypalButtonId ? 'Buy Now' : 'Unavailable'}
+                    <span className={`text-sm font-bold uppercase tracking-wider ${book.paypalButtonId ? 'text-brand-accent' : 'text-slate-400'}`}>
+                      {book.paypalButtonId ? 'Buy Now' : 'Coming Soon'}
                     </span>
                   </div>
                 </div>
