@@ -1,8 +1,14 @@
 import { Resend } from "resend";
+import { createClient } from "@supabase/supabase-js";
 import { booksCatalog } from "../data/books";
 import { validateOrigin } from './_utils/security';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
+
+// Supabase client for purchases table
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://nntdawowuukgxitwcnlp.supabase.co";
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5udGRhd293dXVrZ3hpdHdjbmxwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDIxODQ2MiwiZXhwIjoyMDg5Nzk0NDYyfQ.BjH6u2v_hOx2vPBy9mPwqE5ioLgrisoLPttYjFwMCPQ";
+const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req: any, res: any) {
   if (!validateOrigin(req, res)) return;
@@ -56,7 +62,24 @@ export default async function handler(req: any, res: any) {
       </div>
     `;
 
-    // 1. Send download email to the buyer
+    // 1. Save purchase to database (with email, no user_id - will link on signup)
+    const { data: purchase, error: purchaseError } = await supabase
+      .from('purchases')
+      .insert({
+        email: email,
+        book_id: bookId,
+        amount: price,
+        status: 'completed',
+      })
+      .select()
+      .single();
+
+    if (purchaseError) {
+      console.error('Purchase insert error:', purchaseError);
+      // Continue anyway - email is more important
+    }
+
+    // 2. Send download email to the buyer
     await resend.emails.send({
       from: "Dr. William Triplett <onboarding@drwilliamtriplett.com>",
       to: [email],
