@@ -42,6 +42,12 @@ const SignupForm: React.FC<SignupFormProps> = ({ onSuccess, onLoginClick }) => {
           email: data.user.email,
           full_name: fullName,
         });
+
+        // Link any existing purchases with this email to the user
+        await supabase
+          .from('purchases')
+          .update({ user_id: data.user.id })
+          .eq('email', email);
       }
 
       navigate('/dashboard');
