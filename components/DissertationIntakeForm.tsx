@@ -396,6 +396,15 @@ const DissertationIntakeForm: React.FC = () => {
             </div>
 
             <div>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Upload IRB Draft (Optional)</label>
+              <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center">
+                <Upload className="w-8 h-8 text-slate-400 mx-auto mb-2" />
+                <p className="text-sm text-slate-500">Click to upload or drag and drop</p>
+                <input type="file" accept=".pdf,.doc,.docx" className="hidden" />
+              </div>
+            </div>
+
+            <div>
               <label className="flex items-start gap-3">
                 <input
                   type="checkbox"
