@@ -1,6 +1,6 @@
 import React from 'react';
 import { academicServices, oneOnOneServices, facultyAdvisoryServices, dissertationAdvisoryServices } from '../data/academicServices';
-import { BookOpen, Users, GraduationCap, ArrowRight, Check } from 'lucide-react';
+import { BookOpen, Users, GraduationCap, ArrowRight, ArrowLeft, Check } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import Navbar from './Navbar';
 
@@ -56,6 +56,15 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
 const AcademicServices: React.FC = () => {
   return (
     <div className="bg-brand-light min-h-screen pt-20">
+      <div className="max-w-7xl mx-auto px-6 pt-6">
+        <button 
+          onClick={() => window.history.back()}
+          className="flex items-center text-brand-primary hover:underline"
+        >
+          <ArrowLeft size={20} className="mr-2" />
+          Back
+        </button>
+      </div>
       <div className="bg-brand-dark py-16 md:py-20 px-6 text-center">
         <h1 className="font-serif text-3xl md:text-5xl font-bold mb-4 text-white">Academic Advisory Services</h1>
         <p className="font-sans text-lg md:text-xl text-slate-300 max-w-2xl mx-auto font-light">
