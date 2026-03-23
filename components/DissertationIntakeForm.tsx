@@ -116,6 +116,19 @@ const DissertationIntakeForm: React.FC = () => {
         .update({ intake_submitted: true })
         .eq('id', id);
 
+      // Send notification to Dr. Triplett
+      await fetch('/api/intake-notification', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          consultationId: id,
+          formType: 'dissertation_strategy',
+          formData,
+          userEmail: formData.email,
+          serviceName: 'Dissertation Strategy Intensive'
+        })
+      });
+
       setSubmitted(true);
     } catch (err) {
       setError('Failed to submit form');
