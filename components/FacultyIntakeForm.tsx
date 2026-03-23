@@ -347,11 +347,11 @@ const FacultyIntakeForm: React.FC = () => {
             </div>
 
             <div>
-              <label className="block text-sm font-bold text-slate-700 mb-2">Upload CV (PDF/DOCX - 20MB max)</label>
+              <label className="block text-sm font-bold text-slate-700 mb-2">Upload CV (PDF/DOCX - 20MB max) *</label>
               <div className="border-2 border-dashed border-slate-200 rounded-lg p-6 text-center">
                 <Upload className="w-8 h-8 text-slate-400 mx-auto mb-2" />
                 <p className="text-sm text-slate-500">Click to upload or drag and drop</p>
-                <input type="file" accept=".pdf,.doc,.docx" className="hidden" />
+                <input type="file" accept=".pdf,.doc,.docx" className="hidden" required />
               </div>
             </div>
 
