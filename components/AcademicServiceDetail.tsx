@@ -86,6 +86,13 @@ const AcademicServiceDetail: React.FC = () => {
           <ArrowLeft size={20} className="mr-2" />
           Back to Academic Services
         </button>
+        <button 
+          onClick={() => navigate('/services/academic')}
+          className="flex items-center text-brand-primary hover:underline mb-8"
+        >
+          <ArrowLeft size={20} className="mr-2" />
+          Back to Academic Services
+        </button>
 
         <div className="bg-white rounded-2xl shadow-card overflow-hidden">
           {/* Header */}
