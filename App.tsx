@@ -137,7 +137,7 @@ const App: React.FC = () => {
         <ScrollToTop />
         <ScrollObserver />
         <div className="flex flex-col min-h-screen font-sans text-slate-900">
-          {!session && <Navbar />}
+          <Navbar />
           <main className="flex-grow">
             <Routes>
               <Route path="/" element={<Home />} />
