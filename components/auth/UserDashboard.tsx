@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { User, BookOpen, Calendar, Clock, LogOut, ArrowRight, CheckCircle, XCircle } from 'lucide-react';
+import { User, BookOpen, Calendar, Clock, LogOut, ArrowRight, CheckCircle, XCircle, List } from 'lucide-react';
 import { NavLink, useSearchParams } from 'react-router-dom';
 
 interface UserDashboardProps {
@@ -116,6 +116,21 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
               <div>
                 <h3 className="font-bold text-brand-dark">Book Consultation</h3>
                 <p className="text-sm text-slate-500">Schedule a session</p>
+              </div>
+            </div>
+          </NavLink>
+
+          <NavLink
+            to="/services"
+            className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-brand-primary/20 transition-all"
+          >
+            <div className="flex items-center gap-4">
+              <div className="w-12 h-12 bg-brand-light rounded-xl flex items-center justify-center">
+                <Calendar className="w-6 h-6 text-brand-primary" />
+              </div>
+              <div>
+                <h3 className="font-bold text-brand-dark">Browse Services</h3>
+                <p className="text-sm text-slate-500">View all services</p>
               </div>
             </div>
           </NavLink>
