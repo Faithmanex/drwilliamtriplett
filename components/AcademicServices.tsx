@@ -2,6 +2,7 @@ import React from 'react';
 import { academicServices, oneOnOneServices, facultyAdvisoryServices, dissertationAdvisoryServices } from '../data/academicServices';
 import { BookOpen, Users, GraduationCap, ArrowRight, Check } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
+import Navbar from './Navbar';
 
 interface ServiceCardProps {
   service: typeof academicServices[0];
@@ -55,9 +56,9 @@ const ServiceCard: React.FC<ServiceCardProps> = ({ service }) => {
 const AcademicServices: React.FC = () => {
   return (
     <div className="bg-brand-light min-h-screen pt-20">
-      <div className="bg-brand-dark py-24 px-6 text-center reveal-on-scroll">
-        <h1 className="font-serif text-5xl font-bold mb-6 text-white">Academic Advisory Services</h1>
-        <p className="font-sans text-xl text-slate-300 max-w-2xl mx-auto font-light">
+      <div className="bg-brand-dark py-16 md:py-20 px-6 text-center">
+        <h1 className="font-serif text-3xl md:text-5xl font-bold mb-4 text-white">Academic Advisory Services</h1>
+        <p className="font-sans text-lg md:text-xl text-slate-300 max-w-2xl mx-auto font-light">
           Strategic guidance for faculty, researchers, and doctoral candidates seeking to advance their academic careers.
         </p>
       </div>
