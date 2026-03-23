@@ -12,7 +12,7 @@ export default {
     extend: {
       fontFamily: {
         sans: ['Inter', 'sans-serif'],
-        serif: ['Merriweather', 'serif'],
+        serif: ['Poppins', 'serif'],
       },
       colors: {
         brand: {
