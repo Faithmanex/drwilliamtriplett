@@ -104,7 +104,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
 
       <div className="max-w-6xl mx-auto px-6 py-8">
         {/* Quick Actions */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-8">
           <NavLink
             to="/services/academic"
             className="bg-white p-5 rounded-xl shadow-sm border border-slate-100 hover:shadow-md hover:border-brand-primary/20 transition-all"
