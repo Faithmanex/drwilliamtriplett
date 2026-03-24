@@ -45,7 +45,7 @@ export const booksCatalog: Book[] = [
     features: ["Define CAIO Authority & Responsibilities", "AI Governance Frameworks", "AI Risk & Regulatory Management", "Mission-Aligned AI Adoption"],
     pubDate: "2026",
     reviews: [],
-    paypalButtonId: "",
+    paypalButtonId: "JMWK38RMQ4CYU",
     blobUrl: "https://mdonfowww3ur5lf4.public.blob.vercel-storage.com/The_Chief_Artificial_Intelligence_Officer.pdf"
   },
   {
@@ -59,7 +59,7 @@ export const booksCatalog: Book[] = [
     features: ["Ethics & Human-Centered Values", "AI Transparency & Accountability", "Innovation vs. Responsibility", "Governance for Leaders & Policymakers"],
     pubDate: "2026",
     reviews: [],
-    paypalButtonId: "",
+    paypalButtonId: "DVKZJLCCXJXTU",
     blobUrl: "https://mdonfowww3ur5lf4.public.blob.vercel-storage.com/Human-Centered_AI_Leadership.pdf"
   },
   {
@@ -73,7 +73,64 @@ export const booksCatalog: Book[] = [
     features: ["Pentecostal Holiness Traditions", "COGIC Heritage & Witness", "Faith, Family & Legacy", "Theology & Lived Experience"],
     pubDate: "2026",
     reviews: [],
-    paypalButtonId: "",
+    paypalButtonId: "Z5KT2T8HCLK5U",
     blobUrl: "https://mdonfowww3ur5lf4.public.blob.vercel-storage.com/From_Kilmichael_to_the_World_Pentecostal_Fire%2C_COGIC_Traditions.pdf"
+  },
+  {
+    id: 'leadership-coaching',
+    title: "Leadership Coaching and Executive Formation",
+    subtitle: "Developing the Inner Life, Moral Imagination, and Strategic Capacity of Transformational Leadership",
+    description: "What truly makes a great leader? In an era filled with leadership frameworks, this book explores leadership from a deeper perspective—the inner formation of the executive.",
+    longDescription: `<p>What truly makes a great leader? In an era filled with leadership frameworks, productivity systems, and strategic models, one crucial question is ignored: Who is forming the leader behind the strategy?</p><p><em>Leadership Coaching and Executive Formation</em> explores leadership from a deeper and rarely examined perspective—the inner formation of the executive. Rather than offering another collection of techniques, this book challenges readers to rethink leadership as a lifelong process of shaping character, judgment, and moral imagination.</p><p>Inside this book, you will discover:</p><ul><li>Why competence without character leads to fragile leadership</li><li>How executive coaching can cultivate deeper self-awareness and judgment</li><li>The role of moral imagination in navigating complex decisions</li><li>How leaders can develop inner discipline, humility, and responsibility</li><li>Strategies for building institutions grounded in trust, wisdom, and long-term vision</li><li>Practical insights for guiding organizations through uncertainty</li></ul>`,
+    price: 14.99,
+    imageUrl: "https://m.media-amazon.com/images/I/61KhzbKmfsL._SY522_.jpg", 
+    features: [
+      "Competence & Character",
+      "Executive Coaching Insights",
+      "Moral Imagination",
+      "Institution Building & Trust"
+    ],
+    pubDate: "2026",
+    reviews: [],
+    paypalButtonId: "UM3UMQ955N7WE",
+    blobUrl: ""
+  },
+  {
+    id: 'future-ready-clo',
+    title: "The Future-Ready Chief Learning Officer",
+    subtitle: "Leading Human-AI learning systems in the age of intelligence on tap",
+    description: "The Future-Ready Chief Learning Officer explores how learning leadership must evolve in a world where artificial intelligence places powerful intelligence “on tap” for every employee.",
+    longDescription: `<p>The Future-Ready Chief Learning Officer explores how learning leadership must evolve in a world where artificial intelligence places powerful intelligence “on tap” for every employee. Rather than treating AI as just another technology trend, the book argues that it fundamentally reshapes how organizations learn, make decisions, and build capability.</p><p>In the past, organizations competed by controlling knowledge. Today, knowledge is abundant and instantly accessible through AI. The real advantage now lies in judgment, ethical reasoning, contextual understanding, and the ability to apply intelligence responsibly. This shift demands a complete redesign of corporate learning.</p><p>Inside this book, you’ll learn how to:</p><ul><li>Build a Human–AI learning architecture that integrates knowledge, workflow, data, and governance</li><li>Use AI as a coach, tutor, and practice partner to accelerate development</li><li>Create adaptive learning systems without losing organizational coherence</li><li>Measure learning by strategic outcomes, not training activity</li><li>Develop AI fluency and responsible decision-making across the enterprise</li><li>Lead cultural transformation where learning becomes a competitive flywheel</li></ul>`,
+    price: 39.99,
+    imageUrl: "https://m.media-amazon.com/images/I/81pcq789trL._SY522_.jpg", 
+    features: [
+      "Human–AI learning architecture",
+      "Adaptive learning systems",
+      "Strategic impact measurement",
+      "Lead cultural AI transformation"
+    ],
+    pubDate: "2026",
+    reviews: [],
+    paypalButtonId: "NR4WLG5N3598S",
+    blobUrl: ""
+  },
+  {
+    id: 'hacked-healed-human',
+    title: "Hacked, Healed, and Human",
+    subtitle: "Cyber Security, AI, Ethics, and Leadership in a Digitally Vulnerable World",
+    description: "The greatest risk in the digital age is not technology failing, but humanity failing to lead it wisely.",
+    longDescription: `<p>The greatest risk in the digital age is not technology failing, but humanity failing to lead it wisely.</p><p>In a world powered by digital technology, vulnerability has become a permanent condition. Cyberattacks, artificial intelligence, interconnected systems, and global digital ecosystems have transformed how organizations operate, and how they fail. But behind every system breach lies a deeper story about people, trust, ethics, and leadership.</p><p><em>Hacked, Healed, and Human</em> explores the human side of cybersecurity in an era where disruption is inevitable. Rather than focusing only on technical defenses, the book examines how cyber risk intersects with leadership, organizational culture, governance, and ethical responsibility.</p><ul><li>Recognizing the reality of permanent digital vulnerability.</li><li>Learning how organizations recover, adapt, and strengthen after disruption.</li><li>Placing ethics, empathy, and responsible leadership at the center of digital innovation.</li></ul>`,
+    price: 39.99,
+    imageUrl: "https://m.media-amazon.com/images/I/71WZyzgsJNL._SY522_.jpg", 
+    features: [
+      "Human Side of Cybersecurity",
+      "Ethics & AI in Crisis",
+      "Building Digital Resilience",
+      "Leadership & Trust Preservation"
+    ],
+    pubDate: "2026",
+    reviews: [],
+    paypalButtonId: "XCHVJ4ZSU4CTU",
+    blobUrl: ""
   }
 ];
