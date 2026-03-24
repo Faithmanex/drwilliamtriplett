@@ -72,7 +72,7 @@ export default async function handler(req: any, res: any) {
     // Send notification to Dr. Triplett
     await resend.emails.send({
       from: "Nexcellence Academy <onboarding@drwilliamtriplett.com>",
-      to: ["advisory@drwilliamtriplett.com", "drtriplettdev@gmail.com"],
+      to: [ "drtriplettdev@gmail.com"],
       subject: `New Intake: ${serviceName} - ${formData.fullName || userEmail}`,
       html: adminContent,
     });
