@@ -4,8 +4,8 @@ import { validateOrigin } from './_utils/security';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || "https://nntdawowuukgxitwcnlp.supabase.co";
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY || "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5udGRhd293dXVrZ3hpdHdjbmxwIiwicm9sZSI6InNlcnZpY2Vfcm9sZSIsImlhdCI6MTc3NDIxODQ2MiwiZXhwIjoyMDg5Nzk0NDYyfQ.BjH6u2v_hOx2vPBy9mPwqE5ioLgrisoLPttYjFwMCPQ";
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
+const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
 const supabase = createClient(supabaseUrl, supabaseKey);
 
 export default async function handler(req: any, res: any) {
@@ -72,7 +72,7 @@ export default async function handler(req: any, res: any) {
     // Send notification to Dr. Triplett
     await resend.emails.send({
       from: "Nexcellence Academy <onboarding@drwilliamtriplett.com>",
-      to: ["advisory@drwilliamtriplett.com"],
+      to: ["advisory@drwilliamtriplett.com", "drtriplettdev@gmail.com"],
       subject: `New Intake: ${serviceName} - ${formData.fullName || userEmail}`,
       html: adminContent,
     });
