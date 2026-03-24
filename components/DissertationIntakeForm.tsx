@@ -66,7 +66,7 @@ const DissertationIntakeForm: React.FC = () => {
         .from('intake_forms')
         .select('*')
         .eq('consultation_id', id)
-        .single();
+        .maybeSingle();
 
       if (existingForm) {
         setSubmitted(true);
