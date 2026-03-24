@@ -501,7 +501,7 @@ const Books: React.FC = () => {
   return (
     <div className="bg-white min-h-screen pt-20">
        <style>{fadeInStyle}</style>
-       <div className="bg-brand-dark py-24 px-6 relative overflow-hidden">
+       <div className="bg-brand-dark pt-28 pb-6 px-6 relative overflow-hidden">
         <div className="max-w-7xl mx-auto text-center relative z-10 animate-fade-in-up">
           <h1 className="font-serif text-4xl md:text-5xl font-bold mb-6 text-white">Publications & Resources</h1>
           <p className="font-sans text-lg text-slate-300 max-w-2xl mx-auto font-light leading-relaxed">
@@ -510,7 +510,7 @@ const Books: React.FC = () => {
         </div>
       </div>
 
-      <div className="max-w-7xl mx-auto px-6 py-20">
+      <div className="max-w-7xl mx-auto px-6 pt-4 pb-20">
         <div className="flex flex-col md:flex-row justify-between items-center mb-12 pb-4 border-b border-slate-100 gap-6 animate-fade-in-up delay-100">
           <p className="text-slate-500 text-sm font-medium order-2 md:order-1">
             {filteredBooks.length} {filteredBooks.length === 1 ? 'Resource' : 'Resources'} Available
@@ -530,35 +530,58 @@ const Books: React.FC = () => {
         </div>
 
         {filteredBooks.length > 0 ? (
-          <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-x-8 gap-y-12">
+          <div className="w-full space-y-4">
             {filteredBooks.map((book, index) => (
               <div 
                 key={book.id}
-                className="group cursor-pointer flex flex-col h-full animate-fade-in-up"
+                className="group cursor-pointer flex flex-col md:flex-row gap-6 bg-white p-6 rounded-xl border border-slate-100 hover:shadow-md transition-shadow animate-fade-in-up"
                 onClick={() => handleBookClick(book)}
               >
-                <div className="bg-slate-50 rounded-2xl p-8 mb-6 relative overflow-hidden transition-all duration-300 group-hover:shadow-card group-hover:-translate-y-1 border border-slate-100">
-                  <div className="flex justify-center transform transition-transform duration-500 group-hover:scale-105">
+                {/* Left: Book Cover Image wrapper structure */}
+                <div className="md:w-72 bg-slate-50/80 rounded-xl p-8 flex justify-center items-center flex-shrink-0">
+                  <div className="w-40 shadow-[0_10px_25px_rgba(0,0,0,0.1)] transition-transform duration-300 group-hover:scale-105">
                      {renderBookCover(book, 'sm')}
                   </div>
-                  <div className="absolute inset-0 bg-brand-dark/0 group-hover:bg-brand-dark/10 transition-colors duration-300 flex items-center justify-center">
-                      <span className="opacity-0 group-hover:opacity-100 transform translate-y-4 group-hover:translate-y-0 transition-all duration-300 bg-white text-brand-dark font-bold py-3 px-6 rounded-full shadow-lg text-sm flex items-center gap-2">
-                        <BookOpen size={16} /> View Details
-                      </span>
-                  </div>
                 </div>
-                <div className="flex-1 flex flex-col">
-                  <div className="mb-2">
-                     <h3 className="font-serif text-xl font-bold text-brand-dark leading-tight group-hover:text-brand-primary transition-colors">
+
+                {/* Right: Book Details sections fits amazon specs sets layout */}
+                <div className="flex-1 flex flex-col justify-between py-2">
+                  <div>
+                    <h3 className="font-sans text-xl font-semibold text-slate-800 group-hover:text-brand-primary transition-colors leading-snug">
                       {book.title}
                     </h3>
+                    {book.subtitle && (
+                      <p className="text-sm text-slate-500 mt-1 font-sans">{book.subtitle}</p>
+                    )}
+                    <p className="text-sm text-slate-400 mt-1 font-sans">by William Triplett</p>
+
+                    <div className="flex items-center gap-1 mt-2 text-amber-500">
+                      <Star size={16} fill="currentColor" />
+                      <Star size={16} fill="currentColor" />
+                      <Star size={16} fill="currentColor" />
+                      <Star size={16} fill="currentColor" />
+                      <Star size={16} fill="currentColor" />
+                      <span className="text-xs text-slate-400 ml-1">5.0 (1)</span>
+                    </div>
+
+                    <p className="text-sm font-semibold text-slate-700 mt-4 font-sans leading-none">Digital Edition (Instant Download)</p>
+
+                    <div className="flex items-start mt-1 text-slate-900 font-sans">
+                      <span className="text-sm font-bold mt-1">$</span>
+                      <span className="text-3xl font-bold">{Math.floor(book.price)}</span>
+                      <span className="text-sm font-bold mt-1">.{(book.price % 1).toFixed(2).split('.')[1]}</span>
+                    </div>
                   </div>
-                  <p className="text-sm text-slate-500 line-clamp-2 mb-4 flex-1">{book.description}</p>
-                  <div className="flex items-center justify-between pt-4 border-t border-slate-100 mt-auto">
-                    <span className="text-lg font-bold text-slate-900">${book.price.toFixed(2)}</span>
-                    <span className={`text-sm font-bold uppercase tracking-wider ${book.paypalButtonId ? 'text-brand-accent' : 'text-slate-400'}`}>
-                      {book.paypalButtonId ? 'Buy Now' : 'Coming Soon'}
-                    </span>
+
+                  <div className="mt-6 flex flex-col sm:flex-row sm:items-center gap-4">
+                    {book.paypalButtonId ? (
+                      <button className="bg-amber-400 hover:bg-amber-500 text-slate-900 px-8 py-2.5 rounded-full font-bold text-sm shadow-sm transition-colors flex items-center justify-center gap-2 max-w-xs">
+                        Buy Now
+                      </button>
+                    ) : (
+                      <span className="text-xs font-bold text-slate-400 tracking-wider">COMING SOON</span>
+                    )}
+
                   </div>
                 </div>
               </div>

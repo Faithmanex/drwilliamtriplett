@@ -1,5 +1,5 @@
 import React, { useState, useRef, useEffect } from 'react';
-import { MessageCircle, X, Send, Loader2, Sparkles, User, Bot } from 'lucide-react';
+import { MessageCircle, X, Send, Loader2, Sparkles, User, Bot, Minus, Trash2 } from 'lucide-react';
 import ReactMarkdown from 'react-markdown';
 import remarkGfm from 'remark-gfm';
 import { useToast } from './Toast';
@@ -39,12 +39,13 @@ const ChatWidget: React.FC = () => {
     }
   }, [isOpen]);
 
-  const handleSendMessage = async () => {
-    if (!inputMessage.trim() || isLoading) return;
+  const handleSendMessage = async (text?: string) => {
+    const messageText = text || inputMessage;
+    if (!messageText.trim() || isLoading) return;
 
     const userMessage: Message = {
       role: 'user',
-      content: inputMessage,
+      content: messageText,
       timestamp: new Date(),
     };
 
@@ -53,7 +54,6 @@ const ChatWidget: React.FC = () => {
     setIsLoading(true);
 
     try {
-      // Build conversation history for context
       const conversationHistory = messages.map((msg) => ({
         role: msg.role,
         content: msg.content,
@@ -65,7 +65,7 @@ const ChatWidget: React.FC = () => {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify({
-          message: inputMessage,
+          message: messageText,
           conversationHistory,
         }),
       });
@@ -74,13 +74,11 @@ const ChatWidget: React.FC = () => {
         throw new Error('Failed to get response');
       }
 
-      // Handle streaming response
       const reader = response.body?.getReader();
       const decoder = new TextDecoder();
       let assistantMessage = '';
 
       if (reader) {
-        // Add empty assistant message that we'll update
         const messageStartTime = new Date();
         setMessages((prev) => [
           ...prev,
@@ -142,12 +140,10 @@ const ChatWidget: React.FC = () => {
                 console.warn('Failed to parse SSE data:', line, e);
               }
             }
-
             if (streamCompleted) break;
           }
         }
 
-        // Parse any remaining complete payload after stream closure
         if (!streamCompleted && buffer.trim().startsWith('data:')) {
           const payload = buffer.trim().slice(5).trim();
           if (payload) {
@@ -162,7 +158,6 @@ const ChatWidget: React.FC = () => {
           }
         }
 
-        // Ensure final message is saved even if stream ends without 'done' signal
         if (assistantMessage) {
           setMessages((prev) => {
             const newMessages = [...prev];
@@ -198,6 +193,17 @@ const ChatWidget: React.FC = () => {
       e.preventDefault();
       handleSendMessage();
     }
+  };
+
+  const handleClearChat = () => {
+    setMessages([
+      {
+        role: 'assistant',
+        content: 'Hi! I\'m here to help with questions about Dr. Triplett\'s books, academic services, publications, and more. You can ask about Faculty Strategy, Dissertation Support, the AI leadership books, or anything else. What would you like to know?',
+        timestamp: new Date(),
+      },
+    ]);
+    if (inputRef.current) inputRef.current.focus();
   };
 
   return (
@@ -236,13 +242,24 @@ const ChatWidget: React.FC = () => {
                 <p className="text-xs text-white/80">AI Assistant</p>
               </div>
             </div>
-            <button
-              onClick={() => setIsOpen(false)}
-              className="p-2 hover:bg-white/10 rounded-full transition-colors"
-              aria-label="Close chat"
-            >
-              <X size={20} />
-            </button>
+            <div className="flex items-center gap-1">
+              {messages.length > 1 && (
+                <button
+                  onClick={handleClearChat}
+                  className="p-2 hover:bg-white/10 rounded-full transition-colors flex items-center justify-center gap-1 text-xs font-semibold text-white/90 hover:text-white"
+                  aria-label="Clear chat"
+                >
+                  <Trash2 size={16} /> <span className="hidden sm:inline font-sans">Clear</span>
+                </button>
+              )}
+              <button
+                onClick={() => setIsOpen(false)}
+                className="p-2 hover:bg-white/10 rounded-full transition-colors"
+                aria-label="Minimize chat"
+              >
+                <Minus size={20} />
+              </button>
+            </div>
           </div>
 
           {/* Messages */}
@@ -303,6 +320,19 @@ const ChatWidget: React.FC = () => {
                 </div>
               </div>
             )}
+            {messages.length === 1 && !isLoading && (
+              <div className="flex flex-wrap gap-1.5 px-11 mt-1 animate-[fadeInUp_0.3s_ease-out]">
+                {['Book overview', 'Academic consulting', 'How to contact?'].map((faq) => (
+                  <button 
+                    key={faq}
+                    onClick={() => handleSendMessage(faq)}
+                    className="text-[11px] bg-white border border-slate-200 text-slate-600 px-2.5 py-1 rounded-full hover:bg-brand-primary/5 hover:border-brand-primary/20 hover:text-brand-primary transition-all duration-200 font-medium shadow-sm"
+                  >
+                    {faq}
+                  </button>
+                ))}
+              </div>
+            )}
             <div ref={messagesEndRef} />
           </div>
 
@@ -320,7 +350,7 @@ const ChatWidget: React.FC = () => {
                 className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all disabled:opacity-50 text-sm"
               />
               <button
-                onClick={handleSendMessage}
+                onClick={() => handleSendMessage()}
                 disabled={!inputMessage.trim() || isLoading}
                 className="px-4 py-3 bg-brand-primary hover:bg-brand-dark text-white rounded-xl transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
                 aria-label="Send message"

@@ -81,13 +81,15 @@ const Navbar: React.FC = () => {
           </div>
 
           {/* Desktop Menu */}
-          <div className="hidden lg:flex space-x-1 items-center">
+          <div className="hidden md:flex space-x-1 items-center">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
                 to={item.path}
                 className={({ isActive }) =>
                   `px-4 py-2 rounded-full text-sm font-medium transition-all duration-300 ${
+                    item.label === 'Academic' || item.label === 'Contact' ? 'hidden lg:inline-block' : 'inline-block'
+                  } ${
                     isActive
                       ? 'text-brand-accent bg-brand-accent/5'
                       : scrolled || location.pathname !== '/' 
@@ -99,7 +101,7 @@ const Navbar: React.FC = () => {
                 {item.label}
               </NavLink>
             ))}
-            <div className="pl-4 ml-2 border-l border-slate-200/20 flex items-center gap-3">
+            <div className="pl-4 ml-2 border-l border-slate-200/20 hidden lg:flex items-center gap-3">
               {user ? (
                 <button
                   onClick={() => navigate('/dashboard')}
@@ -160,7 +162,7 @@ const Navbar: React.FC = () => {
       >
         <div className="flex flex-col h-full relative">
            
-           <div className="px-8 pt-24 pb-8 space-y-6 overflow-y-auto h-full">
+           <div className="px-8 pt-24 pb-48 space-y-6 overflow-y-auto h-full">
             {navItems.map((item) => (
               <NavLink
                 key={item.path}
@@ -186,35 +188,49 @@ const Navbar: React.FC = () => {
               </NavLink>
             </div>
 
-            <div className="mt-auto pt-12 text-sm text-slate-400">
-               {user ? (
-                <NavLink
-                  to="/dashboard"
-                  onClick={() => setIsOpen(false)}
-                  className="block w-full text-center bg-brand-primary text-white p-4 rounded-2xl font-bold text-lg mb-4"
-                >
-                  Dashboard
-                </NavLink>
-               ) : (
-                <>
-                  <NavLink
-                    to="/login"
-                    onClick={() => setIsOpen(false)}
-                    className="block w-full text-center text-slate-800 font-bold text-lg mb-3"
-                  >
-                    Sign In
-                  </NavLink>
-                  <NavLink
-                    to="/signup"
-                    onClick={() => setIsOpen(false)}
-                    className="block w-full text-center bg-brand-primary text-white p-4 rounded-2xl font-bold text-lg"
-                  >
-                    Sign Up
-                  </NavLink>
-                </>
-               )}
-               <p className="mt-4">&copy; {new Date().getFullYear()} Dr. William Triplett</p>
-            </div>
+          </div>
+
+          {/* Fixed Footer bottom container always visible with Sign Out option */}
+          <div className="absolute bottom-0 left-0 right-0 p-6 border-t border-slate-100 bg-white">
+             {user ? (
+               <>
+                 <NavLink
+                   to="/dashboard"
+                   onClick={() => setIsOpen(false)}
+                   className="block w-full text-center bg-brand-primary text-white p-2.5 rounded-xl font-bold text-base shadow-md mb-2"
+                 >
+                   Dashboard
+                 </NavLink>
+                 <button
+                   onClick={async () => {
+                     await supabase.auth.signOut();
+                     setIsOpen(false);
+                     window.location.href = '/';
+                   }}
+                   className="block w-full text-center bg-slate-100 text-slate-700 p-2.5 rounded-xl font-bold text-base border border-slate-200"
+                 >
+                   Sign Out
+                 </button>
+               </>
+             ) : (
+               <div className="grid grid-cols-2 gap-3">
+                 <NavLink
+                   to="/login"
+                   onClick={() => setIsOpen(false)}
+                   className="block w-full text-center text-slate-800 bg-slate-50 p-2.5 rounded-xl font-bold text-base border border-slate-100"
+                 >
+                   Sign In
+                 </NavLink>
+                 <NavLink
+                   to="/signup"
+                   onClick={() => setIsOpen(false)}
+                   className="block w-full text-center bg-brand-primary text-white p-2.5 rounded-xl font-bold text-base shadow-md"
+                 >
+                   Sign Up
+                 </NavLink>
+               </div>
+             )}
+            <p className="text-center text-xs text-slate-400 mt-3">&copy; {new Date().getFullYear()} Dr. William Triplett</p>
           </div>
         </div>
       </div>
