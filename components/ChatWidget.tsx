@@ -227,9 +227,9 @@ const ChatWidget: React.FC = () => {
 
       {/* Chat Window */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 w-full h-[100dvh] bg-white rounded-none shadow-2xl flex flex-col overflow-hidden border-0 animate-[slideUp_0.3s_ease-out] sm:inset-auto sm:bottom-6 sm:right-6 sm:w-full sm:max-w-md sm:h-[600px] sm:rounded-2xl sm:border sm:border-slate-200">
+        <div className="fixed inset-0 z-50 w-full h-[100svh] bg-white rounded-none shadow-2xl flex flex-col overflow-hidden border-0 animate-[slideUp_0.3s_ease-out] sm:inset-auto sm:bottom-6 sm:right-6 sm:w-full sm:max-w-md sm:h-[600px] sm:rounded-2xl sm:border sm:border-slate-200">
           {/* Header */}
-          <div className="bg-gradient-to-r from-brand-primary to-brand-dark text-white p-3 sm:p-4 flex items-center justify-between pt-[max(0.75rem,env(safe-area-inset-top))]">
+          <div className="bg-gradient-to-r from-brand-primary to-brand-dark text-white p-3 sm:p-4 flex items-center justify-between pt-[max(0.75rem,env(safe-area-inset-top))] flex-shrink-0">
             <div className="flex items-center gap-2 sm:gap-3 min-w-0 flex-1">
               <div className="relative">
                 <div className="w-10 h-10 bg-white rounded-full flex items-center justify-center overflow-hidden">
@@ -264,7 +264,7 @@ const ChatWidget: React.FC = () => {
           </div>
 
           {/* Messages */}
-          <div className="flex-1 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-slate-50">
+          <div className="flex-1 min-h-0 overflow-y-auto p-3 sm:p-4 space-y-3 sm:space-y-4 bg-slate-50">
             {messages.map((msg, idx) => (
               <div
                 key={idx}
@@ -345,10 +345,10 @@ const ChatWidget: React.FC = () => {
                 type="text"
                 value={inputMessage}
                 onChange={(e) => setInputMessage(e.target.value)}
-                onKeyPress={handleKeyPress}
+                onKeyDown={handleKeyPress}
                 placeholder="Type your message..."
                 disabled={isLoading}
-                className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all disabled:opacity-50 text-sm"
+                className="flex-1 px-4 py-3 bg-slate-50 border border-slate-200 rounded-xl focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all disabled:opacity-50 text-sm text-slate-900 placeholder:text-slate-400"
               />
               <button
                 onClick={() => handleSendMessage()}
