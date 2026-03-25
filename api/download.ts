@@ -1,6 +1,6 @@
 import { head } from '@vercel/blob';
-import { booksCatalog } from '../data/books';
-import { validateOrigin } from './_utils/security';
+import { booksCatalog } from '../data/books.js';
+import { validateOrigin } from './_utils/security.js';
 
 export default async function handler(req: any, res: any) {
   if (!validateOrigin(req, res)) return;

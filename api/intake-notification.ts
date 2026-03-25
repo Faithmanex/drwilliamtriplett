@@ -1,6 +1,6 @@
 import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
-import { validateOrigin } from './_utils/security';
+import { validateOrigin } from './_utils/security.js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
