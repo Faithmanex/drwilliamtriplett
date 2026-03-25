@@ -79,7 +79,7 @@ export default async function handler(req: any, res: any) {
       model: process.env.OPENAI_MODEL || "gpt-4o-mini",
       messages,
       stream: true,
-      max_tokens: 1024,
+      max_completion_tokens: 1024,
       temperature: 0.7,
     });
 
