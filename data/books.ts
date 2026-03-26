@@ -93,7 +93,7 @@ export const booksCatalog: Book[] = [
     pubDate: "2026",
     reviews: [],
     paypalButtonId: "UM3UMQ955N7WE",
-    blobUrl: ""
+    blobUrl: "https://mdonfowww3ur5lf4.public.blob.vercel-storage.com/leadership-coaching-Fsv2jWMQUWztYZz8huzw6wf8zVZ0k4.pdf"
   },
   {
     id: 'future-ready-clo',
@@ -112,7 +112,7 @@ export const booksCatalog: Book[] = [
     pubDate: "2026",
     reviews: [],
     paypalButtonId: "NR4WLG5N3598S",
-    blobUrl: ""
+    blobUrl: "https://mdonfowww3ur5lf4.public.blob.vercel-storage.com/future-ready-clo-Vik0Lyg38CEWL3WulXTQuWPFhzPdaA.pdf"
   },
   {
     id: 'hacked-healed-human',
@@ -131,6 +131,6 @@ export const booksCatalog: Book[] = [
     pubDate: "2026",
     reviews: [],
     paypalButtonId: "XCHVJ4ZSU4CTU",
-    blobUrl: ""
+    blobUrl: "https://mdonfowww3ur5lf4.public.blob.vercel-storage.com/hacked-healed-human-2yyePDPvkkbOJntOKQFti0LHWuni4D.pdf"
   }
 ];
