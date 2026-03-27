@@ -127,7 +127,7 @@ const FacultyIntakeForm: React.FC = () => {
           formType: 'faculty_strategy',
           formData,
           userEmail: formData.email,
-          serviceName: 'Faculty Strategy Intensive'
+          serviceName: consultation?.service_name || 'Faculty Strategy Intensive'
         })
       });
 
@@ -199,7 +199,7 @@ const FacultyIntakeForm: React.FC = () => {
         </button>
 
         <div className="bg-white rounded-2xl shadow-card p-8">
-          <h1 className="font-serif text-2xl font-bold text-brand-dark mb-2">Faculty Strategy Intake Form</h1>
+          <h1 className="font-serif text-2xl font-bold text-brand-dark mb-2">{consultation?.service_name || 'Faculty Strategy'} Intake Form</h1>
           <p className="text-slate-500 mb-8">Please complete this form before your session with Dr. Triplett.</p>
 
           <form onSubmit={handleSubmit} className="space-y-6">
