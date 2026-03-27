@@ -4,10 +4,6 @@ import { validateOrigin } from './_utils/security.js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
-const supabase = createClient(supabaseUrl, supabaseKey);
-
 export default async function handler(req: any, res: any) {
   if (!validateOrigin(req, res)) return;
 
