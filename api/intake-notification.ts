@@ -1,6 +1,7 @@
 import { Resend } from "resend";
 import { createClient } from "@supabase/supabase-js";
 import { validateOrigin } from './_utils/security.js';
+import { logToGoogleSheet } from './_utils/google-sheets.js';
 
 const resend = new Resend(process.env.RESEND_API_KEY);
 
@@ -77,9 +78,36 @@ export default async function handler(req: any, res: any) {
       html: adminContent,
     });
 
-    // Log to Google Sheets (if credentials provided)
-    if (process.env.GOOGLE_SHEETS_API_KEY) {
-      // Google Sheets logging would go here
+    // Log to Google Sheets
+    if (process.env.GOOGLE_SERVICE_ACCOUNT_KEY) {
+      try {
+        // Build a readable summary of all form fields
+        const details = Object.entries(formData)
+          .filter(([key]) => key !== 'acknowledgment')
+          .map(([key, value]) => {
+            const label = key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
+            const val = Array.isArray(value) ? value.join(', ') : String(value || '—');
+            return `${label}: ${val}`;
+          })
+          .join(' | ');
+
+        await logToGoogleSheet({
+          sheetId: process.env.GOOGLE_SHEET_ID!,
+          tabName: process.env.GOOGLE_SHEET_TAB || 'Sheet1',
+          values: [
+            new Date().toISOString(),
+            formData.fullName || '',
+            userEmail,
+            formData.phone || formData.phoneNumber || '',
+            serviceName,
+            formType,
+            details,
+          ],
+        });
+      } catch (sheetError) {
+        console.error('Google Sheets logging failed:', sheetError);
+        // Don't fail the request — email was sent successfully
+      }
     }
 
     return res.status(200).json({ success: true });
