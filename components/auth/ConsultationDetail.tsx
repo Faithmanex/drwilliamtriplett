@@ -54,9 +54,9 @@ const ConsultationDetail: React.FC = () => {
 
   const getStatusInfo = (status: string) => {
     switch (status) {
-      case 'completed': return { label: 'Completed', color: 'bg-green-100 text-green-700 border-green-200' };
-      case 'scheduled': return { label: 'Scheduled', color: 'bg-blue-100 text-blue-700 border-blue-200' };
-      default: return { label: 'Pending Review', color: 'bg-amber-100 text-amber-700 border-amber-200' };
+      case 'completed': return { label: 'Completed', color: 'bg-emerald-50 text-emerald-700 border-emerald-200 shadow-sm' };
+      case 'scheduled': return { label: 'Scheduled', color: 'bg-blue-50 text-blue-700 border-blue-200 shadow-sm' };
+      default: return { label: 'Pending Review', color: 'bg-amber-50 text-amber-700 border-amber-200 shadow-sm' };
     }
   };
 
@@ -130,7 +130,7 @@ const ConsultationDetail: React.FC = () => {
 
                 {intakeForm ? (
                   <div className="space-y-6">
-                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-6">
+                    <div className="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-8 bg-slate-50/50 rounded-3xl p-8 border border-slate-100/60 shadow-inner">
                       {Object.entries(intakeForm.data || {}).map(([key, value]) => {
                         if (key === 'acknowledgment' || !value) return null;
                         const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
@@ -146,13 +146,22 @@ const ConsultationDetail: React.FC = () => {
                     </div>
                   </div>
                 ) : (
-                  <div className="bg-slate-50 border border-dashed border-slate-200 rounded-2xl p-8 text-center">
-                    <p className="text-slate-500 mb-6 font-medium">You haven't completed the intake form for this session yet.</p>
+                  <div className="relative overflow-hidden bg-gradient-to-br from-amber-50 to-white border border-amber-200/60 rounded-3xl p-10 text-center shadow-sm">
+                    <div className="absolute top-0 right-0 p-8 opacity-10">
+                      <FileText className="w-32 h-32 text-amber-500" />
+                    </div>
+                    <div className="relative z-10 w-16 h-16 bg-white rounded-2xl shadow-sm flex items-center justify-center border border-amber-100 mx-auto mb-6">
+                      <FileText className="w-8 h-8 text-amber-500" />
+                    </div>
+                    <h3 className="font-serif text-xl font-bold text-brand-dark mb-3 relative z-10">Intake Form Required</h3>
+                    <p className="text-slate-600 mb-8 max-w-md mx-auto relative z-10 leading-relaxed font-medium">
+                      Dr. Triplett requires your intake information to prepare effectively for your upcoming session. Please complete the form to proceed.
+                    </p>
                     <NavLink
                       to={`${intakeRoute}/${consultation.id}`}
-                      className="inline-flex items-center gap-2 bg-brand-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-brand-dark transition-all hover:shadow-lg"
+                      className="inline-flex items-center gap-2 bg-brand-primary text-white px-8 py-4 rounded-xl font-bold hover:bg-brand-dark transition-all hover:shadow-xl hover:-translate-y-1 relative z-10"
                     >
-                      Fill Intake Form <ArrowRight size={18} />
+                      Complete Intake Form <ArrowRight size={18} />
                     </NavLink>
                   </div>
                 )}

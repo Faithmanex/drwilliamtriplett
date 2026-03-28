@@ -260,17 +260,25 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
             )}
             
             {filteredConsultations.length === 0 ? (
-              <div className="text-center py-12 bg-slate-50 rounded-xl border border-dashed border-slate-200">
-                <Calendar className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-                <p className="text-slate-500 mb-4">
-                  {consultations.length === 0 ? "No consultations yet." : "No matching consultations found."}
+              <div className="text-center py-16 px-6 bg-gradient-to-b from-slate-50 to-white rounded-3xl border border-slate-200 shadow-sm relative overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_right,rgba(16,24,39,0.02)_0%,transparent_50%))]"></div>
+                <div className="w-16 h-16 bg-white rounded-full flex items-center justify-center border border-slate-100 shadow-sm mx-auto mb-4 relative z-10">
+                  <Calendar className="w-8 h-8 text-slate-300" />
+                </div>
+                <h3 className="font-serif text-lg font-bold text-brand-dark mb-2 relative z-10">
+                  {consultations.length === 0 ? "No Active Consultations" : "No Matches Found"}
+                </h3>
+                <p className="text-slate-500 mb-6 max-w-sm mx-auto relative z-10 leading-relaxed text-sm">
+                  {consultations.length === 0 
+                    ? "Your scheduled advisory sessions, structural reviews, and coaching packages will appear here." 
+                    : "Adjust your filters or search terms to find specific sessions."}
                 </p>
                 {consultations.length === 0 && (
                   <NavLink
                     to="/services/academic"
-                    className="inline-flex items-center gap-2 text-brand-primary font-bold hover:underline"
+                    className="inline-flex items-center gap-2 bg-brand-primary text-white px-6 py-3 rounded-xl font-bold hover:bg-brand-dark transition-all hover:shadow-lg relative z-10"
                   >
-                    Book your first consultation <ArrowRight size={16} />
+                    Explore Academic Services <ArrowRight size={16} />
                   </NavLink>
                 )}
               </div>
@@ -283,33 +291,34 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
                       to={`/dashboard/consultation/${consult.id}`}
                       className="block group"
                     >
-                      <div className="border border-slate-200 shadow-sm bg-white rounded-xl p-4 hover:border-brand-primary/30 hover:shadow-md transition-all duration-300">
-                        <div className="flex items-start justify-between mb-2">
-                          <h3 className="font-bold text-brand-dark group-hover:text-brand-primary transition-colors">{consult.service_name}</h3>
-                          <div className="flex flex-col items-end gap-1">
+                      <div className="border border-slate-200 shadow-sm bg-white rounded-2xl p-5 hover:border-brand-primary/40 hover:shadow-md transition-all duration-300 group-hover:-translate-y-0.5 relative overflow-hidden">
+                        <div className="absolute top-0 left-0 w-1 h-full bg-brand-primary opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
+                        <div className="flex items-start justify-between mb-3">
+                          <h3 className="font-bold text-brand-dark group-hover:text-brand-primary transition-colors pr-4 leading-tight">{consult.service_name}</h3>
+                          <div className="flex flex-col items-end gap-1 flex-shrink-0">
                             {consult.intake_submitted ? (
-                              <span className="px-2 py-1 rounded-full text-[10px] font-bold border bg-green-100 text-green-700 border-green-200 whitespace-nowrap">
+                              <span className="px-3 py-1 rounded-full text-[10px] font-bold border bg-emerald-50 text-emerald-700 border-emerald-200 whitespace-nowrap shadow-sm">
                                 Form Filled
                               </span>
                             ) : (
-                              <span className="px-2 py-1 rounded-full text-[10px] font-bold border bg-amber-100 text-amber-700 border-amber-200 whitespace-nowrap">
-                                Action Needed
+                              <span className="px-3 py-1 rounded-full text-[10px] font-bold border bg-amber-50 text-amber-700 border-amber-200 whitespace-nowrap shadow-sm flex items-center gap-1.5">
+                                <span className="w-1.5 h-1.5 rounded-full bg-amber-500 animate-pulse"></span>
+                                Required Action
                               </span>
                             )}
                           </div>
                         </div>
-                        <div className="flex items-center justify-between text-xs">
+                        <div className="flex items-center justify-between text-xs mt-4 pt-4 border-t border-slate-100/60">
                           <div className="flex items-center gap-3">
-                            <span className="text-slate-600 font-medium">${consult.price}</span>
-                            <span className="text-slate-400">|</span>
-                            <span className="text-slate-500 flex items-center gap-1">
-                              <Calendar className="w-3 h-3" />
-                              {new Date(consult.created_at).toLocaleDateString()}
+                            <span className="text-slate-700 font-bold bg-slate-50 px-2 py-1 rounded border border-slate-100">${consult.price}</span>
+                            <span className="text-slate-500 flex items-center gap-1.5">
+                              <Calendar className="w-3.5 h-3.5 text-slate-400" />
+                              <span className="font-medium">{new Date(consult.created_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', year: 'numeric' })}</span>
                             </span>
                           </div>
-                          <div className="text-brand-primary opacity-0 group-hover:opacity-100 font-bold flex items-center gap-1 transition-all transform translate-x-2 group-hover:translate-x-0">
-                            View Details
-                            <ArrowRight size={12} />
+                          <div className="text-brand-primary opacity-0 group-hover:opacity-100 font-bold flex items-center gap-1.5 transition-all transform translate-x-2 group-hover:translate-x-0">
+                            Session Details
+                            <ArrowRight size={14} />
                           </div>
                         </div>
                       </div>
