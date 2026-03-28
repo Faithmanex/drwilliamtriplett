@@ -74,6 +74,32 @@ export const websiteKnowledge = {
     about: "/about",
     services: "/services",
     books: "/books",
-    contact: "/contact"
+    contact: "/contact",
+    dashboard: "/dashboard"
+  },
+  academicCatalog: [
+    { title: "Faculty Strategy Intensive", type: "One-Time", price: 400, focus: "Research agenda and P&T positioning." },
+    { title: "Dissertation Strategy Intensive", type: "One-Time", price: 350, focus: "Research framework and completion acceleration." },
+    { title: "Publication Strategy Advisory", type: "One-Time", price: 1800, focus: "Article positioning and pipeline development." },
+    { title: "Promotion & Tenure Advisory", type: "One-Time", price: 3500, focus: "Portfolio strategy and narrative refinement." },
+    { title: "Executive Advisory Retainer", type: "Monthly", price: 1200, focus: "Strategic leadership and institutional navigation." },
+    { title: "Proposal & IRB Advisory", type: "One-Time", price: 1500, focus: "Methodology clarity and IRB readiness." },
+    { title: "Chapter Development Advisory", type: "per Chapter", price: 1200, focus: "Theoretical alignment and structural feedback." },
+    { title: "Dissertation Completion Program", type: "One-Time", price: 4500, focus: "Final-stage writing and defense preparation." }
+  ],
+  bookCatalog: [
+    "Harbors of Hope (2025)",
+    "The Chief Artificial Intelligence Officer (2026)",
+    "Human-Centered AI Leadership (2026)",
+    "From Kilmichael to the World (2026)",
+    "Leadership Coaching and Executive Formation (2026)",
+    "The Future-Ready Chief Learning Officer (2026)",
+    "Hacked, Healed, and Human (2026)"
+  ],
+  platformFeatures: {
+    payments: "Secure and seamless checkout for all advisory services, subscriptions, and digital publications.",
+    onboarding: "Integrated digital intake process designed to streamline session preparation and ensure immediate strategic alignment.",
+    clientSupport: "Dedicated member dashboard for managing active consultations, reviewing submitted materials, and accessing acquired digital resources.",
+    notifications: "Automated real-time confirmation for all bookings and submissions, with a commitment to human response within 48 business hours."
   }
 };
