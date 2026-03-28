@@ -18,7 +18,7 @@ export const academicServices: AcademicService[] = [
     ],
     category: 'one-on-one',
     priceLabel: '(One-Time)',
-    stripePriceId: 'price_faculty_strategy'
+    paypalButtonId: ''
   },
   {
     id: 'dissertation-strategy',
@@ -36,7 +36,7 @@ export const academicServices: AcademicService[] = [
     ],
     category: 'one-on-one',
     priceLabel: '(One-Time)',
-    stripePriceId: 'price_dissertation_strategy'
+    paypalButtonId: ''
   },
   // Faculty Advisory Programs (Post-Consultation)
   {
@@ -53,7 +53,7 @@ export const academicServices: AcademicService[] = [
     ],
     category: 'faculty-advisory',
     priceLabel: '(One-Time)',
-    stripePriceId: 'price_publication_strategy'
+    paypalButtonId: ''
   },
   {
     id: 'promotion-tenure',
@@ -69,7 +69,7 @@ export const academicServices: AcademicService[] = [
     ],
     category: 'faculty-advisory',
     priceLabel: '(One-Time)',
-    stripePriceId: 'price_promotion_tenure'
+    paypalButtonId: ''
   },
   {
     id: 'executive-academic',
@@ -85,7 +85,8 @@ export const academicServices: AcademicService[] = [
     ],
     category: 'faculty-advisory',
     priceLabel: '(Subscription)',
-    stripePriceId: 'price_executive_academic'
+    isSubscription: true,
+    paypalButtonId: ''
   },
   // Dissertation Advisory Programs (Post-Consultation)
   {
@@ -102,7 +103,7 @@ export const academicServices: AcademicService[] = [
     ],
     category: 'dissertation-advisory',
     priceLabel: '(One-Time)',
-    stripePriceId: 'price_proposal_irb'
+    paypalButtonId: ''
   },
   {
     id: 'chapter-development',
@@ -118,7 +119,7 @@ export const academicServices: AcademicService[] = [
     ],
     category: 'dissertation-advisory',
     priceLabel: '(per Chapter)',
-    stripePriceId: 'price_chapter_development'
+    paypalButtonId: ''
   },
   {
     id: 'dissertation-completion',
@@ -134,7 +135,7 @@ export const academicServices: AcademicService[] = [
     ],
     category: 'dissertation-advisory',
     priceLabel: '(One-Time)',
-    stripePriceId: 'price_dissertation_completion'
+    paypalButtonId: ''
   }
 ];
 

@@ -3,8 +3,9 @@ import { useParams, useNavigate } from 'react-router-dom';
 import { academicServices } from '../data/academicServices';
 import { supabase } from '../lib/supabase';
 import { Check, ArrowLeft, CreditCard, Loader2 } from 'lucide-react';
+import PayPalHostedButton from './PayPalHostedButton';
 
-interface RouteParams {
+interface RouteParams extends Record<string, string> {
   id: string;
 }
 
@@ -123,30 +124,47 @@ const AcademicServiceDetail: React.FC = () => {
               <div className="bg-slate-50 rounded-xl p-6 mb-6">
                 <div className="flex items-center justify-between mb-4">
                   <span className="font-bold text-slate-700">Total</span>
-                  <span className="text-2xl font-bold text-brand-dark">${service.price}</span>
+                  <div className="text-right">
+                    <span className="text-2xl font-bold text-brand-dark">${service.price}</span>
+                    <span className="text-xs text-slate-500 block">{service.priceLabel}</span>
+                  </div>
                 </div>
 
-                <button
-                  onClick={handlePayment}
-                  disabled={isProcessing}
-                  className="w-full mt-2 bg-brand-dark hover:bg-slate-800 text-white py-4 px-6 rounded-lg font-bold transition-all hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
-                >
-                  {isProcessing ? (
-                    <>
-                      <Loader2 className="w-5 h-5 animate-spin" />
-                      Processing...
-                    </>
-                  ) : (
-                    <>
-                      <CreditCard className="w-5 h-5" />
-                      Book Now
-                    </>
-                  )}
-                </button>
+                {service.paypalButtonId ? (
+                  <div className="mt-4">
+                    <PayPalHostedButton 
+                      hostedButtonId={service.paypalButtonId} 
+                      isSubscription={service.isSubscription}
+                    />
+                    <p className="text-center text-xs text-slate-400 mt-2 italic">
+                      Note: You will be redirected to intake form completion after payment.
+                    </p>
+                  </div>
+                ) : (
+                  <button
+                    onClick={handlePayment}
+                    disabled={isProcessing}
+                    className="w-full mt-2 bg-brand-dark hover:bg-slate-800 text-white py-4 px-6 rounded-lg font-bold transition-all hover:shadow-lg flex items-center justify-center gap-2 disabled:opacity-50"
+                  >
+                    {isProcessing ? (
+                      <>
+                        <Loader2 className="w-5 h-5 animate-spin" />
+                        Processing...
+                      </>
+                    ) : (
+                      <>
+                        <CreditCard className="w-5 h-5" />
+                        Book Now
+                      </>
+                    )}
+                  </button>
+                )}
                 
-                <p className="text-center text-slate-500 text-sm mt-4">
-                  Demo mode • Payment simulated • Non-refundable
-                </p>
+                {!service.paypalButtonId && (
+                  <p className="text-center text-slate-500 text-sm mt-4">
+                    Demo mode • Payment simulated • Non-refundable
+                  </p>
+                )}
               </div>
             </div>
 

@@ -4,9 +4,10 @@ import { useToast } from './Toast';
 
 interface PayPalHostedButtonProps {
   hostedButtonId: string;
+  isSubscription?: boolean;
 }
 
-const PayPalHostedButton: React.FC<PayPalHostedButtonProps> = ({ hostedButtonId }) => {
+const PayPalHostedButton: React.FC<PayPalHostedButtonProps> = ({ hostedButtonId, isSubscription }) => {
   const [isCheckoutOpen, setIsCheckoutOpen] = useState(false);
   const { showToast } = useToast();
 
@@ -86,7 +87,7 @@ const PayPalHostedButton: React.FC<PayPalHostedButtonProps> = ({ hostedButtonId 
         onSubmit={handlePayClick}
         style={{ display: 'inline-grid', justifyItems: 'center', alignContent: 'start', gap: '0.5rem' }}
       >
-        <input className={`pp-${hostedButtonId}`} type="submit" value="Buy Now" />
+        <input className={`pp-${hostedButtonId}`} type="submit" value={isSubscription ? "Subscribe" : "Buy Now"} />
         <img src="https://www.paypalobjects.com/images/Debit_Credit_APM.svg" alt="cards" />
         <section style={{ fontSize: '0.75rem', color: '#64748b' }}>
           Powered by <img src="https://www.paypalobjects.com/paypal-ui/logos/svg/paypal-wordmark-color.svg" alt="paypal" style={{ height: '0.875rem', verticalAlign: 'middle' }} />
