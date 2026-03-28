@@ -15,6 +15,7 @@ import Legal from './components/Legal';
 import LoginForm from './components/auth/LoginForm';
 import SignupForm from './components/auth/SignupForm';
 import UserDashboard from './components/auth/UserDashboard';
+import ConsultationDetail from './components/auth/ConsultationDetail';
 import FacultyIntakeForm from './components/FacultyIntakeForm';
 import DissertationIntakeForm from './components/DissertationIntakeForm';
 import ChatWidget from './components/ChatWidget';
@@ -165,6 +166,7 @@ const App: React.FC = () => {
                 session ? <UserDashboard user={session.user} onLogout={handleLogout} /> : 
                 <LoginForm onSuccess={() => {}} />
               } />
+              <Route path="/dashboard/consultation/:id" element={<ConsultationDetail />} />
               <Route path="/intake/faculty/:id" element={<FacultyIntakeForm />} />
               <Route path="/intake/dissertation/:id" element={<DissertationIntakeForm />} />
             </Routes>

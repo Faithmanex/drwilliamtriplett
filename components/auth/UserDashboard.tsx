@@ -13,7 +13,6 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
   const [consultations, setConsultations] = useState<any[]>([]);
   const [intakeForms, setIntakeForms] = useState<any[]>([]);
   const [purchases, setPurchases] = useState<any[]>([]);
-  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const bookingSuccess = searchParams.get('booking') === 'success';
@@ -22,6 +21,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
   const [searchQuery, setSearchQuery] = useState('');
   const [filterStatus, setFilterStatus] = useState('all');
   const [sortBy, setSortBy] = useState('newest');
+  const [showFilters, setShowFilters] = useState(false);
 
   useEffect(() => {
     loadData();
@@ -200,21 +200,35 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Consultations */}
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-            <h2 className="font-serif text-xl font-bold text-brand-dark mb-6 flex items-center gap-2">
-              <Calendar className="w-5 h-5 text-brand-primary" />
-              My Consultations
-            </h2>
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-serif text-xl font-bold text-brand-dark flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-brand-primary" />
+                My Consultations
+              </h2>
+              {consultations.length > 0 && (
+                <button 
+                  onClick={() => setShowFilters(!showFilters)}
+                  className={`flex items-center gap-2 px-3 py-1.5 rounded-lg text-sm font-bold transition-all ${showFilters ? 'bg-brand-primary text-white shadow-md' : 'bg-slate-50 text-slate-600 hover:bg-slate-100 hover:text-brand-dark border border-slate-200'}`}
+                >
+                  <List size={14} />
+                  {showFilters ? 'Hide Filters' : 'Filters'}
+                  {(searchQuery || filterStatus !== 'all' || sortBy !== 'newest') && !showFilters && (
+                    <span className="w-2 h-2 bg-brand-primary rounded-full animate-pulse"></span>
+                  )}
+                </button>
+              )}
+            </div>
 
-            {/* Controls */}
-            {consultations.length > 0 && (
-              <div className="flex flex-col md:flex-row gap-4 mb-6">
+            {/* Compact Controls */}
+            {consultations.length > 0 && showFilters && (
+              <div className="flex flex-col md:flex-row gap-4 mb-6 p-4 bg-slate-50 rounded-xl border border-slate-200 animate-in fade-in slide-in-from-top-2 duration-200">
                 <div className="flex-1 relative">
                   <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                   <input
                     type="text"
                     placeholder="Search services..."
                     aria-label="Search services"
-                    className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all text-sm"
+                    className="w-full pl-10 pr-4 py-2 bg-white border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all text-sm font-medium"
                     value={searchQuery}
                     onChange={(e) => setSearchQuery(e.target.value)}
                   />
@@ -222,7 +236,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
                 <div className="flex gap-2">
                   <select
                     aria-label="Filter by intake status"
-                    className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition-all font-medium text-slate-700"
+                    className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition-all font-bold text-slate-700"
                     value={filterStatus}
                     onChange={(e) => setFilterStatus(e.target.value)}
                   >
@@ -232,7 +246,7 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
                   </select>
                   <select
                     aria-label="Sort consultations"
-                    className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition-all font-medium text-slate-700"
+                    className="bg-white border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition-all font-bold text-slate-700"
                     value={sortBy}
                     onChange={(e) => setSortBy(e.target.value)}
                   >
@@ -263,19 +277,15 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
             ) : (
               <div className="space-y-4">
                 {filteredConsultations.map((consult) => {
-                  const isFaculty = ['faculty-strategy', 'publication-strategy', 'promotion-tenure', 'executive-academic'].includes(consult.service_id);
-                  const intakeRoute = isFaculty ? '/intake/faculty' : '/intake/dissertation';
-                  const isExpanded = expandedId === consult.id;
-                  const form = intakeForms.find(f => f.consultation_id === consult.id);
-
                   return (
-                    <div key={consult.id} className={`border border-slate-200 shadow-sm transition-all duration-300 ${isExpanded ? 'bg-slate-50 border-brand-primary' : 'bg-white'} rounded-xl overflow-hidden`}>
-                      <div 
-                        className="p-4 cursor-pointer hover:bg-slate-50/50"
-                        onClick={() => setExpandedId(isExpanded ? null : consult.id)}
-                      >
+                    <NavLink 
+                      key={consult.id} 
+                      to={`/dashboard/consultation/${consult.id}`}
+                      className="block group"
+                    >
+                      <div className="border border-slate-200 shadow-sm bg-white rounded-xl p-4 hover:border-brand-primary/30 hover:shadow-md transition-all duration-300">
                         <div className="flex items-start justify-between mb-2">
-                          <h3 className="font-bold text-brand-dark">{consult.service_name}</h3>
+                          <h3 className="font-bold text-brand-dark group-hover:text-brand-primary transition-colors">{consult.service_name}</h3>
                           <div className="flex flex-col items-end gap-1">
                             {consult.intake_submitted ? (
                               <span className="px-2 py-1 rounded-full text-[10px] font-bold border bg-green-100 text-green-700 border-green-200 whitespace-nowrap">
@@ -297,78 +307,13 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
                               {new Date(consult.created_at).toLocaleDateString()}
                             </span>
                           </div>
-                          <div className="text-brand-primary font-bold flex items-center gap-1">
-                            {isExpanded ? 'Close' : 'View Details'}
-                            <ArrowRight size={12} className={`transition-transform duration-300 ${isExpanded ? '-rotate-90' : ''}`} />
+                          <div className="text-brand-primary opacity-0 group-hover:opacity-100 font-bold flex items-center gap-1 transition-all transform translate-x-2 group-hover:translate-x-0">
+                            View Details
+                            <ArrowRight size={12} />
                           </div>
                         </div>
                       </div>
-                      
-                      {isExpanded && (
-                        <div className="px-4 pb-4 pt-2 border-t border-slate-200/50 animate-in fade-in slide-in-from-top-2 duration-300">
-                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
-                            {/* Left: Summary */}
-                            <div className="space-y-4">
-                              <div>
-                                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Session Info</h4>
-                                <div className="bg-white border border-slate-100 rounded-lg p-3 space-y-2">
-                                  <div className="flex justify-between text-xs">
-                                    <span className="text-slate-500">Service ID</span>
-                                    <span className="text-slate-700 font-mono">{consult.service_id}</span>
-                                  </div>
-                                  <div className="flex justify-between text-xs">
-                                    <span className="text-slate-500">Scheduled For</span>
-                                    <span className="text-slate-700">{consult.scheduled_at ? new Date(consult.scheduled_at).toLocaleString() : 'Pending review'}</span>
-                                  </div>
-                                </div>
-                              </div>
-
-                              <div>
-                                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Next Steps</h4>
-                                <div className="bg-brand-dark text-slate-200 rounded-lg p-3 text-xs leading-relaxed">
-                                  {!consult.intake_submitted ? (
-                                    <p>Please complete your intake form. Dr. Triplett requires this information to prepare for your specific academic context.</p>
-                                  ) : (
-                                    <p>Your intake form is under review. You will receive an email to finalize your session time within 48 business hours.</p>
-                                  )}
-                                </div>
-                              </div>
-                            </div>
-
-                            {/* Right: Intake Form Summary */}
-                            <div>
-                               <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Submission Details</h4>
-                               {form ? (
-                                 <div className="bg-white border border-slate-100 rounded-lg p-3 max-h-[200px] overflow-y-auto custom-scrollbar">
-                                   <div className="space-y-3">
-                                     {Object.entries(form.data || {}).map(([key, value]) => {
-                                       if (key === 'acknowledgment' || !value) return null;
-                                       const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
-                                       return (
-                                         <div key={key}>
-                                           <p className="text-[10px] font-bold text-slate-400">{formattedKey}</p>
-                                           <p className="text-xs text-slate-700 mt-0.5">{Array.isArray(value) ? value.join(', ') : String(value)}</p>
-                                         </div>
-                                       );
-                                     })}
-                                   </div>
-                                 </div>
-                               ) : (
-                                 <div className="bg-amber-50 border border-amber-100 rounded-lg p-3 text-center">
-                                   <p className="text-xs text-amber-700 mb-3">No intake data available yet.</p>
-                                   <NavLink
-                                      to={`${intakeRoute}/${consult.id}`}
-                                      className="inline-block bg-brand-primary text-white text-[10px] font-bold px-3 py-1.5 rounded-md hover:bg-brand-dark transition-colors"
-                                    >
-                                      Fill Intake Form
-                                    </NavLink>
-                                 </div>
-                               )}
-                            </div>
-                          </div>
-                        </div>
-                      )}
-                    </div>
+                    </NavLink>
                   );
                 })}
               </div>
