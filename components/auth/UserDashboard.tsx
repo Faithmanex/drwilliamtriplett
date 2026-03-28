@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { supabase } from '../../lib/supabase';
-import { User, BookOpen, Calendar, Clock, LogOut, ArrowRight, CheckCircle, XCircle, List } from 'lucide-react';
+import { User, BookOpen, Calendar, Clock, LogOut, ArrowRight, CheckCircle, XCircle, List, Search } from 'lucide-react';
 import { NavLink, useSearchParams } from 'react-router-dom';
 
 interface UserDashboardProps {
@@ -15,6 +15,11 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const bookingSuccess = searchParams.get('booking') === 'success';
+
+  // Filters & Sorting
+  const [searchQuery, setSearchQuery] = useState('');
+  const [filterStatus, setFilterStatus] = useState('all');
+  const [sortBy, setSortBy] = useState('newest');
 
   useEffect(() => {
     loadData();
@@ -53,6 +58,26 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
     await supabase.auth.signOut();
     onLogout();
   };
+
+  // Derived state for filtered consultations
+  const filteredConsultations = consultations
+    .filter(consult => {
+      const matchesSearch = consult.service_name.toLowerCase().includes(searchQuery.toLowerCase());
+      const matchesStatus = 
+        filterStatus === 'all' || 
+        (filterStatus === 'filled' && consult.intake_submitted) || 
+        (filterStatus === 'pending' && !consult.intake_submitted);
+      return matchesSearch && matchesStatus;
+    })
+    .sort((a, b) => {
+      switch (sortBy) {
+        case 'newest': return new Date(b.created_at).getTime() - new Date(a.created_at).getTime();
+        case 'oldest': return new Date(a.created_at).getTime() - new Date(b.created_at).getTime();
+        case 'price-high': return b.price - a.price;
+        case 'price-low': return a.price - b.price;
+        default: return 0;
+      }
+    });
 
   const getStatusColor = (status: string) => {
     switch (status) {
@@ -166,25 +191,69 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           {/* Consultations */}
           <div className="bg-white rounded-2xl shadow-sm border border-slate-100 p-6">
-            <h2 className="font-serif text-xl font-bold text-brand-dark mb-4 flex items-center gap-2">
-              <Calendar className="w-5 h-5" />
+            <h2 className="font-serif text-xl font-bold text-brand-dark mb-6 flex items-center gap-2">
+              <Calendar className="w-5 h-5 text-brand-primary" />
               My Consultations
             </h2>
+
+            {/* Controls */}
+            {consultations.length > 0 && (
+              <div className="flex flex-col md:flex-row gap-4 mb-6">
+                <div className="flex-1 relative">
+                  <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <input
+                    type="text"
+                    placeholder="Search services..."
+                    aria-label="Search services"
+                    className="w-full pl-10 pr-4 py-2 bg-slate-50 border border-slate-200 rounded-lg focus:outline-none focus:ring-2 focus:ring-brand-primary/20 focus:border-brand-primary transition-all text-sm"
+                    value={searchQuery}
+                    onChange={(e) => setSearchQuery(e.target.value)}
+                  />
+                </div>
+                <div className="flex gap-2">
+                  <select
+                    aria-label="Filter by intake status"
+                    className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition-all font-medium text-slate-700"
+                    value={filterStatus}
+                    onChange={(e) => setFilterStatus(e.target.value)}
+                  >
+                    <option value="all">All Status</option>
+                    <option value="filled">Form Filled</option>
+                    <option value="pending">Form Not Filled</option>
+                  </select>
+                  <select
+                    aria-label="Sort consultations"
+                    className="bg-slate-50 border border-slate-200 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-brand-primary/20 transition-all font-medium text-slate-700"
+                    value={sortBy}
+                    onChange={(e) => setSortBy(e.target.value)}
+                  >
+                    <option value="newest">Newest First</option>
+                    <option value="oldest">Oldest First</option>
+                    <option value="price-high">Price: High to Low</option>
+                    <option value="price-low">Price: Low to High</option>
+                  </select>
+                </div>
+              </div>
+            )}
             
-            {consultations.length === 0 ? (
-              <div className="text-center py-8">
+            {filteredConsultations.length === 0 ? (
+              <div className="text-center py-12 bg-slate-50 rounded-xl border border-dashed border-slate-200">
                 <Calendar className="w-12 h-12 text-slate-200 mx-auto mb-3" />
-                <p className="text-slate-500 mb-4">No consultations yet.</p>
-                <NavLink
-                  to="/services/academic"
-                  className="inline-flex items-center gap-2 text-brand-primary font-medium hover:underline"
-                >
-                  Book your first consultation <ArrowRight size={16} />
-                </NavLink>
+                <p className="text-slate-500 mb-4">
+                  {consultations.length === 0 ? "No consultations yet." : "No matching consultations found."}
+                </p>
+                {consultations.length === 0 && (
+                  <NavLink
+                    to="/services/academic"
+                    className="inline-flex items-center gap-2 text-brand-primary font-bold hover:underline"
+                  >
+                    Book your first consultation <ArrowRight size={16} />
+                  </NavLink>
+                )}
               </div>
             ) : (
-              <div className="space-y-3">
-                {consultations.map((consult) => {
+              <div className="space-y-4">
+                {filteredConsultations.map((consult) => {
                   const isFaculty = ['faculty-strategy', 'publication-strategy', 'promotion-tenure', 'executive-academic'].includes(consult.service_id);
                   const intakeRoute = isFaculty ? '/intake/faculty' : '/intake/dissertation';
 
