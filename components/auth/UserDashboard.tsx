@@ -11,7 +11,9 @@ interface UserDashboardProps {
 const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
   const [profile, setProfile] = useState<any>(null);
   const [consultations, setConsultations] = useState<any[]>([]);
+  const [intakeForms, setIntakeForms] = useState<any[]>([]);
   const [purchases, setPurchases] = useState<any[]>([]);
+  const [expandedId, setExpandedId] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const [searchParams] = useSearchParams();
   const bookingSuccess = searchParams.get('booking') === 'success';
@@ -40,6 +42,13 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
         .eq('user_id', user.id)
         .order('created_at', { ascending: false });
       setConsultations(consultData || []);
+
+      // Fetch intake forms
+      const { data: intakeData } = await supabase
+        .from('intake_forms')
+        .select('*')
+        .eq('user_id', user.id);
+      setIntakeForms(intakeData || []);
 
       const { data: purchaseData } = await supabase
         .from('purchases')
@@ -256,41 +265,107 @@ const UserDashboard: React.FC<UserDashboardProps> = ({ user, onLogout }) => {
                 {filteredConsultations.map((consult) => {
                   const isFaculty = ['faculty-strategy', 'publication-strategy', 'promotion-tenure', 'executive-academic'].includes(consult.service_id);
                   const intakeRoute = isFaculty ? '/intake/faculty' : '/intake/dissertation';
+                  const isExpanded = expandedId === consult.id;
+                  const form = intakeForms.find(f => f.consultation_id === consult.id);
 
                   return (
-                    <div key={consult.id} className="border border-slate-200 shadow-sm bg-white rounded-xl p-4">
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-bold text-brand-dark">{consult.service_name}</h3>
-                        <div className="flex flex-col items-end gap-1">
-                          {consult.intake_submitted ? (
-                            <span className="px-2 py-1 rounded-full text-xs font-bold border bg-green-100 text-green-700 border-green-200 whitespace-nowrap">
-                              Form Filled
+                    <div key={consult.id} className={`border border-slate-200 shadow-sm transition-all duration-300 ${isExpanded ? 'bg-slate-50 border-brand-primary' : 'bg-white'} rounded-xl overflow-hidden`}>
+                      <div 
+                        className="p-4 cursor-pointer hover:bg-slate-50/50"
+                        onClick={() => setExpandedId(isExpanded ? null : consult.id)}
+                      >
+                        <div className="flex items-start justify-between mb-2">
+                          <h3 className="font-bold text-brand-dark">{consult.service_name}</h3>
+                          <div className="flex flex-col items-end gap-1">
+                            {consult.intake_submitted ? (
+                              <span className="px-2 py-1 rounded-full text-[10px] font-bold border bg-green-100 text-green-700 border-green-200 whitespace-nowrap">
+                                Form Filled
+                              </span>
+                            ) : (
+                              <span className="px-2 py-1 rounded-full text-[10px] font-bold border bg-amber-100 text-amber-700 border-amber-200 whitespace-nowrap">
+                                Action Needed
+                              </span>
+                            )}
+                          </div>
+                        </div>
+                        <div className="flex items-center justify-between text-xs">
+                          <div className="flex items-center gap-3">
+                            <span className="text-slate-600 font-medium">${consult.price}</span>
+                            <span className="text-slate-400">|</span>
+                            <span className="text-slate-500 flex items-center gap-1">
+                              <Calendar className="w-3 h-3" />
+                              {new Date(consult.created_at).toLocaleDateString()}
                             </span>
-                          ) : (
-                            <span className="px-2 py-1 rounded-full text-xs font-bold border bg-amber-100 text-amber-700 border-amber-200 whitespace-nowrap">
-                              Form Not Filled
-                            </span>
-                          )}
+                          </div>
+                          <div className="text-brand-primary font-bold flex items-center gap-1">
+                            {isExpanded ? 'Close' : 'View Details'}
+                            <ArrowRight size={12} className={`transition-transform duration-300 ${isExpanded ? '-rotate-90' : ''}`} />
+                          </div>
                         </div>
                       </div>
-                      <div className="flex items-center justify-between text-sm">
-                        <span className="text-slate-600">${consult.price}</span>
-                        {consult.scheduled_at && (
-                          <span className="text-slate-500 flex items-center gap-1">
-                            <Clock className="w-3 h-3" />
-                            {new Date(consult.scheduled_at).toLocaleDateString()}
-                          </span>
-                        )}
-                      </div>
                       
-                      {!consult.intake_submitted && (
-                        <div className="mt-3 pt-3 border-t border-slate-100 flex justify-end">
-                          <NavLink
-                            to={`${intakeRoute}/${consult.id}`}
-                            className="inline-flex items-center gap-1 text-sm text-brand-primary font-bold hover:underline"
-                          >
-                            Fill Intake Form <ArrowRight size={14} />
-                          </NavLink>
+                      {isExpanded && (
+                        <div className="px-4 pb-4 pt-2 border-t border-slate-200/50 animate-in fade-in slide-in-from-top-2 duration-300">
+                          <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-2">
+                            {/* Left: Summary */}
+                            <div className="space-y-4">
+                              <div>
+                                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Session Info</h4>
+                                <div className="bg-white border border-slate-100 rounded-lg p-3 space-y-2">
+                                  <div className="flex justify-between text-xs">
+                                    <span className="text-slate-500">Service ID</span>
+                                    <span className="text-slate-700 font-mono">{consult.service_id}</span>
+                                  </div>
+                                  <div className="flex justify-between text-xs">
+                                    <span className="text-slate-500">Scheduled For</span>
+                                    <span className="text-slate-700">{consult.scheduled_at ? new Date(consult.scheduled_at).toLocaleString() : 'Pending review'}</span>
+                                  </div>
+                                </div>
+                              </div>
+
+                              <div>
+                                <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Next Steps</h4>
+                                <div className="bg-brand-dark text-slate-200 rounded-lg p-3 text-xs leading-relaxed">
+                                  {!consult.intake_submitted ? (
+                                    <p>Please complete your intake form. Dr. Triplett requires this information to prepare for your specific academic context.</p>
+                                  ) : (
+                                    <p>Your intake form is under review. You will receive an email to finalize your session time within 48 business hours.</p>
+                                  )}
+                                </div>
+                              </div>
+                            </div>
+
+                            {/* Right: Intake Form Summary */}
+                            <div>
+                               <h4 className="text-[10px] font-bold text-slate-400 uppercase tracking-widest mb-2">Submission Details</h4>
+                               {form ? (
+                                 <div className="bg-white border border-slate-100 rounded-lg p-3 max-h-[200px] overflow-y-auto custom-scrollbar">
+                                   <div className="space-y-3">
+                                     {Object.entries(form.data || {}).map(([key, value]) => {
+                                       if (key === 'acknowledgment' || !value) return null;
+                                       const formattedKey = key.replace(/([A-Z])/g, ' $1').replace(/^./, s => s.toUpperCase());
+                                       return (
+                                         <div key={key}>
+                                           <p className="text-[10px] font-bold text-slate-400">{formattedKey}</p>
+                                           <p className="text-xs text-slate-700 mt-0.5">{Array.isArray(value) ? value.join(', ') : String(value)}</p>
+                                         </div>
+                                       );
+                                     })}
+                                   </div>
+                                 </div>
+                               ) : (
+                                 <div className="bg-amber-50 border border-amber-100 rounded-lg p-3 text-center">
+                                   <p className="text-xs text-amber-700 mb-3">No intake data available yet.</p>
+                                   <NavLink
+                                      to={`${intakeRoute}/${consult.id}`}
+                                      className="inline-block bg-brand-primary text-white text-[10px] font-bold px-3 py-1.5 rounded-md hover:bg-brand-dark transition-colors"
+                                    >
+                                      Fill Intake Form
+                                    </NavLink>
+                                 </div>
+                               )}
+                            </div>
+                          </div>
                         </div>
                       )}
                     </div>
